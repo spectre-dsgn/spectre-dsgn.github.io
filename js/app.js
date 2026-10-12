@@ -10,11 +10,11 @@
 
   /* Категории: id, пропорции карточки, минимальная ширина в сетке */
   const CATS = [
-    { id: 'avatars',    ratio: '1 / 1',  min: 'clamp(140px, 40vw, 230px)' },
-    { id: 'banners',    ratio: '16 / 9', min: 'min(380px, 100%)' },
-    { id: 'cards',      ratio: '3 / 4',  min: 'clamp(150px, 42vw, 280px)' },
+    { id: 'avatars',    ratio: '1 / 1',  min: 'clamp(140px, 40vw, 230px)', sizes: '(max-width: 560px) 56vw, (max-width: 1133px) 30vw, 340px' },
+    { id: 'banners',    ratio: '16 / 9', min: 'min(380px, 100%)', sizes: '(max-width: 560px) 100vw, (max-width: 1133px) 53vw, 604px' },
+    { id: 'cards',      ratio: '3 / 4',  min: 'clamp(150px, 42vw, 280px)', sizes: '(max-width: 820px) 68vw, (max-width: 1560px) 25vw, 390px' },
     { id: 'animations', ratio: '16 / 9', min: 'min(380px, 100%)' },
-    { id: 'previews',   ratio: '16 / 9', min: 'min(330px, 100%)' },
+    { id: 'previews',   ratio: '16 / 9', min: 'min(330px, 100%)', sizes: '(max-width: 560px) 100vw, (max-width: 1133px) 53vw, 604px' },
     { id: 'bots',       ratio: '4 / 3',  min: 'min(320px, 100%)' },
   ];
 
@@ -164,7 +164,14 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const isVideo = (src) => /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(src || '');
   /* уменьшенная копия для карусели/сетки; оригинал — в полноэкранном просмотре */
-  const thumb = (src) => (window.SPECTRE_THUMBS || {})[src] || src;
+  const thumbInfo = (src) => (window.SPECTRE_THUMBS || {})[src];
+  const thumb = (src) => (thumbInfo(src) || {}).lg || src;
+  const srcsetOf = (src) => { const t = thumbInfo(src); return t && t.sm ? `${t.sm} ${t.smw}w, ${t.lg} ${t.lgw}w` : ''; };
+  /* атрибуты <img>: браузер сам выбирает копию под ширину экрана и плотность пикселей */
+  const imgAttrs = (src, cat) => {
+    const set = srcsetOf(src);
+    return `src="${esc(thumb(src))}"` + (set && cat && cat.sizes ? ` srcset="${esc(set)}" sizes="${esc(cat.sizes)}"` : '');
+  };
 
   /* ---------------------------- статистика (Umami) ----------------------------
      Свои визиты: ?owner=on — не считать это устройство, ?owner=off — снова считать. */
@@ -380,7 +387,7 @@
         <span class="w-badge">${t('works.video')}</span>
         <span class="w-info">${title ? `<span>${esc(title)}</span>` : ''}<span class="w-zoom">${ICON_ZOOM}</span></span>`;
     } else {
-      el.innerHTML = `<img src="${esc(thumb(item.src))}" alt="${esc(title)}" ${grid ? 'loading="lazy"' : ''} decoding="async" draggable="false">
+      el.innerHTML = `<img ${imgAttrs(item.src, cat)} alt="${esc(title)}" ${grid ? 'loading="lazy"' : ''} decoding="async" draggable="false">
         <span class="w-info">${title ? `<span>${esc(title)}</span>` : ''}<span class="w-zoom">${ICON_ZOOM}</span></span>`;
     }
     return el;
@@ -470,6 +477,7 @@
      ===================================================================== */
   let revealCtl = null;
   function cardReveal(items) {
+    const cardsCat = CATS.find((c) => c.id === 'cards');
     const box = document.createElement('div');
     box.className = 'cr-stage';
     const dots = items.length > 1
@@ -487,7 +495,7 @@
       <div class="cr-scene">
         <span class="cr-shadow" aria-hidden="true"></span>
         <div class="cr-tilt"><div class="cr-float">
-          <button type="button" class="cr-card"><img src="${esc(thumb(items[0].src))}" alt="" decoding="async" draggable="false"><span class="cr-sheen" aria-hidden="true"></span></button>
+          <button type="button" class="cr-card"><img ${imgAttrs(items[0].src, cardsCat)} alt="" decoding="async" draggable="false"><span class="cr-sheen" aria-hidden="true"></span></button>
         </div></div>
         <p class="cr-caption"></p>
       </div>`;
@@ -500,6 +508,8 @@
     const show = (i) => {
       idx = (i + items.length) % items.length;
       const it = items[idx], title = pick(it, 'title');
+      const set = srcsetOf(it.src);
+      if (set) { img.sizes = cardsCat.sizes; img.srcset = set; } else img.removeAttribute('srcset');
       img.src = thumb(it.src); img.alt = title;
       cap.textContent = title;
       card.setAttribute('aria-label', `${t('cards.open')}: ${title || idx + 1}`);
