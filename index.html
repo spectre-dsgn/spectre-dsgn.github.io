@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SPECTRE STUDIO — дизайн-студия</title>
+  <meta name="description" content="SPECTRE STUDIO — аватарки, баннеры, анимации, превью и Telegram-боты. Портфолио и отзывы.">
+  <meta name="theme-color" content="#040814">
+  <link rel="icon" href="assets/logo.webp" type="image/webp">
+  <link rel="apple-touch-icon" href="assets/logo.webp">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SPECTRE STUDIO">
+  <meta property="og:description" content="Аватарки, баннеры, анимации, превью и Telegram-боты. Avatars, banners, animations, thumbnails & bots.">
+  <meta property="og:image" content="assets/logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+
+  <div class="bg" aria-hidden="true">
+    <div class="aurora a1"></div>
+    <div class="aurora a2"></div>
+    <div class="aurora a3"></div>
+    <div class="grid-lines"></div>
+  </div>
+
+  <!-- ================= HEADER ================= -->
+  <header class="nav" id="nav">
+    <a class="brand" href="#top" aria-label="SPECTRE STUDIO">
+      <img src="assets/logo.webp" alt="" width="34" height="34">
+      <span>SPECTRE<b>STUDIO</b></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#works" data-i18n="nav.works">Работы</a>
+      <a href="#process" data-i18n="nav.process">Как заказать</a>
+      <a href="#reviews" data-i18n="nav.reviews">Отзывы</a>
+      <a href="#contact" data-i18n="nav.contact">Контакты</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang" id="lang" role="group" aria-label="Language">
+        <span class="lang-pill" aria-hidden="true"></span>
+        <button type="button" data-lang="ru">RU</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <a class="btn btn-primary btn-sm nav-cta" href="https://t.me/hovatsavsem" target="_blank" rel="noopener" data-i18n="nav.order">Заказать</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================= HERO ================= -->
+    <section class="hero container" id="top">
+      <div class="hero-text">
+        <p class="eyebrow reveal"><span class="dot"></span><span data-i18n="hero.eyebrow">Дизайн-студия · принимаем заказы</span></p>
+        <h1 class="hero-title" aria-label="SPECTRE STUDIO">
+          <span class="line grad" data-split>SPECTRE</span>
+          <span class="line outline" data-split>STUDIO</span>
+        </h1>
+        <p class="hero-sub reveal" style="--d:.5s" data-i18n="hero.sub">Аватарки, баннеры, анимации, превью и Telegram-боты. Делаем визуал, который цепляет с первого взгляда.</p>
+        <div class="hero-cta reveal" style="--d:.65s">
+          <a class="btn btn-primary magnetic" href="https://t.me/hovatsavsem" target="_blank" rel="noopener">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2l-11 6.9-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3Z" fill="currentColor"/></svg>
+            <span data-i18n="hero.cta">Написать в Telegram</span>
+          </a>
+          <a class="btn btn-ghost" href="#works" data-i18n="hero.cta2">Смотреть работы</a>
+        </div>
+        <ul class="hero-cats reveal" style="--d:.8s" id="heroCats"></ul>
+      </div>
+
+      <div class="hero-visual reveal" style="--d:.3s" id="heroVisual">
+        <svg class="orbit" viewBox="0 0 200 200" aria-hidden="true">
+          <defs><path id="circ" d="M100,100 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0"/></defs>
+          <g class="orbit-g"><text><textPath href="#circ">SPECTRE ✦ STUDIO ✦ DESIGN ✦ MOTION ✦ CODE ✦ SPECTRE ✦ STUDIO ✦ </textPath></text></g>
+        </svg>
+        <div class="tilt" id="tilt">
+          <img src="assets/logo.webp" alt="SPECTRE STUDIO" width="640" height="640" fetchpriority="high">
+          <div class="tilt-glare"></div>
+        </div>
+        <div class="float-badge fb1"><span class="dot"></span><span data-i18n="hero.badge1">Быстрые сроки</span></div>
+        <div class="float-badge fb2">by KELN</div>
+      </div>
+    </section>
+
+    <!-- ================= TICKER ================= -->
+    <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
+
+    <!-- ================= WORKS ================= -->
+    <section class="section container" id="works">
+      <div class="section-head reveal">
+        <p class="kicker">01 — <span data-i18n="works.kicker">Портфолио</span></p>
+        <h2 data-i18n="works.title">Наши работы</h2>
+        <p class="section-sub" data-i18n="works.sub">Наведите курсор или коснитесь карусели, чтобы её остановить. Нажмите на работу, чтобы открыть её целиком.</p>
+      </div>
+
+      <div class="works-bar reveal">
+        <div class="tabs" id="tabs" role="tablist"><span class="tab-ind" id="tabInd" aria-hidden="true"></span></div>
+        <div class="view-toggle" id="viewToggle" role="group">
+          <button type="button" data-view="carousel">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="5" height="12" rx="1.5"/><rect x="9.5" y="5" width="5" height="14" rx="1.5"/><rect x="17" y="6" width="5" height="12" rx="1.5"/></svg>
+            <span data-i18n="view.carousel">Карусель</span>
+          </button>
+          <button type="button" data-view="grid">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+            <span data-i18n="view.grid">Сетка</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="works-stage" id="stage" role="tabpanel" aria-live="polite"></div>
+    </section>
+
+    <!-- ================= PROCESS ================= -->
+    <section class="section container" id="process">
+      <div class="section-head reveal">
+        <p class="kicker">02 — <span data-i18n="process.kicker">Процесс</span></p>
+        <h2 data-i18n="process.title">Как заказать</h2>
+      </div>
+      <ol class="steps">
+        <li class="step spot reveal">
+          <span class="step-n">01</span>
+          <h3 data-i18n="process.s1t">Напишите нам</h3>
+          <p data-i18n="process.s1">Отправьте идею, референсы и пожелания в Telegram.</p>
+        </li>
+        <li class="step spot reveal" style="--d:.12s">
+          <span class="step-n">02</span>
+          <h3 data-i18n="process.s2t">Обсудим детали</h3>
+          <p data-i18n="process.s2">Согласуем стиль, сроки и стоимость до начала работы.</p>
+        </li>
+        <li class="step spot reveal" style="--d:.24s">
+          <span class="step-n">03</span>
+          <h3 data-i18n="process.s3t">Получите результат</h3>
+          <p data-i18n="process.s3">Готовая работа в нужных форматах и размерах.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ================= REVIEWS ================= -->
+    <section class="section" id="reviews">
+      <div class="container section-head reveal">
+        <p class="kicker">03 — <span data-i18n="reviews.kicker">Отзывы</span></p>
+        <h2 data-i18n="reviews.title">Что говорят клиенты</h2>
+        <p class="section-sub"><span data-i18n="reviews.sub">Реальные отзывы из нашего Telegram-канала.</span> <span class="tr-note" data-i18n="reviews.note"></span></p>
+      </div>
+      <div class="reviews reveal" id="reviewsRows"></div>
+      <div class="container center reveal">
+        <a class="btn btn-ghost" href="https://t.me/specreview" target="_blank" rel="noopener">
+          <span data-i18n="reviews.all">Все отзывы в Telegram</span>
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section class="section container" id="contact">
+      <div class="contact-card reveal">
+        <div class="contact-text">
+          <p class="kicker">04 — <span data-i18n="contact.kicker">Контакты</span></p>
+          <h2 data-i18n="contact.title">Обсудим ваш проект?</h2>
+          <p class="section-sub" data-i18n="contact.sub">Пишите напрямую CEO студии в Telegram — ответим на вопросы, подскажем и рассчитаем стоимость.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary magnetic" href="https://t.me/hovatsavsem" target="_blank" rel="noopener">
+              <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2l-11 6.9-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3Z" fill="currentColor"/></svg>
+              <span data-i18n="contact.cta">Написать @hovatsavsem</span>
+            </a>
+            <a class="btn btn-ghost" href="https://t.me/specreview" target="_blank" rel="noopener" data-i18n="contact.cta2">Канал с отзывами</a>
+          </div>
+        </div>
+        <a class="ceo spot" href="https://t.me/hovatsavsem" target="_blank" rel="noopener">
+          <img src="assets/logo.webp" alt="" width="64" height="64" loading="lazy">
+          <div>
+            <p class="ceo-role">CEO · Telegram</p>
+            <p class="ceo-name">@hovatsavsem</p>
+            <p class="ceo-status"><span class="dot"></span><span data-i18n="contact.offers">Предложения рассматриваю</span></p>
+          </div>
+          <svg class="ic ceo-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <span class="brand small"><img src="assets/logo.webp" alt="" width="26" height="26" loading="lazy"><span>SPECTRE<b>STUDIO</b></span></span>
+    <span class="muted">© <span id="year">2026</span> SPECTRE STUDIO. <span data-i18n="footer.rights">Все права защищены.</span></span>
+    <a class="muted link" href="#top" data-i18n="footer.top">Наверх ↑</a>
+  </footer>
+
+  <!-- ================= LIGHTBOX ================= -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+    <button class="lb-btn lb-close" type="button" data-i18n-aria="lb.close" aria-label="Закрыть">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button class="lb-btn lb-prev" type="button" data-i18n-aria="lb.prev" aria-label="Назад">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <figure class="lb-figure">
+      <div class="lb-media" id="lbMedia"></div>
+      <figcaption class="lb-cap"><span id="lbTitle"></span><span class="lb-count" id="lbCount"></span></figcaption>
+    </figure>
+    <button class="lb-btn lb-next" type="button" data-i18n-aria="lb.next" aria-label="Вперёд">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <script src="data/works.js"></script>
+  <script src="data/reviews.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
