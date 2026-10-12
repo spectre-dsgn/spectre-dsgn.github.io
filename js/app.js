@@ -439,7 +439,7 @@
       <div class="cr-scene">
         <span class="cr-shadow" aria-hidden="true"></span>
         <div class="cr-tilt"><div class="cr-float">
-          <button type="button" class="cr-card"><img alt="" decoding="async" draggable="false"><span class="cr-sheen" aria-hidden="true"></span></button>
+          <button type="button" class="cr-card"><img src="${esc(items[0].src)}" alt="" decoding="async" draggable="false"><span class="cr-sheen" aria-hidden="true"></span></button>
         </div></div>
         <p class="cr-caption"></p>
       </div>`;
