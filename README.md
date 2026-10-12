@@ -28,7 +28,7 @@ spectre-studio/
 { cat: "avatars", src: "works/avatars/ava-07.webp", title: "Ава для стримера", title_en: "Streamer avatar" },
 ```
 
-Значения `cat`: `avatars` (аватарки), `banners` (баннеры), `animations` (анимации), `previews` (превью), `bots` (боты и системы).
+Значения `cat`: `avatars` (аватарки), `banners` (баннеры), `cards` (карточки, вертикальные 3:4), `animations` (анимации), `previews` (превью), `bots` (боты и системы).
 Подписи `title` и `title_en` можно не указывать.
 
 Бот или система (картинка не обязательна):

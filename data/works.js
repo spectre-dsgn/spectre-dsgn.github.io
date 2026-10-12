@@ -12,6 +12,7 @@
    Категории (cat):
      avatars    — Аватарки
      banners    — Баннеры
+     cards      — Карточки (товаров, маркетплейсы) — показываются с 3D-анимацией
      animations — Анимации
      previews   — Превью
      bots       — Боты / Системы
@@ -42,6 +43,11 @@ window.SPECTRE_WORKS = [
   { cat: "banners", src: "works/banners/perehodnik-keln.webp" },
   { cat: "banners", src: "works/banners/uslugi.webp" },
   { cat: "banners", src: "works/banners/obmen-valyut.webp" },
+
+  /* ---------------- КАРТОЧКИ ----------------
+     Лучше вертикальные 3:4 (например 1200×1600). В режиме «Карусель»
+     карточки по очереди влетают в 3D; в «Сетке» — все сразу. */
+  { cat: "cards", src: "works/cards/onitsuka-mexico-66.webp", title: "Onitsuka Tiger · Mexico 66" },
 
   /* ---------------- АНИМАЦИИ ---------------- */
   { cat: "animations", src: "works/animations/karamelnye-ceny.mp4", poster: "works/animations/karamelnye-ceny-poster.webp" },

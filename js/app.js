@@ -12,6 +12,7 @@
   const CATS = [
     { id: 'avatars',    ratio: '1 / 1',  min: 'clamp(140px, 40vw, 230px)' },
     { id: 'banners',    ratio: '16 / 9', min: 'min(380px, 100%)' },
+    { id: 'cards',      ratio: '3 / 4',  min: 'clamp(150px, 42vw, 280px)' },
     { id: 'animations', ratio: '16 / 9', min: 'min(380px, 100%)' },
     { id: 'previews',   ratio: '16 / 9', min: 'min(330px, 100%)' },
     { id: 'bots',       ratio: '4 / 3',  min: 'min(320px, 100%)' },
@@ -34,6 +35,7 @@
       'hero.badge1': 'Быстрые сроки',
       'cat.avatars': 'Аватарки',
       'cat.banners': 'Баннеры',
+      'cat.cards': 'Карточки',
       'cat.animations': 'Анимации',
       'cat.previews': 'Превью',
       'cat.bots': 'Боты / Системы',
@@ -47,6 +49,12 @@
       'works.video': 'ВИДЕО',
       'works.project': 'Открыть проект',
       'view.carousel': 'Карусель',
+      'cards.eyebrow': 'SPECTRE STUDIO · карточки товаров',
+      'cards.l1': 'Сначала видят.',
+      'cards.l2': 'Потом покупают.',
+      'cards.sub': 'Карточки для маркетплейсов и соцсетей: обработка товара, инфографика и акцент на главных преимуществах.',
+      'cards.cta': 'Заказать карточку',
+      'cards.open': 'Открыть карточку',
       'view.grid': 'Сетка',
       'process.kicker': 'Процесс',
       'process.title': 'Как заказать',
@@ -69,6 +77,8 @@
       'contact.cta': 'Написать @hovatsavsem',
       'contact.cta2': 'Канал с отзывами',
       'contact.offers': 'Предложения рассматриваю',
+      'contact.channelRole': 'Telegram-канал',
+      'contact.channelSub': 'Новые работы и анонсы',
       'footer.rights': 'Все права защищены.',
       'footer.top': 'Наверх ↑',
       'lb.close': 'Закрыть',
@@ -90,6 +100,7 @@
       'hero.badge1': 'Fast turnaround',
       'cat.avatars': 'Avatars',
       'cat.banners': 'Banners',
+      'cat.cards': 'Product cards',
       'cat.animations': 'Animations',
       'cat.previews': 'Thumbnails',
       'cat.bots': 'Bots & Systems',
@@ -103,6 +114,12 @@
       'works.video': 'VIDEO',
       'works.project': 'Open project',
       'view.carousel': 'Carousel',
+      'cards.eyebrow': 'SPECTRE STUDIO · product cards',
+      'cards.l1': 'Seen first.',
+      'cards.l2': 'Bought next.',
+      'cards.sub': 'Product cards for marketplaces and social media: product retouching, infographics and a clear focus on what sells.',
+      'cards.cta': 'Order a card',
+      'cards.open': 'Open card',
       'view.grid': 'Grid',
       'process.kicker': 'Process',
       'process.title': 'How to order',
@@ -125,6 +142,8 @@
       'contact.cta': 'Message @hovatsavsem',
       'contact.cta2': 'Reviews channel',
       'contact.offers': 'Open to offers',
+      'contact.channelRole': 'Telegram channel',
+      'contact.channelSub': 'New work and announcements',
       'footer.rights': 'All rights reserved.',
       'footer.top': 'Back to top ↑',
       'lb.close': 'Close',
@@ -358,6 +377,7 @@
 
   function renderStage() {
     if (marquees.works) { marquees.works.destroy(); marquees.works = null; }
+    if (revealCtl) { revealCtl.destroy(); revealCtl = null; }
     stage.innerHTML = '';
     const cat = CATS.find((c) => c.id === curCat);
     const items = catItems(curCat);
@@ -370,7 +390,9 @@
       return;
     }
 
-    if (view === 'grid') {
+    if (curCat === 'cards' && view === 'carousel') {
+      revealCtl = cardReveal(items);
+    } else if (view === 'grid') {
       const g = document.createElement('div');
       g.className = 'w-grid';
       g.style.setProperty('--min', cat.min);
@@ -393,6 +415,87 @@
     }
     watchVideos();
   }
+
+  /* =====================================================================
+     Card Reveal — карточка влетает в 3D, по ней проходит блик,
+     рядом появляются заголовок и кнопка. Несколько карточек сменяются по очереди.
+     ===================================================================== */
+  let revealCtl = null;
+  function cardReveal(items) {
+    const box = document.createElement('div');
+    box.className = 'cr-stage';
+    const dots = items.length > 1
+      ? `<div class="cr-dots">${items.map((_, i) => `<button type="button" aria-label="${i + 1} / ${items.length}"></button>`).join('')}</div>` : '';
+    box.innerHTML = `
+      <div class="cr-text">
+        <p class="cr-eyebrow" style="--d:.15s"><img src="assets/logo.webp" alt="" width="22" height="22">${esc(t('cards.eyebrow'))}</p>
+        <h3 class="cr-title"><span style="--d:.4s">${esc(t('cards.l1'))}</span><span class="cr-it" style="--d:.6s">${esc(t('cards.l2'))}</span></h3>
+        <p class="cr-sub" style="--d:.8s">${esc(t('cards.sub'))}</p>
+        <div class="cr-actions" style="--d:1s">
+          <a class="cr-cta" href="${TG}" target="_blank" rel="noopener">${esc(t('cards.cta'))} <span aria-hidden="true">→</span></a>
+          ${dots}
+        </div>
+      </div>
+      <div class="cr-scene">
+        <span class="cr-shadow" aria-hidden="true"></span>
+        <div class="cr-tilt"><div class="cr-float">
+          <button type="button" class="cr-card"><img alt="" decoding="async" draggable="false"><span class="cr-sheen" aria-hidden="true"></span></button>
+        </div></div>
+        <p class="cr-caption"></p>
+      </div>`;
+    stage.appendChild(box);
+
+    const card = $('.cr-card', box), img = $('img', card), cap = $('.cr-caption', box);
+    const tilt = $('.cr-tilt', box), scene = $('.cr-scene', box);
+    let idx = 0, timer = null, visible = false, hover = false, busy = false;
+
+    const show = (i) => {
+      idx = (i + items.length) % items.length;
+      const it = items[idx], title = pick(it, 'title');
+      img.src = it.src; img.alt = title;
+      cap.textContent = title;
+      card.setAttribute('aria-label', `${t('cards.open')}: ${title || idx + 1}`);
+      $$('.cr-dots button', box).forEach((d, k) => d.classList.toggle('on', k === idx));
+      card.classList.remove('out', 'in');
+      void card.offsetWidth;
+      card.classList.add('in');
+    };
+    const go = (i) => {
+      if (busy || i === idx) return;
+      if (reduced) { show(i); return; }
+      busy = true;
+      card.classList.remove('in');
+      card.classList.add('out');
+      setTimeout(() => { show(i); busy = false; }, 650);
+    };
+    const loop = () => {
+      clearInterval(timer);
+      if (items.length > 1 && !reduced) timer = setInterval(() => { if (visible && !hover) go(idx + 1); }, 6500);
+    };
+
+    show(0);
+    loop();
+    card.addEventListener('click', () => openLightbox(items, idx));
+    $$('.cr-dots button', box).forEach((d, k) => d.addEventListener('click', () => { go(k); loop(); }));
+
+    const io = new IntersectionObserver(([en]) => {
+      visible = en.isIntersecting;
+      if (visible && !box.classList.contains('play')) { box.classList.add('play'); show(idx); }
+    }, { threshold: 0.3 });
+    io.observe(box);
+
+    if (finePointer && !reduced) {
+      scene.addEventListener('pointerenter', () => { hover = true; });
+      scene.addEventListener('pointermove', (e) => {
+        const r = scene.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+        tilt.style.transform = `rotateY(${px * 14}deg) rotateX(${-py * 10}deg)`;
+      });
+      scene.addEventListener('pointerleave', () => { hover = false; tilt.style.transform = ''; });
+    }
+    return { destroy() { clearInterval(timer); io.disconnect(); } };
+  }
+
 
   /* Видео играют только когда видны на экране — экономит трафик и батарею */
   let videoIO = null;
