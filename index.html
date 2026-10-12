@@ -4,18 +4,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>SPECTRE STUDIO — дизайн-студия</title>
-  <meta name="description" content="SPECTRE STUDIO — аватарки, баннеры, анимации, превью и Telegram-боты. Портфолио и отзывы.">
+  <meta name="description" content="SPECTRE STUDIO — аватарки, баннеры, карточки, анимации, превью и Telegram-боты. Портфолио и отзывы.">
   <meta name="theme-color" content="#040814">
-  <link rel="icon" href="assets/logo.webp" type="image/webp">
-  <link rel="apple-touch-icon" href="assets/logo.webp">
+  <meta name="color-scheme" content="dark">
+  <link rel="canonical" href="https://spectre-dsgn.github.io/">
+  <link rel="alternate" hreflang="ru" href="https://spectre-dsgn.github.io/?lang=ru">
+  <link rel="alternate" hreflang="en" href="https://spectre-dsgn.github.io/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://spectre-dsgn.github.io/">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SPECTRE STUDIO">
-  <meta property="og:description" content="Аватарки, баннеры, анимации, превью и Telegram-боты. Avatars, banners, animations, thumbnails & bots.">
-  <meta property="og:image" content="assets/logo.webp">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,400&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <meta property="og:site_name" content="SPECTRE STUDIO">
+  <meta property="og:url" content="https://spectre-dsgn.github.io/">
+  <meta property="og:title" content="SPECTRE STUDIO — дизайн-студия">
+  <meta property="og:description" content="Аватарки, баннеры, карточки, анимации, превью и Telegram-боты. Портфолио и отзывы.">
+  <meta property="og:image" content="https://spectre-dsgn.github.io/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://spectre-dsgn.github.io/assets/og.jpg">
+  <link rel="preload" href="assets/fonts/Manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/Manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/Unbounded-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css?v=20261012">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"SPECTRE STUDIO","url":"https://spectre-dsgn.github.io/","image":"https://spectre-dsgn.github.io/assets/og.jpg","logo":"https://spectre-dsgn.github.io/assets/icon-512.png","description":"Дизайн-студия: аватарки, баннеры, карточки товаров, анимации, превью и Telegram-боты.","sameAs":["https://t.me/specstudio","https://t.me/hovatsavsem","https://t.me/specreview"]}</script>
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -30,7 +43,7 @@
   <!-- ================= HEADER ================= -->
   <header class="nav" id="nav">
     <a class="brand" href="#top" aria-label="SPECTRE STUDIO">
-      <img src="assets/logo.webp" alt="" width="34" height="34">
+      <img src="assets/logo-128.webp" alt="" width="34" height="34">
       <span>SPECTRE<b>STUDIO</b></span>
     </a>
     <nav class="nav-links" id="navLinks">
@@ -170,7 +183,7 @@
         </div>
         <div class="contact-side">
         <a class="ceo spot" href="https://t.me/hovatsavsem" target="_blank" rel="noopener">
-          <img src="assets/logo.webp" alt="" width="64" height="64" loading="lazy">
+          <img src="assets/logo-128.webp" alt="" width="64" height="64" loading="lazy">
           <div>
             <p class="ceo-role">CEO · Telegram</p>
             <p class="ceo-name">@hovatsavsem</p>
@@ -193,7 +206,7 @@
   </main>
 
   <footer class="footer container">
-    <span class="brand small"><img src="assets/logo.webp" alt="" width="26" height="26" loading="lazy"><span>SPECTRE<b>STUDIO</b></span></span>
+    <span class="brand small"><img src="assets/logo-128.webp" alt="" width="26" height="26" loading="lazy"><span>SPECTRE<b>STUDIO</b></span></span>
     <span class="muted">© <span id="year">2026</span> SPECTRE STUDIO. <span data-i18n="footer.rights">Все права защищены.</span></span>
     <span class="footer-links">
       <a class="muted link" href="https://t.me/specstudio" target="_blank" rel="noopener">Telegram · @specstudio</a>
@@ -218,8 +231,10 @@
     </button>
   </div>
 
-  <script src="data/works.js"></script>
-  <script src="data/reviews.js"></script>
-  <script src="js/app.js"></script>
+  <script src="data/config.js?v=20261012"></script>
+  <script src="data/works.js?v=20261012"></script>
+  <script src="data/thumbs.js?v=20261012"></script>
+  <script src="data/reviews.js?v=20261012"></script>
+  <script src="js/app.js?v=20261012"></script>
 </body>
 </html>

@@ -163,6 +163,54 @@
   };
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const isVideo = (src) => /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(src || '');
+  /* уменьшенная копия для карусели/сетки; оригинал — в полноэкранном просмотре */
+  const thumb = (src) => (window.SPECTRE_THUMBS || {})[src] || src;
+
+  /* ---------------------------- статистика (Umami) ----------------------------
+     Свои визиты: ?owner=on — не считать это устройство, ?owner=off — снова считать. */
+  const CFG = window.SPECTRE_CONFIG || {};
+  const ownerParam = new URLSearchParams(location.search).get('owner');
+  if (ownerParam === 'on' || ownerParam === 'off') {
+    if (ownerParam === 'on') store.set('umami.disabled', '1');
+    else { try { localStorage.removeItem('umami.disabled'); } catch (e) { /* private mode */ } }
+    const u = new URL(location.href);
+    u.searchParams.delete('owner');
+    history.replaceState(null, '', u.pathname + u.search + u.hash);
+    addEventListener('DOMContentLoaded', () => {
+      const ru = /^ru/i.test(document.documentElement.lang);
+      const msg = ownerParam === 'on'
+        ? (ru ? 'Готово: ваши визиты с этого устройства не попадают в статистику.' : 'Done: visits from this device are excluded from analytics.')
+        : (ru ? 'Подсчёт ваших визитов на этом устройстве снова включён.' : 'Visits from this device are counted again.');
+      const t = document.createElement('div');
+      t.className = 'owner-toast';
+      t.setAttribute('role', 'status');
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.classList.add('hide'), 4200);
+      setTimeout(() => t.remove(), 4800);
+    });
+  }
+  const isOwner = store.get('umami.disabled') === '1';
+  if (CFG.umamiId && !isOwner && location.hostname === CFG.domain) {
+    const sc = document.createElement('script');
+    sc.defer = true;
+    sc.src = CFG.umamiScript || 'https://cloud.umami.is/script.js';
+    sc.dataset.websiteId = CFG.umamiId;
+    sc.dataset.domains = CFG.domain;
+    document.head.appendChild(sc);
+  }
+  const track = (name, data) => {
+    if (isOwner) return;
+    try { if (window.umami && typeof window.umami.track === 'function') window.umami.track(name, data); } catch (e) { /* ignore */ }
+  };
+  // клики по всем ссылкам в Telegram: куда и из какого блока
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href*="t.me/"]');
+    if (!a) return;
+    const to = a.getAttribute('href').replace(/^https?:\/\/t\.me\//, '');
+    const zone = a.closest('header') ? 'header' : a.closest('footer') ? 'footer' : (a.closest('section[id]') || {}).id || (a.closest('.lightbox') ? 'lightbox' : 'page');
+    track('telegram_click', { to, place: zone });
+  }, true);
   const ICON_ZOOM = '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const ICON_ARROW = '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const ICON_QUOTE = '<svg class="rv-q" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.6 6C6.5 7.3 4.5 10 4.5 13.6V18h5.6v-5.4H7.3c.1-2 1.3-3.6 3.3-4.5L9.6 6Zm9.3 0c-3.1 1.3-5.1 4-5.1 7.6V18h5.6v-5.4h-2.8c.1-2 1.3-3.6 3.3-4.5L18.9 6Z"/></svg>';
@@ -332,7 +380,7 @@
         <span class="w-badge">${t('works.video')}</span>
         <span class="w-info">${title ? `<span>${esc(title)}</span>` : ''}<span class="w-zoom">${ICON_ZOOM}</span></span>`;
     } else {
-      el.innerHTML = `<img src="${esc(item.src)}" alt="${esc(title)}" ${grid ? 'loading="lazy"' : ''} decoding="async" draggable="false">
+      el.innerHTML = `<img src="${esc(thumb(item.src))}" alt="${esc(title)}" ${grid ? 'loading="lazy"' : ''} decoding="async" draggable="false">
         <span class="w-info">${title ? `<span>${esc(title)}</span>` : ''}<span class="w-zoom">${ICON_ZOOM}</span></span>`;
     }
     return el;
@@ -428,7 +476,7 @@
       ? `<div class="cr-dots">${items.map((_, i) => `<button type="button" aria-label="${i + 1} / ${items.length}"></button>`).join('')}</div>` : '';
     box.innerHTML = `
       <div class="cr-text">
-        <p class="cr-eyebrow" style="--d:.15s"><img src="assets/logo.webp" alt="" width="22" height="22">${esc(t('cards.eyebrow'))}</p>
+        <p class="cr-eyebrow" style="--d:.15s"><img src="assets/logo-128.webp" alt="" width="22" height="22">${esc(t('cards.eyebrow'))}</p>
         <h3 class="cr-title"><span style="--d:.4s">${esc(t('cards.l1'))}</span><span class="cr-it" style="--d:.6s">${esc(t('cards.l2'))}</span></h3>
         <p class="cr-sub" style="--d:.8s">${esc(t('cards.sub'))}</p>
         <div class="cr-actions" style="--d:1s">
@@ -439,7 +487,7 @@
       <div class="cr-scene">
         <span class="cr-shadow" aria-hidden="true"></span>
         <div class="cr-tilt"><div class="cr-float">
-          <button type="button" class="cr-card"><img src="${esc(items[0].src)}" alt="" decoding="async" draggable="false"><span class="cr-sheen" aria-hidden="true"></span></button>
+          <button type="button" class="cr-card"><img src="${esc(thumb(items[0].src))}" alt="" decoding="async" draggable="false"><span class="cr-sheen" aria-hidden="true"></span></button>
         </div></div>
         <p class="cr-caption"></p>
       </div>`;
@@ -452,7 +500,7 @@
     const show = (i) => {
       idx = (i + items.length) % items.length;
       const it = items[idx], title = pick(it, 'title');
-      img.src = it.src; img.alt = title;
+      img.src = thumb(it.src); img.alt = title;
       cap.textContent = title;
       card.setAttribute('aria-label', `${t('cards.open')}: ${title || idx + 1}`);
       $$('.cr-dots button', box).forEach((d, k) => d.classList.toggle('on', k === idx));
@@ -516,6 +564,7 @@
   function selectCat(id, { scroll = false } = {}) {
     if (id === curCat && !scroll) return;
     curCat = id;
+    track('category_open', { category: id });
     $$('.tab', tabs).forEach((b) => b.setAttribute('aria-selected', String(b.dataset.cat === id)));
     moveIndicator();
     swapStage();
@@ -535,6 +584,7 @@
   function setView(v) {
     view = v;
     store.set('spectre-view', v);
+    track('view_mode', { mode: v });
     $$('#viewToggle button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
     swapStage();
   }
@@ -554,6 +604,8 @@
 
   function openLightbox(items, index) {
     lbItems = items; lbIndex = index; lbReturn = document.activeElement;
+    const it0 = items[index] || {};
+    track('work_open', { category: it0.cat, work: (it0.src || pick(it0, 'title') || '').split('/').pop() });
     Object.values(marquees).flat().forEach((m) => m && (m.target = 0));
     renderLightbox();
     lb.classList.add('open');
@@ -693,6 +745,7 @@
     if (!first && l === lang) return;
     lang = l;
     store.set('spectre-lang', l);
+    if (!first) track('language', { lang: l });
     applyTexts();
     renderTicker();
     renderHeroCats();
