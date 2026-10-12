@@ -50,6 +50,7 @@ window.SPECTRE_WORKS = [
   { cat: "cards", src: "works/cards/onitsuka-mexico-66.webp", title: "Onitsuka Tiger · Mexico 66" },
 
   /* ---------------- АНИМАЦИИ ---------------- */
+  { cat: "animations", src: "works/animations/spectre-black-card.mp4", poster: "works/animations/spectre-black-card-poster.webp", title: "SPECTRE BLACK — металлическая карта", title_en: "SPECTRE BLACK — metal card" },
   { cat: "animations", src: "works/animations/karamelnye-ceny.mp4", poster: "works/animations/karamelnye-ceny-poster.webp" },
   { cat: "animations", src: "works/animations/glitch.mp4",          poster: "works/animations/glitch-poster.webp" },
   { cat: "animations", src: "works/animations/lavina.mp4",          poster: "works/animations/lavina-poster.webp" },
