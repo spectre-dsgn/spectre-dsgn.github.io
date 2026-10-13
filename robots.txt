@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /negroni/
 
 Sitemap: https://spectre-dsgn.github.io/sitemap.xml

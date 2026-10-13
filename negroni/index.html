@@ -1,0 +1,1097 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Negroni Aperitivo Bar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;0,800;1,500;1,700;1,800&family=Onest:wght@400;500;600;700&family=Unbounded:wght@600;800&display=swap">
+<style>
+/* Layout: menu-card poster. Cream paper, brand-red checker bands between chapters, big warm photos, one red action per screen. */
+:root{
+  --paper:#FDF7EC;        /* paper of the client's printed menu */
+  --paper-2:#F5E9D6;
+  --ink:#231D1B;          /* graphite */
+  --ink-soft:#5F534D;
+  --line:rgba(35,29,27,.14);
+  --red:#E2000E;          /* sampled from the client's logo */
+  --red-text:#C2000C;
+  --on-red:#FFFFFF;
+  --bordeaux:#5E0D18;
+  --on-bordeaux:#FBEFE3;
+  --orange:#E5562A;
+  --field:#FFFFFF;
+  --focus:#1F5FD1;
+  --ok:#2F6B3B;
+  --shadow:0 18px 40px -24px rgba(60,20,10,.45);
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-head:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-ui:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:14px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#16110F;--paper-2:#211816;--ink:#F6ECDF;--ink-soft:#C2B3A6;--line:rgba(246,236,223,.16);
+  --red:#E2000E;--red-text:#FF6A5C;--on-red:#FFFFFF;--bordeaux:#3B0A11;--on-bordeaux:#FBEFE3;--orange:#FF7A4D;
+  --field:#231B19;--focus:#8AB4FF;--ok:#7CC489;--shadow:0 18px 40px -24px rgba(0,0,0,.8);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#16110F;--paper-2:#211816;--ink:#F6ECDF;--ink-soft:#C2B3A6;--line:rgba(246,236,223,.16);
+  --red:#E2000E;--red-text:#FF6A5C;--on-red:#FFFFFF;--bordeaux:#3B0A11;--on-bordeaux:#FBEFE3;--orange:#FF7A4D;
+  --field:#231B19;--focus:#8AB4FF;--ok:#7CC489;--shadow:0 18px 40px -24px rgba(0,0,0,.8);color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:16px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+img{max-width:100%;display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- device frame (presenter "mobile" mode) ---------- */
+#device{position:relative}
+#app{container:app/inline-size;min-height:100vh;background:var(--paper)}
+body.frame{background:#2A2321}
+body.frame #stage{min-height:100vh;display:grid;place-items:center;padding-block:24px;padding-inline:16px}
+body.frame #device{width:390px;max-width:100%;height:min(844px,calc(100vh - 48px));border:10px solid #0E0B0A;border-radius:46px;overflow:hidden;transform:translateZ(0);box-shadow:0 40px 80px -30px rgba(0,0,0,.7)}
+body.frame #app{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+body.frame .frame-cap{display:block}
+.frame-cap{display:none;color:#CDBFB4;font:500 13px/1.4 var(--f-ui);text-align:center;margin-top:12px}
+
+/* ---------- shared ---------- */
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:clamp(16px,4cqi,48px)}
+.eyebrow{font:600 12px/1.2 var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--red-text)}
+.h1,.h2,.h3{font-family:var(--f-head);font-weight:800;letter-spacing:-.01em;text-wrap:balance;margin:0}
+.h2{font-size:clamp(2rem,4.6cqi,3.4rem);line-height:1.02}
+.h3{font-size:1.6rem;line-height:1.1}
+em.it{font-style:italic;font-weight:700}
+.lead{font-size:1.125rem;color:var(--ink-soft);max-width:60ch;margin:0}
+.stamp{font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.price{font-family:var(--f-display);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.checker{height:28px;background:repeating-conic-gradient(var(--red) 0 25%,var(--paper) 0 50%) 0 0/28px 28px}
+.checker.sm{height:14px;background-size:14px 14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:48px;padding:.75em 1.4em;border-radius:999px;border:2px solid transparent;font-weight:600;font-size:1rem;text-decoration:none;line-height:1.1;transition:transform .15s ease,background-color .15s ease,color .15s ease;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-red{background:var(--red);color:var(--on-red)}
+.btn-red:hover{background:color-mix(in srgb,var(--red) 86%,#000)}
+.btn-line{border-color:currentColor;background:transparent}
+.btn-line:hover{background:color-mix(in srgb,currentColor 10%,transparent)}
+.btn-ghost{background:transparent;padding-inline:.4em;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+.btn-sm{min-height:44px;padding:.6em 1.05em;font-size:.95rem}
+.btn[disabled]{opacity:.55;pointer-events:none}
+.tag{display:inline-flex;align-items:center;gap:.35em;font:600 11px/1 var(--f-display);text-transform:uppercase;letter-spacing:.08em;padding:.5em .7em;border-radius:6px;background:var(--paper-2);color:var(--ink-soft)}
+.tag.red{background:var(--red);color:var(--on-red)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+section{scroll-margin-top:84px}
+
+/* ---------- header ---------- */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:20px;min-height:72px}
+.logo{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;text-decoration:none}
+.logo img{width:52px;height:52px}
+.logo span{font:800 13px/1.05 var(--f-display);text-transform:uppercase;letter-spacing:.04em;color:var(--red-text);text-align:left}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--paper-2);gap:2px}
+.seg button{border:0;background:transparent;min-height:40px;padding:0 14px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--ink-soft)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.nav{display:flex;gap:4px;margin-left:auto}
+.nav button{border:0;background:none;padding:10px 12px;font-weight:500;border-radius:8px;color:var(--ink)}
+.nav button:hover,.nav button[aria-current="page"]{color:var(--red-text)}
+.nav button[aria-current="page"]{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+.hdr-m{display:none;margin-left:auto;gap:8px;align-items:center}
+.chip-city{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--field);font-weight:600}
+.chip-city svg,.icon-btn svg{width:18px;height:18px}
+.icon-btn{width:46px;height:46px;border-radius:999px;border:1.5px solid var(--line);background:var(--field);display:grid;place-items:center}
+
+/* ---------- hero ---------- */
+.hero{position:relative;color:#FFF7EC;min-height:clamp(560px,64cqi,760px);display:flex;align-items:flex-end;overflow:hidden;isolation:isolate}
+.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transform:scale(1.04);animation:heroIn 1.6s cubic-bezier(.2,.7,.2,1) both}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(28,8,6,.86) 0%,rgba(28,8,6,.55) 45%,rgba(28,8,6,.05) 80%),linear-gradient(0deg,rgba(28,8,6,.7),transparent 45%)}
+@keyframes heroIn{from{transform:scale(1.12)}to{transform:scale(1.04)}}
+.hero .wrap{width:100%;padding-block:72px 56px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:end}
+.hero h1{font-family:var(--f-head);font-weight:800;font-size:clamp(3rem,8cqi,6.6rem);line-height:.92;letter-spacing:-.02em;margin:14px 0 20px;max-width:12ch;text-wrap:balance}
+.hero h1 em{font-style:italic;color:#FFB59A;display:block}
+.hero p{font-size:1.15rem;max-width:44ch;margin:0 0 28px;color:#F3E3D3}
+.hero .eyebrow{color:#FFC2A8}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.hero .btn-line{color:#FFF7EC}
+.hero-card{width:300px;padding:22px;border-radius:var(--r);background:rgba(253,247,236,.96);color:#231D1B}
+.hero-card .row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid rgba(35,29,27,.12);font-size:.95rem}
+.hero-card .row:first-of-type{border-top:0}
+.hero-card .k{font:600 10px/1.6 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:#7A6B63;min-width:64px}
+.hero-card .cityname{font:800 1.9rem/1 var(--f-head);margin:0 0 6px}
+.hero-card .lnk{color:#C2000C;font-weight:600;background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:3px}
+.kiss{position:absolute;right:clamp(16px,4cqi,48px);top:28px;transform:rotate(6deg);font:800 13px/1.15 var(--f-display);text-transform:uppercase;color:#fff;background:var(--red);padding:10px 14px;border-radius:6px;letter-spacing:.04em}
+
+/* ---------- sections ---------- */
+.sec{padding-block:clamp(56px,8cqi,104px)}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:36px;flex-wrap:wrap}
+.sec-head>div{display:grid;gap:12px;min-width:0}
+
+/* locations */
+.locs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4cqi,32px)}
+.loc{display:flex;flex-direction:column;min-width:0}
+.loc .ph{position:relative;aspect-ratio:4/5;border-radius:var(--r);overflow:hidden;max-width:100%}
+.loc .ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.loc:hover .ph img{transform:scale(1.04)}
+.loc .ph .tag{position:absolute;left:14px;top:14px}
+.loc .city{font:800 clamp(2.2rem,4cqi,3rem)/1 var(--f-head);margin:20px 0 10px}
+.loc dl{margin:0 0 18px;display:grid;gap:6px}
+.loc dl div{display:flex;gap:10px}
+.loc dt{font:600 10px/2.1 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);min-width:58px}
+.loc dd{margin:0}
+.loc .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.loc.is-current .ph{outline:3px solid var(--red);outline-offset:4px}
+
+/* about */
+.about{background:var(--paper-2)}
+.about-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,6cqi,96px);align-items:center}
+.about-grid p{margin:0 0 16px;max-width:58ch}
+.quote{font:italic 800 clamp(2.2rem,5cqi,4rem)/.98 var(--f-head);color:var(--red-text);margin:0 0 8px;text-wrap:balance}
+.quote-tr{color:var(--ink-soft);margin:0 0 28px}
+.illu{background:#FDF7EC;border-radius:var(--r);padding:28px 20px 0;overflow:hidden}
+.illu img{width:100%}
+.illu .lemons{margin:20px -20px 0;height:120px;width:calc(100% + 40px);max-width:none;object-fit:cover}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+.facts span{font:600 12px/1.4 var(--f-display);text-transform:uppercase;letter-spacing:.06em}
+
+/* menu */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--line);background:transparent;font-weight:600}
+.tabs button[aria-selected="true"]{background:var(--red);border-color:var(--red);color:var(--on-red)}
+.menu-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(24px,5cqi,72px)}
+.mgroup{margin-bottom:40px;break-inside:avoid}
+.mgroup h3{font:800 1.5rem/1.1 var(--f-head);margin:0 0 4px}
+.mgroup .note{color:var(--ink-soft);font-size:.92rem;margin:0 0 10px}
+.mi{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;padding:14px 0;border-bottom:1px dashed var(--line)}
+.mi.has-ph{grid-template-columns:72px minmax(0,1fr) auto}
+.mi .ph{width:72px;height:72px;border-radius:10px;object-fit:cover;grid-row:span 2}
+.mi .nm{font:800 13px/1.3 var(--f-display);text-transform:uppercase;letter-spacing:.02em;color:var(--red-text);min-width:0}
+.mi .nm small{display:block;font:500 12px/1.4 var(--f-ui);text-transform:none;letter-spacing:0;color:var(--ink-soft);margin-top:2px}
+.mi .ds{grid-column:1/2;font-size:.94rem;color:var(--ink);margin:0;min-width:0}
+.mi.has-ph .ds{grid-column:2/3}
+.mi .pr{grid-row:1;grid-column:-2/-1;text-align:right}
+.mi .vol{display:block;font:500 12px/1.4 var(--f-ui);color:var(--ink-soft);text-align:right}
+.mi .tag{margin-left:6px;vertical-align:2px}
+.menu-foot{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;padding:20px 0 0;border-top:2px solid var(--ink);margin-top:8px}
+.menu-foot p{margin:0;color:var(--ink-soft);font-size:.92rem;max-width:60ch}
+.preview-list{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 clamp(24px,5cqi,72px)}
+.menu-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.48fr);gap:clamp(24px,5cqi,72px);align-items:start}
+.menu-hero .shot{border-radius:var(--r);overflow:hidden;aspect-ratio:4/5;position:sticky;top:96px}
+.menu-hero .shot img{width:100%;height:100%;object-fit:cover}
+
+/* events */
+.evs{display:grid;gap:0}
+.ev{display:grid;grid-template-columns:120px minmax(0,220px) minmax(0,1fr) auto;gap:24px;align-items:center;padding:22px 0;border-top:1px solid var(--line)}
+.ev:last-child{border-bottom:1px solid var(--line)}
+.ev .date{display:grid;gap:2px}
+.ev .date b{font:800 3rem/.9 var(--f-display);color:var(--red-text);font-variant-numeric:tabular-nums}
+.ev .date span{font-weight:600;font-size:.92rem}
+.ev .date small{color:var(--ink-soft);font-size:.85rem}
+.ev .ph{aspect-ratio:3/2;border-radius:10px;overflow:hidden;max-width:100%}
+.ev .ph img{width:100%;height:100%;object-fit:cover}
+.ev h3{font:800 1.55rem/1.1 var(--f-head);margin:6px 0 6px}
+.ev p{margin:0;color:var(--ink-soft);max-width:56ch}
+.ev .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.empty{padding:40px clamp(20px,4cqi,48px);border-radius:var(--r);background:var(--paper-2);display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px;align-items:center}
+.empty .glass{width:84px;height:84px;border-radius:50%;background:var(--red);display:grid;place-items:center}
+.empty .glass svg{width:42px;height:42px;color:#fff}
+.empty h3{font:800 1.6rem/1.1 var(--f-head);margin:0 0 6px}
+.empty p{margin:0 0 14px;color:var(--ink-soft);max-width:52ch}
+
+/* gallery */
+.gal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:clamp(140px,17cqi,240px);gap:10px}
+.gal figure{margin:0;border-radius:10px;overflow:hidden;min-width:0}
+.gal img{width:100%;height:100%;object-fit:cover}
+.gal .t{grid-row:span 2}
+.gal .w{grid-column:span 2}
+
+/* contacts */
+.contacts{background:var(--bordeaux);color:var(--on-bordeaux)}
+.contacts .eyebrow{color:#FFB59A}
+.c-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(32px,6cqi,96px)}
+.c-main .addr{font:800 clamp(2rem,4.4cqi,3.2rem)/1.02 var(--f-head);margin:14px 0 24px;text-wrap:balance}
+.c-rows{display:grid;gap:0;margin-bottom:28px}
+.c-rows div{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding:14px 0;border-top:1px solid rgba(251,239,227,.18)}
+.c-rows dt{font:600 10px/1.4 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:#E7C9B6;min-width:92px}
+.c-rows dd{margin:0;font-size:1.05rem;font-weight:500}
+.copy{border:1px solid rgba(251,239,227,.4);background:transparent;color:inherit;border-radius:999px;padding:6px 12px;font-size:.85rem;min-height:36px}
+.c-actions{display:flex;flex-wrap:wrap;gap:10px}
+.contacts .btn-line{color:var(--on-bordeaux)}
+.other{display:grid;gap:0;align-content:start}
+.other button{all:unset;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;padding:18px 0;border-top:1px solid rgba(251,239,227,.18)}
+.other button:focus-visible{outline:3px solid #8AB4FF;outline-offset:2px}
+.other b{font:800 1.6rem/1 var(--f-head)}
+.other span{color:#E7C9B6;font-size:.95rem;grid-column:1}
+.other i{font-style:normal;grid-row:span 2;align-self:center;font-weight:600;text-decoration:underline;text-underline-offset:4px}
+
+/* footer */
+.ftr{background:#120D0C;color:#CDBFB4;padding-block:40px 120px;font-size:.92rem}
+.ftr .wrap{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;justify-content:space-between}
+.ftr .kk{font:800 clamp(1.4rem,3cqi,2.2rem)/1 var(--f-display);color:#FF3B30;text-transform:uppercase}
+.ftr p{margin:0}
+.ftr .warn{flex-basis:100%;border-top:1px solid rgba(255,255,255,.12);padding-top:18px;color:#9E8F86}
+
+/* ---------- page heads (inner views) ---------- */
+.phead{padding-block:clamp(36px,6cqi,72px) 28px}
+.phead .h1{font-size:clamp(2.6rem,6.4cqi,5rem);line-height:.95;margin:12px 0 14px}
+.crumbs{display:flex;gap:8px;align-items:center;font-size:.92rem;color:var(--ink-soft)}
+.crumbs button{all:unset;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.crumbs button:focus-visible{outline:3px solid var(--focus)}
+.pick{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-top:20px}
+.pick label{font-weight:600;font-size:.95rem}
+
+/* location page */
+.l-hero{position:relative;color:#FFF7EC;isolation:isolate;min-height:clamp(380px,42cqi,560px);display:flex;align-items:flex-end}
+.l-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.l-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(28,8,6,.85),rgba(28,8,6,.1) 65%)}
+.l-hero .wrap{width:100%;padding-block:40px}
+.l-hero .h1{font-size:clamp(3rem,8cqi,6.4rem);line-height:.9;margin:10px 0 0}
+.l-hero .crumbs{color:#F3E3D3}
+.l-body{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:clamp(32px,5cqi,72px);padding-block:48px}
+.l-body .lead{color:var(--ink);font-size:1.2rem;margin-bottom:12px}
+.infobox{border:2px solid var(--ink);border-radius:var(--r);padding:24px;align-self:start;position:sticky;top:96px;background:var(--paper)}
+.infobox dl{margin:0 0 18px;display:grid}
+.infobox dl div{padding:12px 0;border-top:1px solid var(--line);display:grid;gap:2px}
+.infobox dl div:first-child{border-top:0;padding-top:0}
+.infobox dt{font:600 10px/1.4 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.infobox dd{margin:0;font-weight:500;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.infobox .copy{border-color:var(--line)}
+.infobox .btn{width:100%}
+.infobox .links{display:grid;gap:4px;margin-top:12px}
+.infobox .links a{font-weight:600;color:var(--red-text);padding:8px 0}
+.l-section{margin-top:56px}
+.l-section>.h2{font-size:clamp(1.8rem,3.6cqi,2.6rem);margin-bottom:20px}
+
+/* ---------- booking ---------- */
+.bk{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:clamp(28px,5cqi,72px);padding-block:32px 64px;align-items:start}
+.progress{display:grid;gap:10px;margin-bottom:28px}
+.progress .bar{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.progress .bar i{height:6px;border-radius:3px;background:var(--line)}
+.progress .bar i.on{background:var(--red)}
+.progress .lbl{display:flex;justify-content:space-between;gap:12px;font-size:.92rem;color:var(--ink-soft);flex-wrap:wrap}
+.progress .lbl b{color:var(--ink)}
+.bk h2:focus{outline:none}
+.bk h2{font:800 clamp(2rem,4.4cqi,3rem)/1 var(--f-head);margin:0 0 8px;text-wrap:balance}
+.bk .sub{color:var(--ink-soft);margin:0 0 28px;max-width:56ch}
+.fld{display:grid;gap:8px;margin-bottom:26px;border:0;padding:0;min-width:0}
+.fld>legend,.fld>label{font-weight:600;padding:0;margin-bottom:8px}
+.fld .hint{font-size:.9rem;color:var(--ink-soft);margin:0}
+.err{color:var(--red-text);font-size:.92rem;font-weight:600;margin:0;display:flex;gap:6px;align-items:flex-start}
+.err::before{content:"!";flex:none;width:18px;height:18px;border-radius:50%;background:var(--red-text);color:var(--paper);font:800 12px/18px var(--f-ui);text-align:center;margin-top:1px}
+.opts{display:grid;gap:10px}
+.opt{position:relative;display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:10px 16px 10px 10px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--field);cursor:pointer;min-height:84px}
+.opt img{width:64px;height:64px;border-radius:10px;object-fit:cover}
+.opt b{font:800 1.35rem/1.1 var(--f-head);display:block}
+.opt span{font-size:.92rem;color:var(--ink-soft)}
+.opt input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.opt .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--line)}
+.opt:has(input:checked){border-color:var(--red);box-shadow:0 0 0 1.5px var(--red)}
+.opt:has(input:checked) .dot{border:7px solid var(--red)}
+.opt:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:3px}
+.venue{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:var(--r);background:var(--paper-2);font-size:.95rem}
+.venue svg{flex:none;width:20px;height:20px;color:var(--red-text)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:48px;min-width:64px;padding:6px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--field);font-weight:600;display:grid;place-items:center;line-height:1.15;font-variant-numeric:tabular-nums}
+.chip small{display:block;font-weight:500;font-size:.78rem;color:var(--ink-soft)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip[aria-pressed="true"] small{color:inherit;opacity:.8}
+.chip:disabled{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+.times{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
+.times.dates{grid-template-columns:repeat(7,minmax(0,1fr))}
+.dateother{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.inp{width:100%;min-height:52px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--field);font-size:1.05rem}
+.inp:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 35%,transparent)}
+.inp[aria-invalid="true"]{border-color:var(--red-text)}
+input[type=date].inp{width:auto;min-width:200px}
+textarea.inp{min-height:110px;resize:vertical}
+.tel{display:flex;align-items:stretch}
+.tel span{display:grid;place-items:center;padding:0 14px;border:1.5px solid var(--line);border-right:0;border-radius:12px 0 0 12px;background:var(--paper-2);font-weight:600;font-variant-numeric:tabular-nums}
+.tel .inp{border-radius:0 12px 12px 0;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.stepper{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;background:var(--field)}
+.stepper button{width:52px;height:52px;border:0;background:none;border-radius:999px;font-size:1.5rem;font-weight:500}
+.stepper button:disabled{opacity:.3}
+.stepper output{min-width:56px;text-align:center;font:800 1.5rem/1 var(--f-display);font-variant-numeric:tabular-nums}
+.guests-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.group{border-radius:var(--r);background:var(--bordeaux);color:var(--on-bordeaux);padding:22px;display:grid;gap:16px;margin-top:6px}
+.group h3{font:800 1.5rem/1.1 var(--f-head);margin:0}
+.group p{margin:0;color:#F0D8C8}
+.group .inp{background:#FFF8F0;color:#231D1B;border-color:transparent;max-width:160px}
+.group .chip{background:transparent;border-color:rgba(251,239,227,.4);color:inherit}
+.group .chip[aria-pressed="true"]{background:#FBEFE3;color:#3B0A11;border-color:#FBEFE3}
+.group label{font-weight:600}
+.group .err{color:#FFC9BF}
+.group .err::before{background:#FFC9BF;color:#3B0A11}
+.counter{font-size:.85rem;color:var(--ink-soft);text-align:right}
+.bk-nav{display:flex;gap:12px;justify-content:space-between;align-items:center;margin-top:12px;padding-top:24px;border-top:1px solid var(--line)}
+.bk-nav .btn-red{min-width:200px}
+.review{display:grid;border:2px solid var(--ink);border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+.review>div{display:grid;grid-template-columns:140px minmax(0,1fr) auto;gap:6px 16px;padding:16px 20px;border-top:1px solid var(--line);align-items:baseline}
+.review>div:first-child{border-top:0}
+.review dt{font:600 10px/1.8 var(--f-display);text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft)}
+.review dd{margin:0;font-weight:500;min-width:0;overflow-wrap:anywhere}
+.review button{border:0;background:none;color:var(--red-text);font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:6px}
+.notice{display:flex;gap:12px;padding:16px 18px;border-radius:var(--r);background:var(--paper-2);font-size:.95rem;margin-bottom:8px}
+.notice svg{flex:none;width:22px;height:22px;color:var(--red-text);margin-top:1px}
+.aside{position:sticky;top:96px;border-radius:var(--r);overflow:hidden;background:var(--paper-2)}
+.aside img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.aside .in{padding:20px 22px 24px}
+.aside h3{font:800 1.4rem/1.1 var(--f-head);margin:0 0 12px}
+.aside dl{margin:0;display:grid;gap:10px;font-size:.95rem}
+.aside dl div{display:grid;grid-template-columns:90px minmax(0,1fr);gap:8px}
+.aside dt{color:var(--ink-soft)}
+.aside dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.aside .hint{margin:16px 0 0;font-size:.88rem;color:var(--ink-soft)}
+
+/* success */
+.ok{padding-block:clamp(40px,7cqi,88px) 80px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:clamp(32px,6cqi,96px);align-items:start}
+.ok .seal{width:96px;height:96px;border-radius:50%;background:var(--red);display:grid;place-items:center;margin-bottom:24px;animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+.ok .seal svg{width:48px;height:48px;color:#fff}
+@keyframes pop{from{transform:scale(.6);opacity:.2}to{transform:none;opacity:1}}
+.ok h1{font:800 clamp(2.6rem,6cqi,4.4rem)/.95 var(--f-head);margin:0 0 16px}
+.ok .msg{font-size:1.25rem;max-width:44ch;margin:0 0 28px}
+.status{display:inline-flex;align-items:center;gap:8px;font-weight:600;padding:8px 14px;border-radius:999px;background:var(--paper-2);margin-bottom:20px}
+.status i{width:10px;height:10px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px color-mix(in srgb,var(--orange) 25%,transparent)}
+
+/* ---------- mobile bottom bar + sheets ---------- */
+.mbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:45;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--paper) 96%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);gap:10px;align-items:center}
+.mbar .btn{flex:1}
+.mbar .where{font-size:.8rem;line-height:1.25;color:var(--ink-soft);min-width:0}
+.mbar .where b{display:block;color:var(--ink);font-size:.95rem}
+.scrim{position:fixed;inset:0;z-index:60;background:rgba(20,10,8,.5);display:flex;align-items:flex-end;justify-content:center;animation:fade .2s ease both}
+@keyframes fade{from{opacity:0}}
+.sheet{width:100%;max-width:560px;background:var(--paper);border-radius:22px 22px 0 0;padding:10px 16px calc(24px + env(safe-area-inset-bottom,0px));animation:up .28s cubic-bezier(.2,.8,.2,1) both;max-height:90%;overflow:auto}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+.sheet .grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:4px auto 14px}
+.sheet h2{font:800 1.8rem/1.1 var(--f-head);margin:0 0 6px}
+.sheet p.s{color:var(--ink-soft);margin:0 0 16px}
+.sheet .opts{margin-bottom:8px}
+.sheet .navlist{display:grid;margin:8px 0 18px}
+.sheet .navlist button{all:unset;cursor:pointer;font:800 1.9rem/1 var(--f-head);padding:14px 0;border-bottom:1px solid var(--line)}
+.sheet .navlist button:focus-visible{outline:3px solid var(--focus)}
+
+/* ---------- presenter layer (not part of guest UI) ---------- */
+.dev-tab{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:90;writing-mode:vertical-rl;rotate:180deg;background:#2B2523;color:#F2E6DA;border:0;border-radius:0 10px 10px 0;padding:16px 9px;font:600 12px/1 var(--f-ui);letter-spacing:.06em;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.dev{position:fixed;inset:0 auto 0 0;z-index:100;width:min(440px,94vw);background:#211B19;color:#EDE2D6;overflow:auto;padding:24px 22px 40px;box-shadow:20px 0 60px rgba(0,0,0,.4);font-size:14px;line-height:1.5;animation:slide .25s ease both}
+@keyframes slide{from{transform:translateX(-30px);opacity:.3}}
+.dev h2{font:700 20px/1.2 var(--f-ui);margin:0 0 4px;color:#fff}
+.dev h3{font:600 11px/1.4 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:#FF9A7A;margin:26px 0 10px}
+.dev p{margin:0 0 8px;color:#CDBFB4}
+.dev .x{position:absolute;right:14px;top:14px;width:40px;height:40px;border-radius:50%;border:1px solid #4A403C;background:none;color:#fff;font-size:20px}
+.dev .jump{display:grid;gap:4px}
+.dev .jump button{text-align:left;border:0;background:#2E2624;color:#F2E6DA;padding:10px 12px;border-radius:8px;display:flex;gap:10px}
+.dev .jump button:hover{background:#3A302D}
+.dev .jump b{color:#FF9A7A;font-variant-numeric:tabular-nums;min-width:26px}
+.dev .seg{background:#2E2624}
+.dev .seg button{color:#CDBFB4}
+.dev .seg button[aria-pressed="true"]{background:#F2E6DA;color:#211B19}
+.dev ul{margin:0;padding-left:18px;display:grid;gap:6px;color:#CDBFB4}
+.dev li b{color:#fff;font-weight:600}
+.dev a{color:#FFB59A}
+.dev .ok-dot,.dev .demo-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.dev .ok-dot{background:#7CC489}.dev .demo-dot{background:#FFB547}
+@media (max-width:700px){.dev-tab{font-size:0;padding:12px 6px}.dev-tab::after{content:"i";font:700 14px/1 var(--f-ui)}}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:80;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-weight:600;font-size:.92rem;animation:fade .2s ease both}
+
+/* ---------- responsive (container-based so the presenter phone frame is real) ---------- */
+@container app (max-width:1080px){
+  .hdr .wrap{gap:12px}
+  .nav button{padding:10px 8px}
+  .logo span{display:none}
+  .ev{grid-template-columns:100px minmax(0,180px) minmax(0,1fr);}
+  .ev .go{grid-column:3}
+}
+@container app (max-width:900px){
+  .seg.hdr-seg,.nav,.hdr .cta{display:none}
+  .hdr-m{display:flex}
+  .hero .wrap{grid-template-columns:minmax(0,1fr)}
+  .hero-card{width:auto;max-width:420px}
+  .kiss{display:none}
+  .locs{grid-template-columns:minmax(0,1fr)}
+  .loc{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr);gap:0 24px}
+  .loc .ph{grid-row:span 4;aspect-ratio:4/5}
+  .about-grid,.c-grid,.menu-hero,.l-body,.bk,.ok{grid-template-columns:minmax(0,1fr)}
+  .menu-hero .shot{display:none}
+  .infobox,.aside{position:static}
+  .gal{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mbar{display:flex}
+  .ftr{padding-bottom:140px}
+  #app.no-mbar .mbar{display:none}
+}
+@container app (max-width:640px){
+  .times.dates{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .hdr .wrap{min-height:64px}
+  .logo img{width:46px;height:46px}
+  .hero{min-height:0}
+  .hero .wrap{padding-block:120px 28px;gap:22px}
+  .hero h1{font-size:clamp(2.7rem,13cqi,3.6rem)}
+  .hero p{font-size:1.05rem;margin-bottom:22px}
+  .hero .ctas .btn{flex:1 1 100%}
+  .hero::after{background:linear-gradient(0deg,rgba(28,8,6,.92) 0%,rgba(28,8,6,.7) 50%,rgba(28,8,6,.25) 100%)}
+  .loc{display:flex}
+  .loc .ph{aspect-ratio:16/11}
+  .loc .acts .btn{flex:1 1 auto}
+  .menu-cols,.preview-list{grid-template-columns:minmax(0,1fr)}
+  .ev{grid-template-columns:72px minmax(0,1fr);gap:14px 16px;align-items:start}
+  .ev .ph{grid-column:1/-1;grid-row:1}
+  .ev .date b{font-size:2.3rem}
+  .ev .go{grid-column:1/-1}
+  .ev .go .btn{width:100%}
+  .empty{grid-template-columns:minmax(0,1fr)}
+  .gal{grid-auto-rows:140px}
+  .gal .w{grid-column:span 2}
+  .review>div{grid-template-columns:minmax(0,1fr) auto}
+  .review dt{grid-column:1/-1}
+  .bk{padding-top:20px}
+  .bk-nav{position:fixed;left:0;right:0;bottom:0;z-index:45;margin:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--paper) 96%,transparent);backdrop-filter:blur(10px)}
+  .bk-nav .btn-red{flex:1;min-width:0}
+  .bk-pad{height:80px}
+  .ok .acts .btn{flex:1 1 100%}
+  .phead .h1{font-size:clamp(2.4rem,12cqi,3.4rem)}
+  .c-rows dt{min-width:100%}
+}
+</style>
+
+<div id="stage">
+  <div id="device"><div id="app" aria-live="off"></div></div>
+  <p class="frame-cap">Мобільний вигляд 390 px · прокручуйте всередині телефона</p>
+</div>
+<button class="dev-tab" id="devTab" type="button">Нотатки для презентації</button>
+<div id="devLayer"></div>
+
+<script>
+/* ======================== DATA ======================== */
+/* Verified: addresses & phones — client's “Наші локації та контакти” file (Linktree); hours — Instagram bio + Linktree;
+   menu — client's 2026 PDF menus for each city; delivery links — Linktree. */
+const CITIES = {
+  kyiv:{id:'kyiv',name:'Київ',loc:'у Києві',address:'вул. Ярославів Вал, 13',phone:'+38 066 043 82 03',tel:'+380660438203',
+    hours:'Щодня 15:00–23:00',img:'img/kyiv.jpg',
+    maps:'https://www.google.com/maps/search/?api=1&query=Negroni+Aperitivo+Bar+Ярославів+Вал+13+Київ',
+    pdf:'https://drive.google.com/file/d/1rNJ6m12MvbsveO0kH5cpoboKaoRf4mgF/view',
+    review:'https://www.google.com/search?q=Negroni+Aperitivo+Bar+Київ+відгуки',
+    delivery:null,
+    lead:'Ярославів Вал, старий центр Києва. Класику наливаємо з крана, твісти змішуємо при вас, а до келиха подаємо оливки Ночеллара, сир і гриловані артишоки.',
+    text:'Зайдіть після роботи на мінікоктейль або залишайтеся до закриття. Для компанії друзів радимо забронювати столик заздалегідь, особливо на п’ятницю й суботу.'},
+  odesa:{id:'odesa',name:'Одеса',loc:'в Одесі',address:'пров. Івана Луценка, 2',phone:'+38 066 733 07 07',tel:'+380667330707',
+    hours:'Щодня 15:00–23:00',img:'img/odesa.jpg',
+    maps:'https://www.google.com/maps/search/?api=1&query=Negroni+Aperitivo+Bar+Івана+Луценка+2+Одеса',
+    pdf:'https://drive.google.com/file/d/1zyfkjLqG7gjDINZ-De4akr0RawDn87Yj/view',
+    review:'https://www.google.com/search?q=Negroni+Aperitivo+Bar+Odesa+відгуки',
+    delivery:{label:'Доставка через BOND',url:'https://bond.delivery/restaurant/negroni/',hours:'15:00–22:00'},
+    lead:'Провулок Івана Луценка, 2. Негроні й спрітц, неаполітанська піца з печі та тарілка антипасті, яку ви збираєте самі.',
+    text:'Довгий одеський вечір найкраще починати з Venetian Spritz. Якщо не виходите з дому, замовте піцу й коктейлі через BOND.'},
+  lviv:{id:'lviv',name:'Львів',loc:'у Львові',address:'вул. Староєврейська, 40',phone:'+38 066 062 86 96',tel:'+380660628696',
+    hours:'Щодня 15:00–23:00',img:'img/lviv.jpg',
+    maps:'https://www.google.com/maps/search/?api=1&query=Negroni+Aperitivo+Bar+Староєврейська+40+Львів',
+    pdf:'https://drive.google.com/file/d/1eoxqEPStKv86OoOfS8FTCGi12uo7mmA9/view',
+    review:'https://www.google.com/search?q=Negroni+Aperitivo+Bar+Lviv+відгуки',
+    delivery:{label:'Доставка через Bolt Food',url:'https://food.bolt.eu/uk-UA/496-lviv/p/118161-negroni-aperitivo-bar',hours:'15:00–22:00'},
+    lead:'Староєврейська, 40, у старому місті. Негроні з крана, піца, міні-бургери й хот-доги для тих, хто прийшов голодним.',
+    text:'Зустріч із друзями, побачення чи келих після прогулянки середмістям: оберіть час, а адміністратор підбере столик.'}
+};
+const ORDER=['kyiv','odesa','lviv'];
+const INSTAGRAM='https://www.instagram.com/negroniaperitivobar/';
+
+const it=(n,d,v,p,o={})=>({n,d,v,p,...o});
+const DRINKS=[
+  {t:'Класика на крані',note:'Наливаємо з крана — швидко й завжди однаково.',items:[
+    it('Negroni','Джин, червоний вермут, біттер','120 мл',220,{img:'img/g-negroni.jpg',sig:1}),
+    it('Boulevardier','Бурбон, червоний вермут, біттер','120 мл',220),
+    it('Bicicletta 2.0','Мікс біттерів і аперитиво, маракуйя, ігристе вино','150 мл',240),
+    it('Americano','Біттер, червоний вермут, содова','120 мл',240),
+    it('Sbagliato','Біттер, червоний вермут, ігристе вино','150 мл',240),
+    it('Milanese G&T','Біттер, джин, тонік','150 мл',240),
+    it('Rosita','Текіла, червоний вермут, біттер','120 мл',240),
+    it('Aviation','Джин, лікер фіалки, лікер мараскіно, сік лимону, цукор','120 мл',280),
+    it('Clover Club','Джин, аперитив, сік лимону, сироп малини, вода з троянди','150 мл',280),
+    it('East Side','Джин, сік лимону, цукор, огірок, м’ята','150 мл',260),
+    it('Old Fashioned','Бурбон Maker’s Mark, цукор, біттер Ангостура','100 мл',280),
+    it('Whiskey Sour','Бурбон Maker’s Mark, сік лимону, цукор, біттер Ангостура, білок','150 мл',260),
+    it('Bloody Mary','Горілка, сік апельсина та лимона, bloody mary mix','150 мл',220)]},
+  {t:'Bevi bene, ridi spesso, ama molto',note:'Авторські твісти на Негроні.',items:[
+    it('Ukroni','Закарпатський кальвадос з копченою грушею, кордіал з «одеського чорного», Негроні Олд 1919','',220,{sig:1}),
+    it('Enzoni','Джин, верджус, бітер, сироп агави, виноград','120 мл',280),
+    it('Yuzu Negroni','Юдзу саке, лікер бергамот, білий вермут і бітер','120 мл',280),
+    it('6+4','Базиліковий джин, білий бітер, персиковий лікер, лайм','120 мл',280),
+    it('Porto Negroni','Оверпруф ром, мікс бітерів, портвейн, фалернум','120 мл',280,{sig:1}),
+    it('Tiki Negroni','Ананасовий ром, мікс вермутів і біттерів, сироп з малини, ананасова пінка','120 мл',280),
+    it('Japanese Negroni Sour','Ром з морською сіллю, мікс біттерів, пюре юдзу та ананаса, йогуртовий лікер, лимонний сік','150 мл',280)]},
+  {t:'Mini cocktails',note:'Маленька порція, щоб спробувати більше.',items:[
+    it('Tropic Negroni','Кокосовий і ананасовий ром, мікс вермутів, бітер, лікер пандан і бергамот','90 мл',180),
+    it('Summer Negroni','Грейпфрутовий джин, мікс вермутів, лікер троянди та персика','90 мл',180),
+    it('Yuzu Negroni','Юдзу саке, білий вермут і бітер, лікер бергамот','90 мл',180)]},
+  {t:'Спрітц',items:[
+    it('Limoncello Spritz','Лимончело, лимонний ром, тонік, ігристе вино','175 мл',150,{img:'img/g-glass.jpg',badge:'Спецціна',sig:1}),
+    it('Venetian Spritz','Аперитив, ігристе вино, оливка','175 мл',240,{img:'img/g-spritz.jpg',sig:1}),
+    it('Negroni Spritz','Аперитив, мікс біттерів, ігристе вино, тонік','175 мл',240),
+    it('Hugo','Бузиновий аперитив, ігристе вино, сік лайму, м’ята','175 мл',240)]},
+  {t:'Sour & highball',items:[
+    it('Everlasting Love','Джин Capriole бергамот, бузиновий лікер, сік лимону, цукор, ананасова пінка','150 мл',260),
+    it('Venetian Sour','Аперитив, джин, малина, йогуртовий лікер, сік лайму, вода троянд','120 мл',280),
+    it('Tropical Rum Sour','Ром, абрикосовий лікер, пюре маракуї, сік лимону','120 мл',280),
+    it('Caribbean Highball','Кокосовий ром, сік апельсина, ваніль, трояндовий лимонад, йогуртова пінка','175 мл',280)]},
+  {t:'Negroni specials',items:[
+    it('Dulce Banana','Кокосовий ром і банан з делікатним вершковим післясмаком','120 мл',500)]},
+  {t:'Шоти',items:[it('Negroni Shot','','50 мл',120),it('Boobs','','50 мл',120)]},
+  {t:'Вино та ігристе',items:[
+    it('Prosecco','','150 мл',140),
+    it('Cabernet Sauvignon DOC Montello','L. Gasparini','150 мл',200),
+    it('Sauvignon Blanc DOC Collio','R. Blanchis','150 мл',200)]}
+];
+const ZERO=[{t:'0% · Mocktails',note:'Смак аперитиво без алкоголю.',items:[
+  it('Negroni Zero','Undone джин, вермут і бітер зеро, амаро зеро','120 мл',220,{sig:1}),
+  it('Tiki Negroni Zero','Undone джин, вермут і бітер зеро, сік ананаса та лайма, малина','150 мл',220),
+  it('Orange Spritz Zero','Аперитиво зеро, безалкогольне ігристе Faber, сік лайму','150 мл',220,{sig:1}),
+  it('Lemon Spritz Zero','Лимончело й амаро зеро, безалкогольне ігристе Faber, сік лайму','150 мл',220)]}];
+
+const PIZZA={t:'Pizza napoletana',note:'Неаполітанська піца — 200 ₴ за будь-яку.',items:[
+  it('Margherita','Томати, моцарела, базилік, пармезан','360 г',200,{sig:1}),
+  it('Pizza al formaggio','aka сирна · моцарела, блакитний сир, пармезан, трохи негроні, в’ялена журавлина, мигдальні пластівці','340 г',200),
+  it('Pizza al salami','aka салямі піца · моцарела, салямі, пармезан','350 г',200),
+  it('Piccolo diavolo','aka може бути і гостріше · томати, чорізо, карі-ананас, чилі, моцарела, базилік','370 г',200),
+  it('Prosciutto e fichi','aka інжир зустрів прошуто · томати, прошуто, інжир, моцарела, блакитний сир, насіння льону','380 г',200,{sig:1}),
+  it('Quattro funghi','aka грибна піца · трюфельний соус, моцарела, печериці, гливи, опеньки, фундук','380 г',200),
+  it('Pizza contadina','aka куряча піца · моцарела, печериці, мариновані опеньки, курка, дор блю','530 г',200),
+  it('Pizza hot sausage','aka може бути і гостріше 2.0 · моцарела, курячі ковбаски, карамелізована й кріспі цибуля, маринований огірок, халапеньо, діжонська гірчиця','500 г',200),
+  it('Mortadella vera','aka італійська класика · мортадела, моцарела, маслини, печериці, трюфельний соус, гострий фундук, в’ялені томати','470 г',200)]};
+const ANTIPASTI={t:'Антипасті на ваш смак',note:'Зберіть тарілку самі: кожен інгредієнт подаємо по 60 г.',items:[
+  it('Салямі','','60 г',100,{img:'img/g-board.jpg',sig:1}),it('Мортадела','','60 г',100),it('Чорізо','','60 г',100),
+  it('Артишоки','','60 г',100),it('Прошуто','','60 г',120),it('Бебі-моцарела','','60 г',80),
+  it('Бебі-моцарела в горіхах','','60 г',80),it('В’ялені томати','','60 г',80),it('Оливки','','60 г',80)]};
+const FOOD={
+  kyiv:[{t:'Закуски до аперитиву',items:[
+    it('Оливки Ночеллара','','150 г',150,{img:'img/g-olives.jpg',sig:1}),
+    it('Сир з оливками та салямі Негроні','','180 г',180,{img:'img/g-board.jpg',sig:1}),
+    it('Сир з оливками','','150 г',140),
+    it('Гриловані артишоки','','125 г',150)]}],
+  odesa:[PIZZA,ANTIPASTI,{t:'Urban street food',note:'aka міська їжа',items:[
+    it('Hot dog alla carbonara','Куряча ковбаска, моцарела, пармезан, бекон, песто й пікантний айолі, в’ялений жовток','300 г',220),
+    it('Hot dog diablo','Пікантна ковбаска, моцарела, карамелізована й кріспі цибуля, халапеньо, чилі, базилік','300 г',220)]}],
+  lviv:[PIZZA,ANTIPASTI,{t:'Urban street food',note:'aka міська їжа',items:[
+    it('Hot dog alla carbonara','Куряча ковбаска, моцарела, пармезан, бекон, песто й пікантний айолі, в’ялений жовток','300 г',220),
+    it('Hot dog diablo','Пікантна ковбаска, моцарела, карамелізована й кріспі цибуля, халапеньо, чилі, базилік','300 г',220),
+    it('Cheesy sliders','Три міні-бургери: бріош, яловича котлета, карамелізована цибуля, чедер, маринований огірок, сирний соус','250 г',240,{sig:1})]}]
+};
+const ALLERGY='У стравах можуть бути алергени: горіхи, мед, алкоголь, молочні продукти. Якщо маєте алергію, скажіть офіціанту.';
+
+/* DEMO events — not verified with the client. Dates are generated relative to today so the demo never shows past events. */
+function nextDow(dow,minAdd=1){const d=today();let add=(dow-d.getDay()+7)%7;if(add<minAdd)add+=7;d.setDate(d.getDate()+add);return d}
+function EVENTS(){return [
+  {id:'e1',city:'kyiv',date:nextDow(4),time:'19:19',title:'Aperitivo о 19:19',img:'img/g-hand.jpg',
+   text:'Вечір класики на крані: Negroni, Boulevardier і Americano. Перший келих — рівно о 19:19.'},
+  {id:'e2',city:'kyiv',date:nextDow(4,8),time:'20:00',title:'Negroni Lab: три твісти',img:'img/g-crowd.jpg',
+   text:'Бармен показує, як народжуються Porto, Tiki та Yuzu Negroni, і наливає міні-версії на дегустацію.'},
+  {id:'e3',city:'odesa',date:nextDow(5),time:'18:30',title:'Спрітц на заході сонця',img:'img/g-terrace.jpg',
+   text:'Venetian, Negroni та Limoncello Spritz, неаполітанська піца й довгий вечір у провулку Луценка.'},
+  {id:'e4',city:'odesa',date:nextDow(6,9),time:'19:00',title:'Pizza & Negroni',img:'img/g-board.jpg',
+   text:'Сет для компанії: дві піци на вибір і чотири Негроні з крана. Залиште заявку, щоб ми тримали для вас стіл.'}
+]}
+
+/* ======================== STATE ======================== */
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const S={
+  city: CITIES[store.get('negroni.city')]?store.get('negroni.city'):'kyiv',
+  view:'home', menuCat:'drinks', evCity:null, frame:false, sheet:null, dev:false,
+  bk:null, sent:null
+};
+function newBooking(extra={}){return {step:1,city:S.city,date:'',time:'',guests:2,group:false,gCount:10,gOcc:'',name:'',phone:'',comment:'',event:null,errors:{},...extra}}
+
+/* ======================== HELPERS ======================== */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function today(){const d=new Date();d.setHours(0,0,0,0);return d}
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fromIso(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
+const fDay=new Intl.DateTimeFormat('uk-UA',{weekday:'short'});
+const fLong=new Intl.DateTimeFormat('uk-UA',{weekday:'long',day:'numeric',month:'long'});
+const fMon=new Intl.DateTimeFormat('uk-UA',{month:'long',day:'numeric'});
+function monthOf(d){return fMon.format(d).replace(/^\d+\s*/,'')}
+function slots(){const a=[];for(let m=15*60;m<=22*60;m+=30)a.push(String(Math.floor(m/60)).padStart(2,'0')+':'+(m%60?'30':'00'));return a}
+function slotPast(dateIso,t){if(dateIso!==iso(today()))return false;const [h,m]=t.split(':').map(Number);const n=new Date();return h*60+m<n.getHours()*60+n.getMinutes()+30}
+function guestsWord(n){const a=n%10,b=n%100;if(a===1&&b!==11)return n+' гість';if(a>=2&&a<=4&&(b<12||b>14))return n+' гості';return n+' гостей'}
+function fmtPhone(d){d=d.replace(/\D/g,'').slice(0,9);const p=[d.slice(0,2),d.slice(2,5),d.slice(5,7),d.slice(7,9)].filter(Boolean);return p.join(' ')}
+const ICON={
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>',
+  glass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h14l-7 8zM12 12v7M8 20h8"/></svg>'
+};
+
+/* ======================== COMPONENTS ======================== */
+function header(){
+  const c=CITIES[S.city];const cur=v=>S.view===v||(v==='locations'&&S.view==='location')?' aria-current="page"':'';
+  return `<header class="hdr"><div class="wrap">
+    <button class="logo" data-go="home" aria-label="Negroni Aperitivo Bar — на головну"><img src="img/logo.png" alt="" width="52" height="52"><span>Aperitivo<br>bar</span></button>
+    <div class="seg hdr-seg" role="group" aria-label="Місто">${ORDER.map(id=>`<button type="button" data-city="${id}" aria-pressed="${id===S.city}">${CITIES[id].name}</button>`).join('')}</div>
+    <nav class="nav" aria-label="Основна навігація">
+      <button data-go="locations"${cur('locations')}>Локації</button>
+      <button data-go="menu"${cur('menu')}>Меню</button>
+      <button data-go="events"${cur('events')}>Події</button>
+      <button data-go="about">Про нас</button>
+    </nav>
+    <button class="btn btn-red cta" data-book>Забронювати столик</button>
+    <div class="hdr-m">
+      <button class="chip-city" data-sheet="city" aria-label="Місто: ${c.name}. Змінити">${ICON.pin}${c.name}${ICON.down}</button>
+      <button class="icon-btn" data-sheet="nav" aria-label="Відкрити меню">${ICON.menu}</button>
+    </div>
+  </div></header>`;
+}
+function footer(){
+  return `<footer class="ftr"><div class="wrap">
+    <div class="kk">Kiss kiss,<br>drink drink</div>
+    <p>Negroni Aperitivo Bar · Київ · Одеса · Львів<br><a href="${INSTAGRAM}" target="_blank" rel="noopener">Instagram @negroniaperitivobar</a></p>
+    <p class="warn">18+ · Надмірне вживання алкоголю шкідливе для вашого здоров’я.<br>Концепт сайту від SPECTRE STUDIO для Negroni Aperitivo Bar. Не офіційний сайт: заявки з цієї сторінки нікуди не надходять.</p>
+  </div></footer>`;
+}
+function mbar(){
+  const c=CITIES[S.city];
+  return `<div class="mbar"><div class="where"><b>${c.name}</b>${c.hours.replace('Щодня ','')}</div><button class="btn btn-red" data-book>Забронювати столик</button></div>`;
+}
+function locCard(id){
+  const c=CITIES[id];
+  return `<article class="loc${id===S.city?' is-current':''}">
+    <div class="ph"><img src="${c.img}" alt="Атмосфера бару ${c.loc}" loading="lazy">${id===S.city?'<span class="tag red">Ваше місто</span>':''}</div>
+    <h3 class="city">${c.name}</h3>
+    <dl><div><dt>Адреса</dt><dd>${c.address}</dd></div><div><dt>Години</dt><dd>${c.hours}</dd></div></dl>
+    <div class="acts">
+      <button class="btn btn-red btn-sm" data-book="${id}">Забронювати</button>
+      <button class="btn btn-line btn-sm" data-go="menu" data-set-city="${id}">Меню</button>
+      <button class="btn btn-ghost btn-sm" data-go="location" data-set-city="${id}">Детальніше</button>
+    </div>
+  </article>`;
+}
+function menuItem(m){
+  return `<div class="mi${m.img?' has-ph':''}">
+    ${m.img?`<img class="ph" src="${m.img}" alt="" loading="lazy">`:''}
+    <div class="nm">${m.n}${m.badge?`<span class="tag red">${m.badge}</span>`:''}</div>
+    <div class="pr"><span class="price">${m.p} ₴</span>${m.v?`<span class="vol">${m.v}</span>`:''}</div>
+    ${m.d?`<p class="ds">${m.d}</p>`:''}
+  </div>`;
+}
+function groupsFor(cat,city){return cat==='drinks'?DRINKS:cat==='food'?FOOD[city]:ZERO}
+function menuBlock(city,{withHead=true}={}){
+  const gs=groupsFor(S.menuCat,city);const c=CITIES[city];
+  const tabs=[['drinks','Коктейлі'],['food','Їжа'],['zero','Безалкогольні']];
+  const half=Math.ceil(gs.reduce((a,g)=>a+g.items.length+2,0)/2);let acc=0;const L=[],R=[];
+  gs.forEach(g=>{(acc<half?L:R).push(g);acc+=g.items.length+2});
+  const col=arr=>arr.map(g=>`<div class="mgroup"><h3>${g.t}</h3>${g.note?`<p class="note">${g.note}</p>`:''}${g.items.map(menuItem).join('')}</div>`).join('');
+  return `${withHead?'':''}
+  <div class="tabs" role="tablist" aria-label="Категорії меню" style="margin-bottom:28px">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${S.menuCat===k}" data-cat="${k}">${l}</button>`).join('')}</div>
+  <div class="menu-cols" role="tabpanel"><div>${col(L)}</div><div>${col(R)}</div></div>
+  <div class="menu-foot"><p>${S.menuCat==='food'?ALLERGY:'Ціни в гривнях. Меню '+c.loc+' актуальне на 2026 рік.'}</p>
+    <a class="btn btn-line btn-sm" href="${c.pdf}" target="_blank" rel="noopener">Відкрити оригінальне меню (PDF) ↗</a></div>`;
+}
+function eventRow(e){
+  const c=CITIES[e.city];
+  return `<article class="ev">
+    <div class="date"><b>${e.date.getDate()}</b><span>${monthOf(e.date)}</span><small>${fDay.format(e.date)}, ${e.time}</small></div>
+    <div class="ph"><img src="${e.img}" alt="" loading="lazy"></div>
+    <div><div class="meta"><span class="tag">${c.name}</span><span class="tag">Демо-анонс</span></div><h3>${e.title}</h3><p>${e.text}</p></div>
+    <div class="go"><button class="btn btn-red btn-sm" data-ev="${e.id}">Залишити заявку</button></div>
+  </article>`;
+}
+function eventsList(city,limit){
+  const list=EVENTS().filter(e=>!city||e.city===city).sort((a,b)=>a.date-b.date).slice(0,limit||99);
+  if(!list.length){const c=CITIES[city];return `<div class="empty"><div class="glass">${ICON.glass}</div><div>
+    <h3>Наразі немає анонсованих подій</h3><p>${c?'Афіша '+c.loc+' з’явиться тут, щойно ми щось заплануємо.':''} Слідкуйте за анонсами в Instagram або просто приходьте на аперитиво — щодня з 15:00.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-line btn-sm" href="${INSTAGRAM}" target="_blank" rel="noopener">Instagram ↗</a><button class="btn btn-red btn-sm" data-book>Забронювати столик</button></div></div></div>`}
+  return `<div class="evs">${list.map(eventRow).join('')}</div>`;
+}
+
+/* ======================== VIEWS ======================== */
+function vHome(){
+  const c=CITIES[S.city];
+  const sig=[...DRINKS.flatMap(g=>g.items),...FOOD[S.city][0].items].filter(m=>m.sig).slice(0,8);
+  return `
+  <section class="hero" aria-labelledby="h-hero">
+    <img class="bg" src="img/hero.jpg" alt="Келих Негроні з апельсиновою цедрою на барній стійці у вечірньому світлі">
+    <div class="kiss">Kiss kiss,<br>drink drink</div>
+    <div class="wrap">
+      <div>
+        <div class="eyebrow">Negroni Aperitivo Bar · ${c.name}</div>
+        <h1 id="h-hero">Твій вечір починається&nbsp;з <em>aperitivo</em></h1>
+        <p>Негроні на крані, спрітц і закуски по-італійськи. Щодня з 15:00 до 23:00 у Києві, Одесі та Львові.</p>
+        <div class="ctas"><button class="btn btn-red" data-book>Забронювати столик</button><button class="btn btn-line" data-go="menu">Переглянути меню</button></div>
+      </div>
+      <aside class="hero-card" aria-label="Ваша локація">
+        <div class="cityname">${c.name}</div>
+        <div class="row"><span class="k">Адреса</span><span>${c.address}</span></div>
+        <div class="row"><span class="k">Сьогодні</span><span>15:00–23:00</span></div>
+        <div class="row"><span class="k">Інше місто</span><button class="lnk" data-sheet="city">Змінити місто</button></div>
+      </aside>
+    </div>
+  </section>
+  <div class="checker" aria-hidden="true"></div>
+
+  <section class="sec" id="locations" aria-labelledby="h-locs"><div class="wrap">
+    <div class="sec-head"><div><div class="eyebrow">Три міста</div><h2 class="h2" id="h-locs">Оберіть свій Negroni</h2></div>
+      <p class="lead">Одна карта коктейлів, три різні вечори. Меню, події й бронювання підлаштуються під обране місто.</p></div>
+    <div class="locs">${ORDER.map(locCard).join('')}</div>
+  </div></section>
+
+  <section class="sec about" id="about" aria-labelledby="h-about"><div class="wrap about-grid">
+    <div>
+      <div class="eyebrow">Про нас</div>
+      <p class="quote" id="h-about" style="margin-top:14px">Bevi bene, ridi spesso, ama molto</p>
+      <p class="quote-tr">Пий добре, смійся часто, кохай багато.</p>
+      <p>В Італії аперитиво — це час між роботою та вечерею: келих гіркого, трохи закусок і розмова, яка нікуди не поспішає. Ми зробили з нього щоденний ритуал у Києві, Одесі та Львові.</p>
+      <p>Кажуть, у 1919 році у Флоренції граф Камілло Негроні попросив додати в американо джин замість содової. Так з’явився коктейль, на честь якого ми назвалися. Класичний Negroni ми наливаємо з крана, а поруч у меню живуть твісти: від Tiki Negroni до українського Ukroni із закарпатським кальвадосом.</p>
+      <div class="facts"><span>Щодня 15:00–23:00</span><span>Коктейлі на крані</span><span>0% меню</span><span>Київ · Одеса · Львів</span></div>
+    </div>
+    <figure class="illu" style="margin:0"><img src="img/cocktails.png" alt="Ілюстрація трьох коктейлів з меню Negroni"><img class="lemons" src="img/lemons.jpg" alt=""></figure>
+  </div></section>
+
+  <section class="sec" id="menu-preview" aria-labelledby="h-menu"><div class="wrap">
+    <div class="sec-head"><div><div class="eyebrow">Меню · ${c.name}</div><h2 class="h2" id="h-menu">З чого почати вечір</h2></div>
+      <button class="btn btn-line" data-go="menu">Усе меню ${c.loc}</button></div>
+    <div class="menu-hero"><div class="preview-list"><div>${sig.slice(0,4).map(menuItem).join('')}</div><div>${sig.slice(4,8).map(menuItem).join('')}</div></div>
+      <div class="shot"><img src="img/g-negroni.jpg" alt="Негроні з апельсином" loading="lazy"></div></div>
+  </div></section>
+  <div class="checker sm" aria-hidden="true"></div>
+
+  <section class="sec" id="events" aria-labelledby="h-ev"><div class="wrap">
+    <div class="sec-head"><div><div class="eyebrow">Афіша · ${c.name}</div><h2 class="h2" id="h-ev">Найближчі події</h2></div>
+      <button class="btn btn-line" data-go="events">Усі події</button></div>
+    ${eventsList(S.city,3)}
+  </div></section>
+
+  <section class="sec" style="padding-top:0" aria-labelledby="h-gal"><div class="wrap">
+    <div class="sec-head"><div><div class="eyebrow">Атмосфера</div><h2 class="h2" id="h-gal">Вечори в Negroni</h2></div>
+      <a class="btn btn-line" href="${INSTAGRAM}" target="_blank" rel="noopener">@negroniaperitivobar ↗</a></div>
+    <div class="gal">
+      <figure class="t"><img src="img/g-pour.jpg" alt="Бармен готує коктейль" loading="lazy"></figure>
+      <figure class="w"><img src="img/g-cheers.jpg" alt="Гості цокаються келихами над закусками" loading="lazy"></figure>
+      <figure class="t"><img src="img/g-crowd.jpg" alt="Вечір у барі" loading="lazy"></figure>
+      <figure><img src="img/g-spritz.jpg" alt="Спрітц на столі" loading="lazy"></figure>
+      <figure><img src="img/g-olives.jpg" alt="Оливки" loading="lazy"></figure>
+    </div>
+  </div></section>
+
+  ${contacts()}`;
+}
+function contacts(){
+  const c=CITIES[S.city];
+  return `<section class="sec contacts" id="contacts" aria-labelledby="h-ct"><div class="wrap c-grid">
+    <div class="c-main"><div class="eyebrow">Контакти · ${c.name}</div>
+      <p class="addr" id="h-ct">${c.address}</p>
+      <dl class="c-rows">
+        <div><dt>Телефон</dt><dd>${c.phone}</dd><button class="copy" data-copy="${c.phone}">Копіювати</button></div>
+        <div><dt>Години</dt><dd>${c.hours}</dd></div>
+        ${c.delivery?`<div><dt>Доставка</dt><dd><a href="${c.delivery.url}" target="_blank" rel="noopener">${c.delivery.label}</a> · ${c.delivery.hours}</dd></div>`:''}
+        <div><dt>Instagram</dt><dd><a href="${INSTAGRAM}" target="_blank" rel="noopener">@negroniaperitivobar</a></dd></div>
+      </dl>
+      <div class="c-actions"><button class="btn btn-red" data-book>Забронювати столик</button><a class="btn btn-line" href="${c.maps}" target="_blank" rel="noopener">Прокласти маршрут ↗</a></div>
+    </div>
+    <div class="other"><div class="eyebrow" style="margin-bottom:12px">Інші міста</div>
+      ${ORDER.filter(id=>id!==S.city).map(id=>`<button data-go="location" data-set-city="${id}"><b>${CITIES[id].name}</b><span>${CITIES[id].address}</span><i>Перейти</i></button>`).join('')}
+    </div>
+  </div></section>`;
+}
+function vLocations(){
+  return `<div class="wrap phead"><div class="crumbs"><button data-go="home">Головна</button><span>/</span><span>Локації</span></div>
+    <h1 class="h1">Де вас чекати сьогодні?</h1><p class="lead">Оберіть місто, і ми покажемо меню, події та контакти саме цього бару. Вибір збережеться, поки ви гуляєте сайтом.</p></div>
+    <div class="wrap" style="padding-bottom:80px"><div class="locs">${ORDER.map(locCard).join('')}</div></div>`;
+}
+function vLocation(){
+  const c=CITIES[S.city];
+  return `<section class="l-hero"><img src="${c.img}" alt="Бар Negroni ${c.loc}"><div class="wrap">
+      <div class="crumbs"><button data-go="home">Головна</button><span>/</span><button data-go="locations">Локації</button><span>/</span><span>${c.name}</span></div>
+      <h1 class="h1">Negroni<br>${c.name}</h1></div></section>
+    <div class="wrap l-body">
+      <div style="min-width:0">
+        <p class="lead">${c.lead}</p><p style="color:var(--ink-soft);max-width:60ch;margin:0">${c.text}</p>
+        <div class="l-section"><h2 class="h2">Меню ${c.loc}</h2>${menuBlock(S.city)}</div>
+        <div class="l-section"><h2 class="h2">Події ${c.loc}</h2>${eventsList(S.city)}</div>
+      </div>
+      <aside class="infobox" aria-label="Контакти закладу">
+        <dl>
+          <div><dt>Адреса</dt><dd>${c.address}</dd></div>
+          <div><dt>Графік</dt><dd>${c.hours}</dd></div>
+          <div><dt>Телефон</dt><dd>${c.phone}<button class="copy" data-copy="${c.phone}">Копіювати</button></dd></div>
+          ${c.delivery?`<div><dt>Доставка</dt><dd>${c.delivery.hours} · ${c.delivery.label.replace('Доставка через ','')}</dd></div>`:''}
+        </dl>
+        <button class="btn btn-red" data-book>Забронювати столик</button>
+        <div class="links"><a href="${c.maps}" target="_blank" rel="noopener">Прокласти маршрут ↗</a>
+          ${c.delivery?`<a href="${c.delivery.url}" target="_blank" rel="noopener">${c.delivery.label} ↗</a>`:''}
+          <a href="${c.review}" target="_blank" rel="noopener">Відгуки в Google ↗</a></div>
+      </aside>
+    </div>`;
+}
+function vMenu(){
+  const c=CITIES[S.city];
+  return `<div class="wrap phead"><div class="crumbs"><button data-go="home">Головна</button><span>/</span><span>Меню</span></div>
+    <h1 class="h1">Меню ${c.loc}</h1>
+    <div class="pick"><label id="mcl">Меню для міста</label><div class="seg" role="group" aria-labelledby="mcl">${ORDER.map(id=>`<button type="button" data-city="${id}" aria-pressed="${id===S.city}">${CITIES[id].name}</button>`).join('')}</div></div></div>
+    <div class="wrap" style="padding-bottom:80px">${menuBlock(S.city)}</div>`;
+}
+function vEvents(){
+  const ec=S.evCity===undefined?S.city:S.evCity;
+  return `<div class="wrap phead"><div class="crumbs"><button data-go="home">Головна</button><span>/</span><span>Події</span></div>
+    <h1 class="h1">Події</h1><p class="lead">Дегустації, вечори класики й сети для компаній. Залиште заявку, і адміністратор зв’яжеться з вами.</p>
+    <div class="pick"><div class="seg" role="group" aria-label="Фільтр за містом">${[...ORDER,'all'].map(id=>`<button type="button" data-evcity="${id}" aria-pressed="${(id==='all'&&ec===null)||id===ec}">${id==='all'?'Усі міста':CITIES[id].name}</button>`).join('')}</div></div></div>
+    <div class="wrap" style="padding-bottom:80px">${eventsList(ec)}</div>`;
+}
+
+/* ---------- booking ---------- */
+function bkAside(){
+  const b=S.bk,c=CITIES[b.city];
+  return `<aside class="aside" aria-label="Ваша заявка"><img src="${c.img}" alt=""><div class="in"><h3>Negroni ${c.name}</h3><dl>
+    <div><dt>Адреса</dt><dd>${c.address}</dd></div>
+    <div><dt>Дата</dt><dd>${b.date?fLong.format(fromIso(b.date)):'—'}</dd></div>
+    <div><dt>Час</dt><dd>${b.time||'—'}</dd></div>
+    <div><dt>Гості</dt><dd>${b.group?(b.gCount?guestsWord(+b.gCount):'9+')+' · компанія':guestsWord(b.guests)}</dd></div>
+    ${b.event?`<div><dt>Подія</dt><dd>${esc(b.event)}</dd></div>`:''}
+  </dl><p class="hint">Ми не показуємо вільні столики онлайн. Адміністратор перевірить посадку й зателефонує, щоб підтвердити бронь.</p></div></aside>`;
+}
+function err(k){const e=S.bk.errors[k];return e?`<p class="err" id="err-${k}">${e}</p>`:''}
+function bkStep1(){
+  const b=S.bk;
+  return `<h2 id="bk-h" tabindex="-1">Де вас чекати?</h2><p class="sub">Місто підставили з вашої поточної локації. Його можна змінити.</p>
+  <fieldset class="fld"><legend>Місто</legend><div class="opts">
+    ${ORDER.map(id=>{const c=CITIES[id];return `<label class="opt"><input type="radio" name="bk-city" id="bk-city-${id}" value="${id}" ${b.city===id?'checked':''}><img src="${c.img}" alt=""><div><b>${c.name}</b><span>${c.address}</span></div><i class="dot" aria-hidden="true"></i></label>`}).join('')}
+  </div></fieldset>
+  <div class="fld"><span style="font-weight:600">Заклад</span><div class="venue">${ICON.pin}<div><b>Negroni Aperitivo Bar</b> · ${CITIES[b.city].address} · ${CITIES[b.city].hours}</div></div>
+  <p class="hint">У кожному місті зараз один бар. Коли відкриються нові, вони з’являться тут.</p></div>`;
+}
+function bkStep2(){
+  const b=S.bk,t=today();const days=[];for(let i=0;i<7;i++){const d=new Date(t);d.setDate(t.getDate()+i);days.push(d)}
+  const custom=b.date&&!days.some(d=>iso(d)===b.date);const max=new Date(t);max.setDate(t.getDate()+90);
+  return `<h2 id="bk-h" tabindex="-1">Коли й скільки гостей?</h2><p class="sub">Оберіть бажаний час. Це ще не бронь: адміністратор перевірить вільні столики й підтвердить.</p>
+  <fieldset class="fld"><legend>Дата</legend><div class="times dates">
+    ${days.map((d,i)=>{const di=iso(d);const none=slots().every(s=>slotPast(di,s));return `<button type="button" class="chip" data-date="${di}" aria-pressed="${b.date===di}" ${none?'disabled title="На сьогодні час уже минув"':''}><small>${i===0?'сьогодні':i===1?'завтра':fDay.format(d)}</small>${d.getDate()} ${monthOf(d).slice(0,3)}</button>`}).join('')}
+  </div><div class="dateother"><label for="bk-date-other" style="font-weight:500">Інша дата</label><input class="inp" type="date" id="bk-date-other" min="${iso(t)}" max="${iso(max)}" value="${custom?b.date:''}" ${b.errors.date?'aria-invalid="true" aria-describedby="err-date"':''}></div>
+  ${slots().every(s=>slotPast(iso(t),s))?'<p class="hint">На сьогодні бажаний час уже минув — оберіть іншу дату.</p>':''}${err('date')}</fieldset>
+  <fieldset class="fld"><legend>Бажаний час</legend><div class="times">
+    ${slots().map(s=>{const past=b.date&&slotPast(b.date,s);return `<button type="button" class="chip" data-time="${s}" aria-pressed="${b.time===s}" ${past?'disabled':''}>${s}</button>`}).join('')}
+  </div><p class="hint">Бар працює до 23:00, тому останній бажаний час — 22:00.</p>${err('time')}</fieldset>
+  <fieldset class="fld"><legend>Кількість гостей</legend><div class="guests-row">
+    <div class="stepper"><button type="button" data-g="-1" aria-label="Менше гостей" ${b.group||b.guests<=1?'disabled':''}>−</button><output aria-live="polite">${b.group?'9+':b.guests}</output><button type="button" data-g="1" aria-label="Більше гостей" ${b.group?'disabled':''}>+</button></div>
+    <button type="button" class="chip" data-groupt aria-pressed="${b.group}">Компанія 9+ гостей</button>
+  </div>
+  ${b.group?`<div class="group"><div><h3>Велика компанія</h3><p>Для 9 і більше гостей адміністратор окремо узгодить розміщення, меню та деталі вечора. Залиште заявку — вам зателефонують.</p></div>
+    <div style="display:grid;gap:8px"><label for="bk-gcount">Скільки буде гостей?</label><input class="inp" id="bk-gcount" type="number" inputmode="numeric" min="9" max="80" value="${esc(b.gCount)}" ${b.errors.gCount?'aria-invalid="true" aria-describedby="err-gCount"':''}>${err('gCount')}</div>
+    <div style="display:grid;gap:8px"><span style="font-weight:600">Привід (необов’язково)</span><div class="chips">${['День народження','Корпоратив','Зустріч друзів','Інше'].map(o=>`<button type="button" class="chip" data-occ="${o}" aria-pressed="${b.gOcc===o}">${o}</button>`).join('')}</div></div>
+  </div>`:''}</fieldset>`;
+}
+function bkStep3(){
+  const b=S.bk;
+  return `<h2 id="bk-h" tabindex="-1">Як до вас звертатися?</h2><p class="sub">Телефон потрібен лише для підтвердження бронювання.</p>
+  <div class="fld"><label for="bk-name">Ім’я</label><input class="inp" id="bk-name" autocomplete="given-name" value="${esc(b.name)}" placeholder="Наприклад, Олена" ${b.errors.name?'aria-invalid="true" aria-describedby="err-name"':''}>${err('name')}</div>
+  <div class="fld"><label for="bk-phone">Телефон</label><div class="tel"><span>+380</span><input class="inp" id="bk-phone" type="tel" inputmode="numeric" autocomplete="tel-national" value="${esc(fmtPhone(b.phone))}" placeholder="67 123 45 67" ${b.errors.phone?'aria-invalid="true" aria-describedby="err-phone"':'aria-describedby="hint-phone"'}></div><p class="hint" id="hint-phone">9 цифр після +380</p>${err('phone')}</div>
+  <div class="fld"><label for="bk-comment">${b.group?'Деталі для адміністратора':'Коментар'} <span style="font-weight:400;color:var(--ink-soft)">— необов’язково</span></label><textarea class="inp" id="bk-comment" maxlength="300" placeholder="${b.group?'Наприклад: святкуємо день народження, потрібен торт і окремий стіл':'Наприклад: столик біля вікна, святкуємо річницю'}">${esc(b.comment)}</textarea><div class="counter"><span id="cnt">${b.comment.length}</span>/300</div></div>`;
+}
+function bkStep4(){
+  const b=S.bk,c=CITIES[b.city];
+  const row=(k,v,s)=>`<div><dt>${k}</dt><dd>${v}</dd><button type="button" data-step="${s}" aria-label="Змінити: ${k}">Змінити</button></div>`;
+  return `<h2 id="bk-h" tabindex="-1">Перевірте заявку</h2><p class="sub">Усе правильно? Після надсилання адміністратор зв’яжеться з вами.</p>
+  <dl class="review">
+    ${row('Заклад',`Negroni ${c.name}, ${c.address}`,1)}
+    ${row('Дата і час',`${fLong.format(fromIso(b.date))}, ${b.time}`,2)}
+    ${row('Гості',b.group?`${guestsWord(+b.gCount)} · компанія${b.gOcc?' · '+esc(b.gOcc):''}`:guestsWord(b.guests),2)}
+    ${b.event?row('Подія',esc(b.event),2):''}
+    ${row('Ім’я',esc(b.name),3)}
+    ${row('Телефон','+380 '+esc(fmtPhone(b.phone)),3)}
+    ${b.comment?row('Коментар',esc(b.comment),3):''}
+  </dl>
+  <div class="notice">${ICON.info}<div>${b.group?'Це заявка на узгодження для великої компанії. Адміністратор обговорить з вами деталі телефоном.':'Це заявка, а не підтверджена бронь. Столик закріплять за вами після дзвінка адміністратора.'}</div></div>
+  <p class="hint" style="font-size:.85rem;color:var(--ink-soft);margin:12px 0 0">Надсилаючи заявку, ви погоджуєтеся на обробку імені й телефону для зв’язку щодо бронювання.</p>`;
+}
+function vBooking(){
+  const b=S.bk;const titles=['Місто та заклад','Дата, час і гості','Контакти','Перевірка'];
+  const body=[bkStep1,bkStep2,bkStep3,bkStep4][b.step-1]();
+  return `<div class="wrap"><div class="bk">
+    <form id="bkForm" novalidate>
+      <div class="crumbs" style="margin-bottom:18px"><button type="button" data-go="${S.prev||'home'}">← Повернутися на сайт</button></div>
+      <div class="progress"><div class="bar">${[1,2,3,4].map(i=>`<i class="${i<=b.step?'on':''}"></i>`).join('')}</div>
+        <div class="lbl"><span><b>Крок ${b.step} з 4</b> · ${titles[b.step-1]}</span><span>Бронювання столика${b.group?' · компанія':''}</span></div></div>
+      ${body}
+      <div class="bk-nav">${b.step>1?'<button type="button" class="btn btn-line" data-back>Назад</button>':'<span></span>'}
+        <button type="submit" class="btn btn-red" id="bkNext">${b.step<4?'Далі':'Надіслати заявку'}</button></div>
+      <div class="bk-pad"></div>
+    </form>
+    ${bkAside()}
+  </div></div>`;
+}
+function vSuccess(){
+  const b=S.sent,c=CITIES[b.city];
+  return `<div class="wrap ok">
+    <div><div class="seal">${ICON.check}</div>
+      <div class="status"><i></i>Очікує підтвердження адміністратора</div>
+      <h1>Grazie, ${esc(b.name)}!</h1>
+      <p class="msg">Заявку надіслано. Адміністратор зв’яжеться з вами для підтвердження бронювання.</p>
+      <p style="color:var(--ink-soft);max-width:52ch;margin:0 0 28px">Якщо плани зміняться, зателефонуйте в бар ${c.loc}: <b style="color:var(--ink);white-space:nowrap">${c.phone}</b>.</p>
+      <div class="acts" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-red" data-go="menu">Переглянути меню ${c.loc}</button><button class="btn btn-line" data-go="home">На головну</button></div>
+    </div>
+    <dl class="review" style="align-self:start">
+      <div><dt>Заклад</dt><dd>Negroni ${c.name}, ${c.address}</dd></div>
+      <div><dt>Дата і час</dt><dd>${fLong.format(fromIso(b.date))}, ${b.time}</dd></div>
+      <div><dt>Гості</dt><dd>${b.group?guestsWord(+b.gCount)+' · компанія'+(b.gOcc?' · '+esc(b.gOcc):''):guestsWord(b.guests)}</dd></div>
+      ${b.event?`<div><dt>Подія</dt><dd>${esc(b.event)}</dd></div>`:''}
+      <div><dt>Ім’я</dt><dd>${esc(b.name)}</dd></div>
+      <div><dt>Телефон</dt><dd>+380 ${esc(fmtPhone(b.phone))}</dd></div>
+      ${b.comment?`<div><dt>Коментар</dt><dd>${esc(b.comment)}</dd></div>`:''}
+    </dl>
+  </div>`;
+}
+
+/* ---------- sheets ---------- */
+function sheet(){
+  if(!S.sheet)return '';
+  if(S.sheet==='city')return `<div class="scrim" data-close><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-h"><div class="grab"></div>
+    <h2 id="sh-h">Оберіть місто</h2><p class="s">Меню, події й бронювання покажемо для цього бару.</p>
+    <div class="opts">${ORDER.map(id=>{const c=CITIES[id];return `<label class="opt"><input type="radio" name="sh-city" value="${id}" ${id===S.city?'checked':''}><img src="${c.img}" alt=""><div><b>${c.name}</b><span>${c.address} · 15:00–23:00</span></div><i class="dot" aria-hidden="true"></i></label>`}).join('')}</div>
+    <button class="btn btn-line" style="width:100%;margin-top:6px" data-close-btn>Закрити</button></div></div>`;
+  return `<div class="scrim" data-close><div class="sheet" role="dialog" aria-modal="true" aria-label="Навігація"><div class="grab"></div>
+    <div class="navlist"><button data-go="locations">Локації</button><button data-go="menu">Меню</button><button data-go="events">Події</button><button data-go="about">Про нас</button></div>
+    <button class="btn btn-red" style="width:100%" data-book>Забронювати столик · ${CITIES[S.city].name}</button></div></div>`;
+}
+
+/* ---------- presenter layer ---------- */
+function devPanel(){
+  if(!S.dev)return '';
+  const J=[['1','Головна сторінка','home'],['2','Вибір міста','locations'],['2·','Вибір міста (мобільна шторка)','sheet'],['3','Сторінка локації · Одеса','loc-odesa'],
+    ['4·1','Бронювання · крок 1','bk1'],['4·2','Крок 2 · дата, час, гості','bk2'],['4·2','Крок 2 · велика компанія','bkg'],['4·3','Крок 3 · контакти з помилками','bk3'],['4·4','Крок 4 · перевірка','bk4'],
+    ['5','Успішне надсилання','ok'],['6','Меню · Львів · їжа','menu'],['6','Події · усі міста','events'],['6·','Порожній стан подій · Львів','ev-empty']];
+  return `<div class="dev" role="dialog" aria-label="Нотатки для презентації"><button class="x" data-dev-close aria-label="Закрити">×</button>
+    <h2>Нотатки для презентації</h2><p>Ця панель не входить у сайт для гостей. Тут перемикання екранів і пояснення, які дані реальні.</p>
+    <h3>Вигляд</h3><div class="seg" role="group" aria-label="Вигляд"><button type="button" data-frame="0" aria-pressed="${!S.frame}">Desktop</button><button type="button" data-frame="1" aria-pressed="${S.frame}">Mobile 390 px</button></div>
+    <h3>Екрани</h3><div class="jump">${J.map(([n,l,k])=>`<button type="button" data-jump="${k}"><b>${n}</b>${l}</button>`).join('')}</div>
+    <h3>Перевірені дані клієнта</h3><ul>
+      <li><span class="ok-dot"></span><b>Адреси й телефони</b> — файл «Наші локації та контакти» з Linktree.</li>
+      <li><span class="ok-dot"></span><b>Графік 15:00–23:00</b> — біо Instagram і Linktree (один для всієї мережі).</li>
+      <li><span class="ok-dot"></span><b>Меню й ціни</b> — PDF-меню 2026 для Києва, Одеси, Львова. Напої однакові, кухня різна: у Києві закуски, в Одесі й Львові піца, антипасті, хот-доги (слайдери лише у Львові).</li>
+      <li><span class="ok-dot"></span><b>Доставка</b> — BOND (Одеса), Bolt Food (Львів), 15:00–22:00.</li>
+      <li><span class="ok-dot"></span><b>Логотип, червоний #E2000E, крем меню, «картата» стрічка, ілюстрації</b> — з меню та матеріалів бренду. Фраза «Kiss kiss, drink drink» і «Bevi bene…» — з матеріалів клієнта.</li></ul>
+    <h3>Демонстраційне</h3><ul>
+      <li><span class="demo-dot"></span><b>Фотографії</b> — стокові (Unsplash), замінити на фото закладів з Instagram.</li>
+      <li><span class="demo-dot"></span><b>Події</b> — вигадані приклади, позначені «Демо-анонс»; дати рахуються від сьогодні. У Львові навмисно порожньо, щоб показати стан «немає подій».</li>
+      <li><span class="demo-dot"></span><b>Описи локацій і текст «Про нас»</b> — чернетки копірайту для погодження.</li>
+      <li><span class="demo-dot"></span><b>Форма</b> нікуди не надсилає дані. Для запуску: заявка в Telegram-бот адміністратора або в CRM, без показу «вільних столиків», доки немає системи обліку.</li>
+      <li><span class="demo-dot"></span><b>Посилання на маршрут і відгуки</b> — пошукові запити Google Maps; замінити на точні картки закладів.</li></ul>
+  </div>`;
+}
+
+/* ======================== RENDER ======================== */
+const app=$('#app');
+function render(focusSel){
+  const views={home:vHome,locations:vLocations,location:vLocation,menu:vMenu,events:vEvents,booking:vBooking,success:vSuccess};
+  const inBk=S.view==='booking'||S.view==='success';
+  app.className=inBk?'no-mbar':'';
+  app.innerHTML=header()+`<main id="main">${views[S.view]()}</main>`+(S.view==='booking'?'':footer())+mbar()+sheet();
+  $('#devLayer').innerHTML=devPanel();
+  document.body.classList.toggle('frame',S.frame);
+  if(focusSel){const el=$(focusSel);if(el)el.focus({preventScroll:true})}
+}
+function scroller(){return S.frame?app:document.scrollingElement}
+function toTop(){scroller().scrollTo({top:0,behavior:'instant'})}
+function go(view,opts={}){
+  if(view==='about'){S.view='home';S.sheet=null;render();requestAnimationFrame(()=>{const a=$('#about');if(a)a.scrollIntoView({behavior:'smooth'})});return}
+  if(view!=='booking'&&view!=='success')S.prev=view;
+  S.view=view;S.sheet=null;render(opts.focus);if(!opts.keepScroll)toTop();
+}
+function setCity(id,silent){if(!CITIES[id])return;S.city=id;store.set('negroni.city',id);if(S.view==='events')S.evCity=id;if(!silent)toast('Місто: '+CITIES[id].name)}
+function startBooking(extra={}){S.bk=newBooking(extra);go('booking',{focus:'#bk-h'})}
+let tt;function toast(t){clearTimeout(tt);let el=$('.toast');if(!el){el=document.createElement('div');el.className='toast';el.setAttribute('role','status');document.body.appendChild(el)}el.textContent=t;tt=setTimeout(()=>el.remove(),1600)}
+
+/* ---------- validation ---------- */
+function validate(step){
+  const b=S.bk,e={};
+  if(step===2){
+    if(!b.date)e.date='Оберіть дату візиту.';
+    else if(fromIso(b.date)<today())e.date='Ця дата вже минула. Оберіть сьогодні або пізніше.';
+    if(!b.time)e.time='Оберіть бажаний час.';
+    else if(b.date&&slotPast(b.date,b.time))e.time='Цей час уже минув. Оберіть пізніший.';
+    if(b.group){const n=+b.gCount;if(!n||n<9)e.gCount='Для компанії вкажіть від 9 гостей. Якщо вас менше, поверніться до звичайного вибору.';else if(n>80)e.gCount='Для понад 80 гостей зателефонуйте адміністратору напряму.'}
+  }
+  if(step===3){
+    if(b.name.trim().length<2)e.name='Ім’я має містити щонайменше 2 літери.';
+    else if(!/^[\p{L}\s'’ʼ-]+$/u.test(b.name.trim()))e.name='Ім’я може містити лише літери, пробіл, дефіс чи апостроф.';
+    const d=b.phone.replace(/\D/g,'');
+    if(!d)e.phone='Вкажіть номер телефону, щоб адміністратор міг підтвердити бронь.';
+    else if(d.length!==9)e.phone='Номер має містити 9 цифр після +380. Зараз: '+d.length+'.';
+  }
+  b.errors=e;return !Object.keys(e).length;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',ev=>{
+  const t=ev.target.closest('button,a,[data-close]');if(!t)return;
+  const d=t.dataset;
+  if(d.close!==undefined&&ev.target!==t)return; // click inside sheet
+  if(d.close!==undefined||d.closeBtn!==undefined){S.sheet=null;render();return}
+  if(d.devClose!==undefined){S.dev=false;render();$('#devTab').focus();return}
+  if(d.frame!==undefined){S.frame=d.frame==='1';render();toTop();return}
+  if(d.jump){jump(d.jump);return}
+  if(d.setCity)setCity(d.setCity,true);
+  if(d.city!==undefined&&t.closest('.seg')&&!d.evcity){setCity(d.city);render();return}
+  if(d.evcity){S.evCity=d.evcity==='all'?null:d.evcity;if(d.evcity!=='all')setCity(d.evcity,true);render();return}
+  if(d.go){go(d.go);return}
+  if(d.book!==undefined){if(d.book)setCity(d.book,true);startBooking();return}
+  if(d.ev){const e=EVENTS().find(x=>x.id===d.ev);setCity(e.city,true);startBooking({date:iso(e.date),time:slots().includes(e.time)?e.time:'',event:e.title+' · '+e.time,comment:''});return}
+  if(d.sheet){S.sheet=d.sheet;render();const f=$('.sheet input:checked,.sheet button');f&&f.focus();return}
+  if(d.cat){S.menuCat=d.cat;render('[data-cat="'+d.cat+'"]');return}
+  if(d.copy){const done=()=>toast('Номер скопійовано');try{navigator.clipboard.writeText(d.copy).then(done,()=>selectText(t))}catch(e){selectText(t)}return}
+  if(!S.bk)return;
+  const b=S.bk;
+  if(d.date){b.date=d.date;if(b.time&&slotPast(b.date,b.time))b.time='';delete b.errors.date;render('[data-date="'+d.date+'"]');return}
+  if(d.time){b.time=d.time;delete b.errors.time;render('[data-time="'+d.time+'"]');return}
+  if(d.g){b.guests=Math.min(8,Math.max(1,b.guests+ +d.g));render('[data-g="'+d.g+'"]');return}
+  if(d.groupt!==undefined){b.group=!b.group;render(b.group?'#bk-gcount':'[data-groupt]');return}
+  if(d.occ){b.gOcc=b.gOcc===d.occ?'':d.occ;render('[data-occ="'+d.occ+'"]');return}
+  if(d.back!==undefined){b.step--;b.errors={};render('#bk-h');toTop();return}
+  if(d.step){b.step=+d.step;b.errors={};render('#bk-h');toTop();return}
+});
+function selectText(btn){const dd=btn.previousElementSibling||btn.parentNode;const r=document.createRange();r.selectNodeContents(dd);const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Виділено — скопіюйте вручну')}
+document.addEventListener('change',ev=>{
+  const t=ev.target;
+  if(t.name==='sh-city'){setCity(t.value);S.sheet=null;render();return}
+  if(t.name==='bk-city'){S.bk.city=t.value;setCity(t.value,true);render('#bk-city-'+t.value);return}
+  if(t.id==='bk-date-other'){if(t.value){S.bk.date=t.value;if(S.bk.time&&slotPast(t.value,S.bk.time))S.bk.time='';const ok=fromIso(t.value)>=today();S.bk.errors.date=ok?undefined:'Ця дата вже минула. Оберіть сьогодні або пізніше.';if(ok)delete S.bk.errors.date;render('#bk-date-other')}}
+});
+document.addEventListener('input',ev=>{
+  const t=ev.target;if(!S.bk)return;
+  if(t.id==='bk-name')S.bk.name=t.value;
+  if(t.id==='bk-gcount')S.bk.gCount=t.value;
+  if(t.id==='bk-comment'){S.bk.comment=t.value;const c=$('#cnt');if(c)c.textContent=t.value.length}
+  if(t.id==='bk-phone'){const digits=t.value.replace(/\D/g,'').replace(/^(380|80|0)(?=\d{9})/,'').slice(0,9);S.bk.phone=digits;const f=fmtPhone(digits);if(t.value!==f)t.value=f}
+});
+document.addEventListener('submit',ev=>{
+  if(ev.target.id!=='bkForm')return;ev.preventDefault();
+  const b=S.bk;
+  if(b.step<4){
+    if(!validate(b.step)){render('[aria-invalid="true"], .chips [aria-pressed]');const first=$('.err');first&&first.scrollIntoView({block:'center',behavior:'smooth'});return}
+    b.step++;render('#bk-h');toTop();return;
+  }
+  const btn=$('#bkNext');btn.disabled=true;btn.textContent='Надсилаємо…';
+  setTimeout(()=>{S.sent={...b};S.bk=null;go('success')},900);
+});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(S.sheet){S.sheet=null;render()}else if(S.dev){S.dev=false;render()}}});
+$('#devTab').addEventListener('click',()=>{S.dev=!S.dev;render();const x=$('.dev .x');x&&x.focus()});
+
+function jump(k){
+  S.dev=window.innerWidth>900&&!S.frame?S.dev:false;if(S.frame)S.dev=true;
+  const tm=new Date(today());tm.setDate(tm.getDate()+2);
+  const sample={date:iso(tm),time:'19:30',guests:4};
+  switch(k){
+    case'home':go('home');break;
+    case'locations':go('locations');break;
+    case'sheet':go('home');S.sheet='city';render();break;
+    case'loc-odesa':setCity('odesa',true);go('location');break;
+    case'bk1':startBooking();break;
+    case'bk2':startBooking({step:2});break;
+    case'bkg':startBooking({step:2,...sample,group:true,gCount:14,gOcc:'День народження'});break;
+    case'bk3':startBooking({step:3,...sample,name:'О',phone:'6712'});validate(3);render();break;
+    case'bk4':startBooking({step:4,...sample,name:'Олена',phone:'671234567',comment:'Столик біля вікна, якщо можна'});break;
+    case'ok':S.sent={...newBooking(),...sample,name:'Олена',phone:'671234567',comment:'Столик біля вікна, якщо можна'};go('success');break;
+    case'menu':setCity('lviv',true);S.menuCat='food';go('menu');break;
+    case'events':S.evCity=null;go('events');break;
+    case'ev-empty':setCity('lviv',true);S.evCity='lviv';go('events');break;
+  }
+}
+render();
+/* deep links for the pitch: #bk2, #ok, #menu … (bare tokens only) */
+const JUMPS=['home','locations','sheet','loc-odesa','bk1','bk2','bkg','bk3','bk4','ok','menu','events','ev-empty'];
+let h0=location.hash.slice(1);if(h0.startsWith('m-')&&innerWidth>700){S.frame=true;h0=h0.slice(2);render()}
+if(JUMPS.includes(h0))jump(h0);if(S.frame){S.dev=false;render()}
+</script>
