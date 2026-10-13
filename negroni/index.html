@@ -271,6 +271,8 @@ section{scroll-margin-top:84px}
 .progress .lbl{display:flex;justify-content:space-between;gap:12px;font-size:.92rem;color:var(--ink-soft);flex-wrap:wrap}
 .progress .lbl b{color:var(--ink)}
 .bk h2:focus{outline:none}
+.bk form{min-width:0}
+.bk .chips .chip{min-width:0}
 .bk h2{font:800 clamp(2rem,4.4cqi,3rem)/1 var(--f-head);margin:0 0 8px;text-wrap:balance}
 .bk .sub{color:var(--ink-soft);margin:0 0 28px;max-width:56ch}
 .fld{display:grid;gap:8px;margin-bottom:26px;border:0;padding:0;min-width:0}
@@ -390,6 +392,21 @@ textarea.inp{min-height:110px;resize:vertical}
 .dev .ok-dot,.dev .demo-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
 .dev .ok-dot{background:#7CC489}.dev .demo-dot{background:#FFB547}
 @media (max-width:700px){.dev-tab{font-size:0;padding:12px 6px}.dev-tab::after{content:"i";font:700 14px/1 var(--f-ui)}}
+.btn svg{width:18px;height:18px;flex:none}
+.live{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.live i{width:9px;height:9px;border-radius:50%;background:#9A8F88;flex:none}
+.live.on i{background:#2FB45A;box-shadow:0 0 0 4px rgba(47,180,90,.22)}
+.busy{display:inline-flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-weight:600}
+.busy b{display:inline-flex;gap:3px}
+.busy b span{width:6px;height:14px;border-radius:2px;background:rgba(127,110,100,.35)}
+.busy b span.f{background:var(--orange)}
+.busy small{font-weight:400;font-size:.8rem;opacity:.7;flex-basis:100%}
+.infobox dd .busy{flex-basis:100%;margin-top:6px}
+.mbar .st.on{color:var(--ok);font-weight:600}
+.hero .hero-del{color:#FFF7EC}
+.party-band{background:var(--paper-2);padding-block:clamp(44px,6cqi,80px)}
+.pb{display:flex;gap:24px 48px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+.pb>div{max-width:720px;min-width:0}
 .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:80;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-weight:600;font-size:.92rem;animation:fade .2s ease both}
 
 /* ---------- responsive (container-based so the presenter phone frame is real) ---------- */
@@ -470,7 +487,7 @@ const CITIES = {
     review:'https://www.google.com/search?q=Negroni+Aperitivo+Bar+Київ+відгуки',
     delivery:null,
     lead:'Ярославів Вал, старий центр Києва. Класику наливаємо з крана, твісти змішуємо при вас, а до келиха подаємо оливки Ночеллара, сир і гриловані артишоки.',
-    text:'Зайдіть після роботи на мінікоктейль або залишайтеся до закриття. Для компанії друзів радимо забронювати столик заздалегідь, особливо на п’ятницю й суботу.'},
+    text:'Зайдіть після роботи на мінікоктейль або залишайтеся до закриття. Столи не бронюємо: у п’ятницю й суботу краще приходити раніше, а для свята від 10 гостей залиште заявку.'},
   odesa:{id:'odesa',name:'Одеса',loc:'в Одесі',address:'пров. Івана Луценка, 2',phone:'+38 066 733 07 07',tel:'+380667330707',
     hours:'Щодня 15:00–23:00',img:'img/odesa.jpg',
     maps:'https://www.google.com/maps/search/?api=1&query=Negroni+Aperitivo+Bar+Івана+Луценка+2+Одеса',
@@ -486,7 +503,7 @@ const CITIES = {
     review:'https://www.google.com/search?q=Negroni+Aperitivo+Bar+Lviv+відгуки',
     delivery:{label:'Доставка через Bolt Food',url:'https://food.bolt.eu/uk-UA/496-lviv/p/118161-negroni-aperitivo-bar',hours:'15:00–22:00'},
     lead:'Староєврейська, 40, у старому місті. Негроні з крана, піца, міні-бургери й хот-доги для тих, хто прийшов голодним.',
-    text:'Зустріч із друзями, побачення чи келих після прогулянки середмістям: оберіть час, а адміністратор підбере столик.'}
+    text:'Зустріч із друзями, побачення чи келих після прогулянки середмістям: просто приходьте, бронювати не потрібно.'}
 };
 const ORDER=['kyiv','odesa','lviv'];
 const INSTAGRAM='https://www.instagram.com/negroniaperitivobar/';
@@ -583,7 +600,7 @@ function EVENTS(){return [
   {id:'e3',city:'odesa',date:nextDow(5),time:'18:30',title:'Спрітц на заході сонця',img:'img/g-terrace.jpg',
    text:'Venetian, Negroni та Limoncello Spritz, неаполітанська піца й довгий вечір у провулку Луценка.'},
   {id:'e4',city:'odesa',date:nextDow(6,9),time:'19:00',title:'Pizza & Negroni',img:'img/g-board.jpg',
-   text:'Сет для компанії: дві піци на вибір і чотири Негроні з крана. Залиште заявку, щоб ми тримали для вас стіл.'}
+   text:'Дві піци на вибір і чотири Негроні з крана за спеціальною ціною для компанії. Столи не бронюємо, тож приходьте раніше.'}
 ]}
 
 /* ======================== STATE ======================== */
@@ -591,9 +608,8 @@ const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},se
 const S={
   city: CITIES[store.get('negroni.city')]?store.get('negroni.city'):'kyiv',
   view:'home', menuCat:'drinks', evCity:null, frame:false, sheet:null, dev:false,
-  bk:null, sent:null
+  pt:null, sent:null, forceOpen:null
 };
-function newBooking(extra={}){return {step:1,city:S.city,date:'',time:'',guests:2,group:false,gCount:10,gOcc:'',name:'',phone:'',comment:'',event:null,errors:{},...extra}}
 
 /* ======================== HELPERS ======================== */
 const $=(s,r=document)=>r.querySelector(s);
@@ -609,6 +625,13 @@ function slots(){const a=[];for(let m=15*60;m<=22*60;m+=30)a.push(String(Math.fl
 function slotPast(dateIso,t){if(dateIso!==iso(today()))return false;const [h,m]=t.split(':').map(Number);const n=new Date();return h*60+m<n.getHours()*60+n.getMinutes()+30}
 function guestsWord(n){const a=n%10,b=n%100;if(a===1&&b!==11)return n+' гість';if(a>=2&&a<=4&&(b<12||b>14))return n+' гості';return n+' гостей'}
 function fmtPhone(d){d=d.replace(/\D/g,'').slice(0,9);const p=[d.slice(0,2),d.slice(2,5),d.slice(5,7),d.slice(7,9)].filter(Boolean);return p.join(' ')}
+function kyivMin(){const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Kyiv',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());return +p.find(x=>x.type==='hour').value*60+ +p.find(x=>x.type==='minute').value}
+function openState(){const t=kyivMin();const open=S.forceOpen!=null?S.forceOpen:(t>=900&&t<1380);
+  return {open,long:open?'Відкрито зараз · до 23:00':'Зачинено · відкриємось '+(t<900?'сьогодні':'завтра')+' о 15:00',short:open?'Відкрито до 23:00':'Відкриємось о 15:00'}}
+function liveHtml(){const st=openState();return `<span class="live${st.open?' on':''}"><i></i>${st.long}</span>`}
+/* DEMO: in production the bar admin sets this once an evening with a Telegram-bot button */
+const BUSY={kyiv:{l:'Майже повно',v:2},odesa:{l:'Є вільні столики',v:0},lviv:{l:'Тільки барна стійка',v:1}};
+function busyHtml(id){const b=BUSY[id];return `<span class="busy"><b aria-hidden="true">${[0,1,2].map(i=>`<span class="${i<=b.v?'f':''}"></span>`).join('')}</b>${b.l}<small>оновлено о 19:40</small></span>`}
 const ICON={
   pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
   menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
@@ -630,7 +653,7 @@ function header(){
       <button data-go="events"${cur('events')}>Події</button>
       <button data-go="about">Про нас</button>
     </nav>
-    <button class="btn btn-red cta" data-book>Забронювати столик</button>
+    <a class="btn btn-red cta" href="${c.maps}" target="_blank" rel="noopener">${ICON.pin}Як дістатися</a>
     <div class="hdr-m">
       <button class="chip-city" data-sheet="city" aria-label="Місто: ${c.name}. Змінити">${ICON.pin}${c.name}${ICON.down}</button>
       <button class="icon-btn" data-sheet="nav" aria-label="Відкрити меню">${ICON.menu}</button>
@@ -646,7 +669,8 @@ function footer(){
 }
 function mbar(){
   const c=CITIES[S.city];
-  return `<div class="mbar"><div class="where"><b>${c.name}</b>${c.hours.replace('Щодня ','')}</div><button class="btn btn-red" data-book>Забронювати столик</button></div>`;
+  const st=openState();
+  return `<div class="mbar"><div class="where"><b>${c.name}</b><span class="st${st.open?' on':''}">${st.short}</span></div><a class="btn btn-red" href="${c.maps}" target="_blank" rel="noopener">${ICON.pin}Як дістатися</a></div>`;
 }
 function locCard(id){
   const c=CITIES[id];
@@ -655,7 +679,7 @@ function locCard(id){
     <h3 class="city">${c.name}</h3>
     <dl><div><dt>Адреса</dt><dd>${c.address}</dd></div><div><dt>Години</dt><dd>${c.hours}</dd></div></dl>
     <div class="acts">
-      <button class="btn btn-red btn-sm" data-book="${id}">Забронювати</button>
+      <a class="btn btn-red btn-sm" href="${c.maps}" target="_blank" rel="noopener">Маршрут</a>
       <button class="btn btn-line btn-sm" data-go="menu" data-set-city="${id}">Меню</button>
       <button class="btn btn-ghost btn-sm" data-go="location" data-set-city="${id}">Детальніше</button>
     </div>
@@ -688,14 +712,14 @@ function eventRow(e){
     <div class="date"><b>${e.date.getDate()}</b><span>${monthOf(e.date)}</span><small>${fDay.format(e.date)}, ${e.time}</small></div>
     <div class="ph"><img src="${e.img}" alt="" loading="lazy"></div>
     <div><div class="meta"><span class="tag">${c.name}</span><span class="tag">Демо-анонс</span></div><h3>${e.title}</h3><p>${e.text}</p></div>
-    <div class="go"><button class="btn btn-red btn-sm" data-ev="${e.id}">Залишити заявку</button></div>
+    <div class="go"><a class="btn btn-line btn-sm" href="${gcal(e)}" target="_blank" rel="noopener">Додати в календар</a></div>
   </article>`;
 }
 function eventsList(city,limit){
   const list=EVENTS().filter(e=>!city||e.city===city).sort((a,b)=>a.date-b.date).slice(0,limit||99);
   if(!list.length){const c=CITIES[city];return `<div class="empty"><div class="glass">${ICON.glass}</div><div>
     <h3>Наразі немає анонсованих подій</h3><p>${c?'Афіша '+c.loc+' з’явиться тут, щойно ми щось заплануємо.':''} Слідкуйте за анонсами в Instagram або просто приходьте на аперитиво — щодня з 15:00.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-line btn-sm" href="${INSTAGRAM}" target="_blank" rel="noopener">Instagram ↗</a><button class="btn btn-red btn-sm" data-book>Забронювати столик</button></div></div></div>`}
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-line btn-sm" href="${INSTAGRAM}" target="_blank" rel="noopener">Instagram ↗</a><a class="btn btn-red btn-sm" href="${CITIES[city||S.city].maps}" target="_blank" rel="noopener">Як дістатися</a></div></div></div>`}
   return `<div class="evs">${list.map(eventRow).join('')}</div>`;
 }
 
@@ -711,13 +735,13 @@ function vHome(){
       <div>
         <div class="eyebrow">Negroni Aperitivo Bar · ${c.name}</div>
         <h1 id="h-hero">Твій вечір починається&nbsp;з <em>aperitivo</em></h1>
-        <p>Негроні на крані, спрітц і закуски по-італійськи. Щодня з 15:00 до 23:00 у Києві, Одесі та Львові.</p>
-        <div class="ctas"><button class="btn btn-red" data-book>Забронювати столик</button><button class="btn btn-line" data-go="menu">Переглянути меню</button></div>
+        <p>Негроні на крані, спрітц і закуски по-італійськи. Щодня з 15:00 до 23:00 у Києві, Одесі та Львові. Без бронювання — просто приходьте.</p>
+        <div class="ctas"><a class="btn btn-red" href="${c.maps}" target="_blank" rel="noopener">${ICON.pin}Як дістатися</a><button class="btn btn-line" data-go="menu">Переглянути меню</button>${c.delivery?`<a class="btn btn-ghost hero-del" href="${c.delivery.url}" target="_blank" rel="noopener">Замовити додому ↗</a>`:''}</div>
       </div>
       <aside class="hero-card" aria-label="Ваша локація">
         <div class="cityname">${c.name}</div>
         <div class="row"><span class="k">Адреса</span><span>${c.address}</span></div>
-        <div class="row"><span class="k">Сьогодні</span><span>15:00–23:00</span></div>
+        <div class="row"><span class="k">Зараз</span><span>${liveHtml()}</span></div>${openState().open?`<div class="row"><span class="k">У барі</span><span>${busyHtml(S.city)}</span></div>`:''}
         <div class="row"><span class="k">Інше місто</span><button class="lnk" data-sheet="city">Змінити місто</button></div>
       </aside>
     </div>
@@ -726,7 +750,7 @@ function vHome(){
 
   <section class="sec" id="locations" aria-labelledby="h-locs"><div class="wrap">
     <div class="sec-head"><div><div class="eyebrow">Три міста</div><h2 class="h2" id="h-locs">Оберіть свій Negroni</h2></div>
-      <p class="lead">Одна карта коктейлів, три різні вечори. Меню, події й бронювання підлаштуються під обране місто.</p></div>
+      <p class="lead">Одна карта коктейлів, три різні вечори. Меню, події й маршрут підлаштуються під обране місто.</p></div>
     <div class="locs">${ORDER.map(locCard).join('')}</div>
   </div></section>
 
@@ -756,7 +780,12 @@ function vHome(){
     ${eventsList(S.city,3)}
   </div></section>
 
-  <section class="sec" style="padding-top:0" aria-labelledby="h-gal"><div class="wrap">
+  <section class="party-band" aria-labelledby="h-party"><div class="wrap pb">
+    <div><div class="eyebrow">Свято у Negroni</div><h2 class="h2" id="h-party" style="margin-top:12px">Збираєте компанію від 10 людей?</h2>
+    <p class="lead" style="margin-top:14px">Столи ми не бронюємо — у бар просто приходять. Але день народження чи корпоратив можемо підготувати заздалегідь: залиште заявку, і менеджер зателефонує.</p></div>
+    <button class="btn btn-red" data-go="party">Залишити заявку на свято</button></div></section>
+
+  <section class="sec" aria-labelledby="h-gal"><div class="wrap">
     <div class="sec-head"><div><div class="eyebrow">Атмосфера</div><h2 class="h2" id="h-gal">Вечори в Negroni</h2></div>
       <a class="btn btn-line" href="${INSTAGRAM}" target="_blank" rel="noopener">@negroniaperitivobar ↗</a></div>
     <div class="gal">
@@ -778,10 +807,11 @@ function contacts(){
       <dl class="c-rows">
         <div><dt>Телефон</dt><dd>${c.phone}</dd><button class="copy" data-copy="${c.phone}">Копіювати</button></div>
         <div><dt>Години</dt><dd>${c.hours}</dd></div>
+        <div><dt>Зараз</dt><dd>${liveHtml()}</dd></div>
         ${c.delivery?`<div><dt>Доставка</dt><dd><a href="${c.delivery.url}" target="_blank" rel="noopener">${c.delivery.label}</a> · ${c.delivery.hours}</dd></div>`:''}
-        <div><dt>Instagram</dt><dd><a href="${INSTAGRAM}" target="_blank" rel="noopener">@negroniaperitivobar</a></dd></div>
+        <div><dt>Instagram</dt><dd><a href="${INSTAGRAM}" target="_blank" rel="noopener">@negroniaperitivobar</a> · мерч у розділі MERCH</dd></div>
       </dl>
-      <div class="c-actions"><button class="btn btn-red" data-book>Забронювати столик</button><a class="btn btn-line" href="${c.maps}" target="_blank" rel="noopener">Прокласти маршрут ↗</a></div>
+      <div class="c-actions"><a class="btn btn-red" href="${c.maps}" target="_blank" rel="noopener">${ICON.pin}Як дістатися</a>${c.delivery?`<a class="btn btn-line" href="${c.delivery.url}" target="_blank" rel="noopener">Замовити додому ↗</a>`:''}<a class="btn btn-line" href="${c.review}" target="_blank" rel="noopener">Залишити відгук ↗</a></div>
     </div>
     <div class="other"><div class="eyebrow" style="margin-bottom:12px">Інші міста</div>
       ${ORDER.filter(id=>id!==S.city).map(id=>`<button data-go="location" data-set-city="${id}"><b>${CITIES[id].name}</b><span>${CITIES[id].address}</span><i>Перейти</i></button>`).join('')}
@@ -808,11 +838,12 @@ function vLocation(){
         <dl>
           <div><dt>Адреса</dt><dd>${c.address}</dd></div>
           <div><dt>Графік</dt><dd>${c.hours}</dd></div>
+          <div><dt>Зараз</dt><dd>${liveHtml()}${openState().open?busyHtml(S.city):''}</dd></div>
           <div><dt>Телефон</dt><dd>${c.phone}<button class="copy" data-copy="${c.phone}">Копіювати</button></dd></div>
           ${c.delivery?`<div><dt>Доставка</dt><dd>${c.delivery.hours} · ${c.delivery.label.replace('Доставка через ','')}</dd></div>`:''}
         </dl>
-        <button class="btn btn-red" data-book>Забронювати столик</button>
-        <div class="links"><a href="${c.maps}" target="_blank" rel="noopener">Прокласти маршрут ↗</a>
+        <a class="btn btn-red" href="${c.maps}" target="_blank" rel="noopener">${ICON.pin}Як дістатися</a>
+        <div class="links">
           ${c.delivery?`<a href="${c.delivery.url}" target="_blank" rel="noopener">${c.delivery.label} ↗</a>`:''}
           <a href="${c.review}" target="_blank" rel="noopener">Відгуки в Google ↗</a></div>
       </aside>
@@ -828,157 +859,106 @@ function vMenu(){
 function vEvents(){
   const ec=S.evCity===undefined?S.city:S.evCity;
   return `<div class="wrap phead"><div class="crumbs"><button data-go="home">Головна</button><span>/</span><span>Події</span></div>
-    <h1 class="h1">Події</h1><p class="lead">Дегустації, вечори класики й сети для компаній. Залиште заявку, і адміністратор зв’яжеться з вами.</p>
+    <h1 class="h1">Події</h1><p class="lead">Дегустації та вечори класики. Вхід вільний, бронювати не потрібно: додайте подію в календар, щоб не пропустити.</p>
     <div class="pick"><div class="seg" role="group" aria-label="Фільтр за містом">${[...ORDER,'all'].map(id=>`<button type="button" data-evcity="${id}" aria-pressed="${(id==='all'&&ec===null)||id===ec}">${id==='all'?'Усі міста':CITIES[id].name}</button>`).join('')}</div></div></div>
     <div class="wrap" style="padding-bottom:80px">${eventsList(ec)}</div>`;
 }
 
-/* ---------- booking ---------- */
-function bkAside(){
-  const b=S.bk,c=CITIES[b.city];
-  return `<aside class="aside" aria-label="Ваша заявка"><img src="${c.img}" alt=""><div class="in"><h3>Negroni ${c.name}</h3><dl>
-    <div><dt>Адреса</dt><dd>${c.address}</dd></div>
-    <div><dt>Дата</dt><dd>${b.date?fLong.format(fromIso(b.date)):'—'}</dd></div>
-    <div><dt>Час</dt><dd>${b.time||'—'}</dd></div>
-    <div><dt>Гості</dt><dd>${b.group?(b.gCount?guestsWord(+b.gCount):'9+')+' · компанія':guestsWord(b.guests)}</dd></div>
-    ${b.event?`<div><dt>Подія</dt><dd>${esc(b.event)}</dd></div>`:''}
-  </dl><p class="hint">Ми не показуємо вільні столики онлайн. Адміністратор перевірить посадку й зателефонує, щоб підтвердити бронь.</p></div></aside>`;
-}
-function err(k){const e=S.bk.errors[k];return e?`<p class="err" id="err-${k}">${e}</p>`:''}
-function bkStep1(){
-  const b=S.bk;
-  return `<h2 id="bk-h" tabindex="-1">Де вас чекати?</h2><p class="sub">Місто підставили з вашої поточної локації. Його можна змінити.</p>
-  <fieldset class="fld"><legend>Місто</legend><div class="opts">
-    ${ORDER.map(id=>{const c=CITIES[id];return `<label class="opt"><input type="radio" name="bk-city" id="bk-city-${id}" value="${id}" ${b.city===id?'checked':''}><img src="${c.img}" alt=""><div><b>${c.name}</b><span>${c.address}</span></div><i class="dot" aria-hidden="true"></i></label>`}).join('')}
-  </div></fieldset>
-  <div class="fld"><span style="font-weight:600">Заклад</span><div class="venue">${ICON.pin}<div><b>Negroni Aperitivo Bar</b> · ${CITIES[b.city].address} · ${CITIES[b.city].hours}</div></div>
-  <p class="hint">У кожному місті зараз один бар. Коли відкриються нові, вони з’являться тут.</p></div>`;
-}
-function bkStep2(){
-  const b=S.bk,t=today();const days=[];for(let i=0;i<7;i++){const d=new Date(t);d.setDate(t.getDate()+i);days.push(d)}
-  const custom=b.date&&!days.some(d=>iso(d)===b.date);const max=new Date(t);max.setDate(t.getDate()+90);
-  return `<h2 id="bk-h" tabindex="-1">Коли й скільки гостей?</h2><p class="sub">Оберіть бажаний час. Це ще не бронь: адміністратор перевірить вільні столики й підтвердить.</p>
-  <fieldset class="fld"><legend>Дата</legend><div class="times dates">
-    ${days.map((d,i)=>{const di=iso(d);const none=slots().every(s=>slotPast(di,s));return `<button type="button" class="chip" data-date="${di}" aria-pressed="${b.date===di}" ${none?'disabled title="На сьогодні час уже минув"':''}><small>${i===0?'сьогодні':i===1?'завтра':fDay.format(d)}</small>${d.getDate()} ${monthOf(d).slice(0,3)}</button>`}).join('')}
-  </div><div class="dateother"><label for="bk-date-other" style="font-weight:500">Інша дата</label><input class="inp" type="date" id="bk-date-other" min="${iso(t)}" max="${iso(max)}" value="${custom?b.date:''}" ${b.errors.date?'aria-invalid="true" aria-describedby="err-date"':''}></div>
-  ${slots().every(s=>slotPast(iso(t),s))?'<p class="hint">На сьогодні бажаний час уже минув — оберіть іншу дату.</p>':''}${err('date')}</fieldset>
-  <fieldset class="fld"><legend>Бажаний час</legend><div class="times">
-    ${slots().map(s=>{const past=b.date&&slotPast(b.date,s);return `<button type="button" class="chip" data-time="${s}" aria-pressed="${b.time===s}" ${past?'disabled':''}>${s}</button>`}).join('')}
-  </div><p class="hint">Бар працює до 23:00, тому останній бажаний час — 22:00.</p>${err('time')}</fieldset>
-  <fieldset class="fld"><legend>Кількість гостей</legend><div class="guests-row">
-    <div class="stepper"><button type="button" data-g="-1" aria-label="Менше гостей" ${b.group||b.guests<=1?'disabled':''}>−</button><output aria-live="polite">${b.group?'9+':b.guests}</output><button type="button" data-g="1" aria-label="Більше гостей" ${b.group?'disabled':''}>+</button></div>
-    <button type="button" class="chip" data-groupt aria-pressed="${b.group}">Компанія 9+ гостей</button>
-  </div>
-  ${b.group?`<div class="group"><div><h3>Велика компанія</h3><p>Для 9 і більше гостей адміністратор окремо узгодить розміщення, меню та деталі вечора. Залиште заявку — вам зателефонують.</p></div>
-    <div style="display:grid;gap:8px"><label for="bk-gcount">Скільки буде гостей?</label><input class="inp" id="bk-gcount" type="number" inputmode="numeric" min="9" max="80" value="${esc(b.gCount)}" ${b.errors.gCount?'aria-invalid="true" aria-describedby="err-gCount"':''}>${err('gCount')}</div>
-    <div style="display:grid;gap:8px"><span style="font-weight:600">Привід (необов’язково)</span><div class="chips">${['День народження','Корпоратив','Зустріч друзів','Інше'].map(o=>`<button type="button" class="chip" data-occ="${o}" aria-pressed="${b.gOcc===o}">${o}</button>`).join('')}</div></div>
-  </div>`:''}</fieldset>`;
-}
-function bkStep3(){
-  const b=S.bk;
-  return `<h2 id="bk-h" tabindex="-1">Як до вас звертатися?</h2><p class="sub">Телефон потрібен лише для підтвердження бронювання.</p>
-  <div class="fld"><label for="bk-name">Ім’я</label><input class="inp" id="bk-name" autocomplete="given-name" value="${esc(b.name)}" placeholder="Наприклад, Олена" ${b.errors.name?'aria-invalid="true" aria-describedby="err-name"':''}>${err('name')}</div>
-  <div class="fld"><label for="bk-phone">Телефон</label><div class="tel"><span>+380</span><input class="inp" id="bk-phone" type="tel" inputmode="numeric" autocomplete="tel-national" value="${esc(fmtPhone(b.phone))}" placeholder="67 123 45 67" ${b.errors.phone?'aria-invalid="true" aria-describedby="err-phone"':'aria-describedby="hint-phone"'}></div><p class="hint" id="hint-phone">9 цифр після +380</p>${err('phone')}</div>
-  <div class="fld"><label for="bk-comment">${b.group?'Деталі для адміністратора':'Коментар'} <span style="font-weight:400;color:var(--ink-soft)">— необов’язково</span></label><textarea class="inp" id="bk-comment" maxlength="300" placeholder="${b.group?'Наприклад: святкуємо день народження, потрібен торт і окремий стіл':'Наприклад: столик біля вікна, святкуємо річницю'}">${esc(b.comment)}</textarea><div class="counter"><span id="cnt">${b.comment.length}</span>/300</div></div>`;
-}
-function bkStep4(){
-  const b=S.bk,c=CITIES[b.city];
-  const row=(k,v,s)=>`<div><dt>${k}</dt><dd>${v}</dd><button type="button" data-step="${s}" aria-label="Змінити: ${k}">Змінити</button></div>`;
-  return `<h2 id="bk-h" tabindex="-1">Перевірте заявку</h2><p class="sub">Усе правильно? Після надсилання адміністратор зв’яжеться з вами.</p>
-  <dl class="review">
-    ${row('Заклад',`Negroni ${c.name}, ${c.address}`,1)}
-    ${row('Дата і час',`${fLong.format(fromIso(b.date))}, ${b.time}`,2)}
-    ${row('Гості',b.group?`${guestsWord(+b.gCount)} · компанія${b.gOcc?' · '+esc(b.gOcc):''}`:guestsWord(b.guests),2)}
-    ${b.event?row('Подія',esc(b.event),2):''}
-    ${row('Ім’я',esc(b.name),3)}
-    ${row('Телефон','+380 '+esc(fmtPhone(b.phone)),3)}
-    ${b.comment?row('Коментар',esc(b.comment),3):''}
-  </dl>
-  <div class="notice">${ICON.info}<div>${b.group?'Це заявка на узгодження для великої компанії. Адміністратор обговорить з вами деталі телефоном.':'Це заявка, а не підтверджена бронь. Столик закріплять за вами після дзвінка адміністратора.'}</div></div>
-  <p class="hint" style="font-size:.85rem;color:var(--ink-soft);margin:12px 0 0">Надсилаючи заявку, ви погоджуєтеся на обробку імені й телефону для зв’язку щодо бронювання.</p>`;
-}
-function vBooking(){
-  const b=S.bk;const titles=['Місто та заклад','Дата, час і гості','Контакти','Перевірка'];
-  const body=[bkStep1,bkStep2,bkStep3,bkStep4][b.step-1]();
+/* ---------- party request: the bar takes no table bookings, only groups/celebrations by request ---------- */
+function newParty(x={}){return {city:S.city,date:'',guests:'15',occ:'',name:'',phone:'',comment:'',errors:{},...x}}
+function err(k){const e=S.pt.errors[k];return e?`<p class="err" id="err-${k}">${e}</p>`:''}
+function inv(k){return S.pt.errors[k]?`aria-invalid="true" aria-describedby="err-${k}"`:''}
+function vParty(){
+  const p=S.pt,c=CITIES[p.city],t=today(),max=new Date(t);max.setDate(t.getDate()+180);
   return `<div class="wrap"><div class="bk">
-    <form id="bkForm" novalidate>
-      <div class="crumbs" style="margin-bottom:18px"><button type="button" data-go="${S.prev||'home'}">← Повернутися на сайт</button></div>
-      <div class="progress"><div class="bar">${[1,2,3,4].map(i=>`<i class="${i<=b.step?'on':''}"></i>`).join('')}</div>
-        <div class="lbl"><span><b>Крок ${b.step} з 4</b> · ${titles[b.step-1]}</span><span>Бронювання столика${b.group?' · компанія':''}</span></div></div>
-      ${body}
-      <div class="bk-nav">${b.step>1?'<button type="button" class="btn btn-line" data-back>Назад</button>':'<span></span>'}
-        <button type="submit" class="btn btn-red" id="bkNext">${b.step<4?'Далі':'Надіслати заявку'}</button></div>
-      <div class="bk-pad"></div>
-    </form>
-    ${bkAside()}
+  <form id="ptForm" novalidate>
+    <div class="crumbs" style="margin-bottom:18px"><button type="button" data-go="${S.prev||'home'}">← Повернутися на сайт</button></div>
+    <div class="eyebrow">Свято у Negroni</div>
+    <h2 id="pt-h" tabindex="-1" style="margin-top:10px">День народження чи корпоратив?</h2>
+    <p class="sub">Звичайні столи ми не бронюємо — у бар просто приходять. Для компаній від 10 гостей залиште заявку, і менеджер обговорить з вами формат вечора.</p>
+    <fieldset class="fld"><legend>Місто</legend><div class="chips">${ORDER.map(id=>`<button type="button" class="chip" data-pcity="${id}" aria-pressed="${p.city===id}">${CITIES[id].name}</button>`).join('')}</div></fieldset>
+    <div class="fld"><label for="pt-date">Дата</label><input class="inp" type="date" id="pt-date" min="${iso(t)}" max="${iso(max)}" value="${p.date}" ${inv('date')}>${err('date')}</div>
+    <div class="fld"><label for="pt-guests">Скільки буде гостей?</label><input class="inp" style="max-width:160px" type="number" inputmode="numeric" id="pt-guests" min="10" max="120" value="${esc(p.guests)}" ${inv('guests')}><p class="hint">Від 10 до 120 гостей.</p>${err('guests')}</div>
+    <fieldset class="fld"><legend>Привід <span style="font-weight:400;color:var(--ink-soft)">— необов’язково</span></legend><div class="chips">${['День народження','Корпоратив','Дівич-вечір','Інше'].map(o=>`<button type="button" class="chip" data-occ="${o}" aria-pressed="${p.occ===o}">${o}</button>`).join('')}</div></fieldset>
+    <div class="fld"><label for="pt-name">Ім’я</label><input class="inp" id="pt-name" autocomplete="given-name" value="${esc(p.name)}" placeholder="Наприклад, Олена" ${inv('name')}>${err('name')}</div>
+    <div class="fld"><label for="pt-phone">Телефон</label><div class="tel"><span>+380</span><input class="inp" id="pt-phone" type="tel" inputmode="numeric" autocomplete="tel-national" value="${esc(fmtPhone(p.phone))}" placeholder="67 123 45 67" ${inv('phone')}></div><p class="hint">9 цифр після +380</p>${err('phone')}</div>
+    <div class="fld"><label for="pt-comment">Побажання <span style="font-weight:400;color:var(--ink-soft)">— необов’язково</span></label><textarea class="inp" id="pt-comment" maxlength="400" placeholder="Наприклад: хочемо сет піци й негроні на всіх, приблизно з 19:00">${esc(p.comment)}</textarea></div>
+    <p class="hint" style="font-size:.85rem;color:var(--ink-soft);margin:0">Надсилаючи заявку, ви погоджуєтеся на обробку імені й телефону для зв’язку щодо свята.</p>
+    <div class="bk-nav"><span></span><button type="submit" class="btn btn-red" id="ptSend">Надіслати заявку</button></div>
+    <div class="bk-pad"></div>
+  </form>
+  <aside class="aside" aria-label="Як це працює"><img src="${c.img}" alt=""><div class="in"><h3>Negroni ${c.name}</h3>
+    <dl><div><dt>Адреса</dt><dd>${c.address}</dd></div><div><dt>Телефон</dt><dd>${c.phone}</dd></div></dl>
+    <p class="hint">Заявка одразу приходить менеджеру бару ${c.loc}. Він зателефонує, щоб узгодити кількість гостей, меню та час.</p></div></aside>
   </div></div>`;
 }
 function vSuccess(){
-  const b=S.sent,c=CITIES[b.city];
+  const p=S.sent,c=CITIES[p.city];
   return `<div class="wrap ok">
     <div><div class="seal">${ICON.check}</div>
-      <div class="status"><i></i>Очікує підтвердження адміністратора</div>
-      <h1>Grazie, ${esc(b.name)}!</h1>
-      <p class="msg">Заявку надіслано. Адміністратор зв’яжеться з вами для підтвердження бронювання.</p>
-      <p style="color:var(--ink-soft);max-width:52ch;margin:0 0 28px">Якщо плани зміняться, зателефонуйте в бар ${c.loc}: <b style="color:var(--ink);white-space:nowrap">${c.phone}</b>.</p>
+      <h1>Grazie, ${esc(p.name)}!</h1>
+      <p class="msg">Заявку надіслано. Менеджер зв’яжеться з вами, щоб обговорити деталі свята.</p>
+      <p style="color:var(--ink-soft);max-width:52ch;margin:0 0 28px">Якщо є питання раніше, телефонуйте в бар ${c.loc}: <b style="color:var(--ink);white-space:nowrap">${c.phone}</b>.</p>
       <div class="acts" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-red" data-go="menu">Переглянути меню ${c.loc}</button><button class="btn btn-line" data-go="home">На головну</button></div>
     </div>
     <dl class="review" style="align-self:start">
-      <div><dt>Заклад</dt><dd>Negroni ${c.name}, ${c.address}</dd></div>
-      <div><dt>Дата і час</dt><dd>${fLong.format(fromIso(b.date))}, ${b.time}</dd></div>
-      <div><dt>Гості</dt><dd>${b.group?guestsWord(+b.gCount)+' · компанія'+(b.gOcc?' · '+esc(b.gOcc):''):guestsWord(b.guests)}</dd></div>
-      ${b.event?`<div><dt>Подія</dt><dd>${esc(b.event)}</dd></div>`:''}
-      <div><dt>Ім’я</dt><dd>${esc(b.name)}</dd></div>
-      <div><dt>Телефон</dt><dd>+380 ${esc(fmtPhone(b.phone))}</dd></div>
-      ${b.comment?`<div><dt>Коментар</dt><dd>${esc(b.comment)}</dd></div>`:''}
-    </dl>
-  </div>`;
+      <div><dt>Бар</dt><dd>Negroni ${c.name}, ${c.address}</dd></div>
+      <div><dt>Дата</dt><dd>${fLong.format(fromIso(p.date))}</dd></div>
+      <div><dt>Гості</dt><dd>${guestsWord(+p.guests)}${p.occ?' · '+esc(p.occ):''}</dd></div>
+      <div><dt>Ім’я</dt><dd>${esc(p.name)}</dd></div>
+      <div><dt>Телефон</dt><dd>+380 ${esc(fmtPhone(p.phone))}</dd></div>
+      ${p.comment?`<div><dt>Побажання</dt><dd>${esc(p.comment)}</dd></div>`:''}
+    </dl></div>`;
 }
 
 /* ---------- sheets ---------- */
 function sheet(){
   if(!S.sheet)return '';
   if(S.sheet==='city')return `<div class="scrim" data-close><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-h"><div class="grab"></div>
-    <h2 id="sh-h">Оберіть місто</h2><p class="s">Меню, події й бронювання покажемо для цього бару.</p>
+    <h2 id="sh-h">Оберіть місто</h2><p class="s">Меню, події та маршрут покажемо для цього бару.</p>
     <div class="opts">${ORDER.map(id=>{const c=CITIES[id];return `<label class="opt"><input type="radio" name="sh-city" value="${id}" ${id===S.city?'checked':''}><img src="${c.img}" alt=""><div><b>${c.name}</b><span>${c.address} · 15:00–23:00</span></div><i class="dot" aria-hidden="true"></i></label>`}).join('')}</div>
     <button class="btn btn-line" style="width:100%;margin-top:6px" data-close-btn>Закрити</button></div></div>`;
   return `<div class="scrim" data-close><div class="sheet" role="dialog" aria-modal="true" aria-label="Навігація"><div class="grab"></div>
-    <div class="navlist"><button data-go="locations">Локації</button><button data-go="menu">Меню</button><button data-go="events">Події</button><button data-go="about">Про нас</button></div>
-    <button class="btn btn-red" style="width:100%" data-book>Забронювати столик · ${CITIES[S.city].name}</button></div></div>`;
+    <div class="navlist"><button data-go="locations">Локації</button><button data-go="menu">Меню</button><button data-go="events">Події</button><button data-go="about">Про нас</button><button data-go="party">Свято у Negroni</button></div>
+    <a class="btn btn-red" style="width:100%" href="${CITIES[S.city].maps}" target="_blank" rel="noopener">${ICON.pin}Як дістатися · ${CITIES[S.city].name}</a></div></div>`;
 }
 
 /* ---------- presenter layer ---------- */
 function devPanel(){
   if(!S.dev)return '';
   const J=[['1','Головна сторінка','home'],['2','Вибір міста','locations'],['2·','Вибір міста (мобільна шторка)','sheet'],['3','Сторінка локації · Одеса','loc-odesa'],
-    ['4·1','Бронювання · крок 1','bk1'],['4·2','Крок 2 · дата, час, гості','bk2'],['4·2','Крок 2 · велика компанія','bkg'],['4·3','Крок 3 · контакти з помилками','bk3'],['4·4','Крок 4 · перевірка','bk4'],
-    ['5','Успішне надсилання','ok'],['6','Меню · Львів · їжа','menu'],['6','Події · усі міста','events'],['6·','Порожній стан подій · Львів','ev-empty']];
+    ['4','Заявка на свято (10+ гостей)','party'],['4·','Заявка з помилками','party-err'],['5','Заявку надіслано','ok'],['6','Меню · Львів · їжа','menu'],['6','Події · усі міста','events'],['6·','Порожній стан подій · Львів','ev-empty']];
   return `<div class="dev" role="dialog" aria-label="Нотатки для презентації"><button class="x" data-dev-close aria-label="Закрити">×</button>
     <h2>Нотатки для презентації</h2><p>Ця панель не входить у сайт для гостей. Тут перемикання екранів і пояснення, які дані реальні.</p>
     <h3>Вигляд</h3><div class="seg" role="group" aria-label="Вигляд"><button type="button" data-frame="0" aria-pressed="${!S.frame}">Desktop</button><button type="button" data-frame="1" aria-pressed="${S.frame}">Mobile 390 px</button></div>
+    <h3>Стан бару</h3><div class="seg" role="group" aria-label="Стан бару"><button type="button" data-demo-open="0" aria-pressed="${S.forceOpen==null}">Як зараз</button><button type="button" data-demo-open="1" aria-pressed="${S.forceOpen===true}">Показати «відкрито»</button></div>
     <h3>Екрани</h3><div class="jump">${J.map(([n,l,k])=>`<button type="button" data-jump="${k}"><b>${n}</b>${l}</button>`).join('')}</div>
+    <h3>Логіка сайту</h3><ul>
+      <li><b>Бар без бронювання.</b> Головна дія — «Як дістатися» (маршрут у Google Maps) і статус «Відкрито / зачинено», порахований за графіком у часовому поясі Києва.</li>
+      <li><b>Доставка</b> — кнопка «Замовити додому» там, де вона є (Одеса, Львів).</li>
+      <li><b>Події</b> — «Додати в календар» (Google Calendar), без реєстрації.</li></ul>
     <h3>Перевірені дані клієнта</h3><ul>
       <li><span class="ok-dot"></span><b>Адреси й телефони</b> — файл «Наші локації та контакти» з Linktree.</li>
-      <li><span class="ok-dot"></span><b>Графік 15:00–23:00</b> — біо Instagram і Linktree (один для всієї мережі).</li>
-      <li><span class="ok-dot"></span><b>Меню й ціни</b> — PDF-меню 2026 для Києва, Одеси, Львова. Напої однакові, кухня різна: у Києві закуски, в Одесі й Львові піца, антипасті, хот-доги (слайдери лише у Львові).</li>
+      <li><span class="ok-dot"></span><b>Графік 15:00–23:00</b> — біо Instagram і Linktree.</li>
+      <li><span class="ok-dot"></span><b>Меню й ціни</b> — PDF-меню 2026 для трьох міст.</li>
       <li><span class="ok-dot"></span><b>Доставка</b> — BOND (Одеса), Bolt Food (Львів), 15:00–22:00.</li>
-      <li><span class="ok-dot"></span><b>Логотип, червоний #E2000E, крем меню, «картата» стрічка, ілюстрації</b> — з меню та матеріалів бренду. Фраза «Kiss kiss, drink drink» і «Bevi bene…» — з матеріалів клієнта.</li></ul>
-    <h3>Демонстраційне</h3><ul>
-      <li><span class="demo-dot"></span><b>Фотографії</b> — стокові (Unsplash), замінити на фото закладів з Instagram.</li>
-      <li><span class="demo-dot"></span><b>Події</b> — вигадані приклади, позначені «Демо-анонс»; дати рахуються від сьогодні. У Львові навмисно порожньо, щоб показати стан «немає подій».</li>
-      <li><span class="demo-dot"></span><b>Описи локацій і текст «Про нас»</b> — чернетки копірайту для погодження.</li>
-      <li><span class="demo-dot"></span><b>Форма</b> нікуди не надсилає дані. Для запуску: заявка в Telegram-бот адміністратора або в CRM, без показу «вільних столиків», доки немає системи обліку.</li>
-      <li><span class="demo-dot"></span><b>Посилання на маршрут і відгуки</b> — пошукові запити Google Maps; замінити на точні картки закладів.</li></ul>
+      <li><span class="ok-dot"></span><b>Логотип, кольори, ілюстрації, слогани</b> — з матеріалів бренду.</li></ul>
+    <h3>Запропонувати / демо</h3><ul>
+      <li><span class="demo-dot"></span><b>«Зараз у барі: вільно / майже повно»</b> — демо. У робочій версії адміністратор раз на вечір тисне кнопку в Telegram-боті.</li>
+      <li><span class="demo-dot"></span><b>Заявка на свято від 10 гостей</b> — уточнити у власника, чи приймають компанії. Заявка йде менеджеру в Telegram; зараз форма нікуди не надсилає.</li>
+      <li><span class="demo-dot"></span><b>Фотографії</b> — стокові (Unsplash), замінити на фото закладів.</li>
+      <li><span class="demo-dot"></span><b>Події</b> — приклади з позначкою «Демо-анонс».</li>
+      <li><span class="demo-dot"></span><b>Описи локацій і «Про нас»</b> — чернетки копірайту.</li></ul>
   </div>`;
 }
 
 /* ======================== RENDER ======================== */
 const app=$('#app');
 function render(focusSel){
-  const views={home:vHome,locations:vLocations,location:vLocation,menu:vMenu,events:vEvents,booking:vBooking,success:vSuccess};
-  const inBk=S.view==='booking'||S.view==='success';
+  const views={home:vHome,locations:vLocations,location:vLocation,menu:vMenu,events:vEvents,party:vParty,success:vSuccess};
+  const inBk=S.view==='party'||S.view==='success';
   app.className=inBk?'no-mbar':'';
-  app.innerHTML=header()+`<main id="main">${views[S.view]()}</main>`+(S.view==='booking'?'':footer())+mbar()+sheet();
+  app.innerHTML=header()+`<main id="main">${views[S.view]()}</main>`+(S.view==='party'?'':footer())+mbar()+sheet();
   $('#devLayer').innerHTML=devPanel();
   document.body.classList.toggle('frame',S.frame);
   if(focusSel){const el=$(focusSel);if(el)el.focus({preventScroll:true})}
@@ -987,31 +967,24 @@ function scroller(){return S.frame?app:document.scrollingElement}
 function toTop(){scroller().scrollTo({top:0,behavior:'instant'})}
 function go(view,opts={}){
   if(view==='about'){S.view='home';S.sheet=null;render();requestAnimationFrame(()=>{const a=$('#about');if(a)a.scrollIntoView({behavior:'smooth'})});return}
-  if(view!=='booking'&&view!=='success')S.prev=view;
+  if(view!=='party'&&view!=='success')S.prev=view;
   S.view=view;S.sheet=null;render(opts.focus);if(!opts.keepScroll)toTop();
 }
 function setCity(id,silent){if(!CITIES[id])return;S.city=id;store.set('negroni.city',id);if(S.view==='events')S.evCity=id;if(!silent)toast('Місто: '+CITIES[id].name)}
-function startBooking(extra={}){S.bk=newBooking(extra);go('booking',{focus:'#bk-h'})}
 let tt;function toast(t){clearTimeout(tt);let el=$('.toast');if(!el){el=document.createElement('div');el.className='toast';el.setAttribute('role','status');document.body.appendChild(el)}el.textContent=t;tt=setTimeout(()=>el.remove(),1600)}
 
-/* ---------- validation ---------- */
-function validate(step){
-  const b=S.bk,e={};
-  if(step===2){
-    if(!b.date)e.date='Оберіть дату візиту.';
-    else if(fromIso(b.date)<today())e.date='Ця дата вже минула. Оберіть сьогодні або пізніше.';
-    if(!b.time)e.time='Оберіть бажаний час.';
-    else if(b.date&&slotPast(b.date,b.time))e.time='Цей час уже минув. Оберіть пізніший.';
-    if(b.group){const n=+b.gCount;if(!n||n<9)e.gCount='Для компанії вкажіть від 9 гостей. Якщо вас менше, поверніться до звичайного вибору.';else if(n>80)e.gCount='Для понад 80 гостей зателефонуйте адміністратору напряму.'}
-  }
-  if(step===3){
-    if(b.name.trim().length<2)e.name='Ім’я має містити щонайменше 2 літери.';
-    else if(!/^[\p{L}\s'’ʼ-]+$/u.test(b.name.trim()))e.name='Ім’я може містити лише літери, пробіл, дефіс чи апостроф.';
-    const d=b.phone.replace(/\D/g,'');
-    if(!d)e.phone='Вкажіть номер телефону, щоб адміністратор міг підтвердити бронь.';
-    else if(d.length!==9)e.phone='Номер має містити 9 цифр після +380. Зараз: '+d.length+'.';
-  }
-  b.errors=e;return !Object.keys(e).length;
+/* ---------- party validation ---------- */
+function validate(){
+  const p=S.pt,e={};
+  if(!p.date)e.date='Оберіть дату свята.';else if(fromIso(p.date)<today())e.date='Ця дата вже минула. Оберіть сьогодні або пізніше.';
+  const n=+p.guests;if(!n||n<10)e.guests='Заявки приймаємо для компаній від 10 гостей. Якщо вас менше, просто приходьте.';else if(n>120)e.guests='Для понад 120 гостей зателефонуйте в бар напряму.';
+  if(p.name.trim().length<2)e.name='Ім’я має містити щонайменше 2 літери.';else if(!/^[\p{L}\s'’ʼ-]+$/u.test(p.name.trim()))e.name='Ім’я може містити лише літери, пробіл, дефіс чи апостроф.';
+  const d=p.phone.replace(/\D/g,'');if(!d)e.phone='Вкажіть номер телефону, щоб менеджер міг з вами зв’язатися.';else if(d.length!==9)e.phone='Номер має містити 9 цифр після +380. Зараз: '+d.length+'.';
+  p.errors=e;return !Object.keys(e).length;
+}
+function gcal(e){
+  const pad=n=>String(n).padStart(2,'0'),d=e.date,[h,m]=e.time.split(':').map(Number),day=`${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`,c=CITIES[e.city];
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(e.title+' · Negroni '+c.name)+'&dates='+day+'T'+pad(h)+pad(m)+'00/'+day+'T'+pad(Math.min(h+3,23))+pad(m)+'00&ctz=Europe/Kyiv&location='+encodeURIComponent('Negroni Aperitivo Bar, '+c.address+', '+c.name)+'&details='+encodeURIComponent(e.text);
 }
 
 /* ---------- events ---------- */
@@ -1022,76 +995,61 @@ document.addEventListener('click',ev=>{
   if(d.close!==undefined||d.closeBtn!==undefined){S.sheet=null;render();return}
   if(d.devClose!==undefined){S.dev=false;render();$('#devTab').focus();return}
   if(d.frame!==undefined){S.frame=d.frame==='1';render();toTop();return}
+  if(d.demoOpen!==undefined){S.forceOpen=d.demoOpen==='1'?true:null;render();return}
   if(d.jump){jump(d.jump);return}
   if(d.setCity)setCity(d.setCity,true);
   if(d.city!==undefined&&t.closest('.seg')&&!d.evcity){setCity(d.city);render();return}
   if(d.evcity){S.evCity=d.evcity==='all'?null:d.evcity;if(d.evcity!=='all')setCity(d.evcity,true);render();return}
-  if(d.go){go(d.go);return}
-  if(d.book!==undefined){if(d.book)setCity(d.book,true);startBooking();return}
-  if(d.ev){const e=EVENTS().find(x=>x.id===d.ev);setCity(e.city,true);startBooking({date:iso(e.date),time:slots().includes(e.time)?e.time:'',event:e.title+' · '+e.time,comment:''});return}
+  if(d.go){if(d.go==='party')S.pt=newParty();go(d.go,d.go==='party'?{focus:'#pt-h'}:{});return}
   if(d.sheet){S.sheet=d.sheet;render();const f=$('.sheet input:checked,.sheet button');f&&f.focus();return}
   if(d.cat){S.menuCat=d.cat;render('[data-cat="'+d.cat+'"]');return}
   if(d.copy){const done=()=>toast('Номер скопійовано');try{navigator.clipboard.writeText(d.copy).then(done,()=>selectText(t))}catch(e){selectText(t)}return}
-  if(!S.bk)return;
-  const b=S.bk;
-  if(d.date){b.date=d.date;if(b.time&&slotPast(b.date,b.time))b.time='';delete b.errors.date;render('[data-date="'+d.date+'"]');return}
-  if(d.time){b.time=d.time;delete b.errors.time;render('[data-time="'+d.time+'"]');return}
-  if(d.g){b.guests=Math.min(8,Math.max(1,b.guests+ +d.g));render('[data-g="'+d.g+'"]');return}
-  if(d.groupt!==undefined){b.group=!b.group;render(b.group?'#bk-gcount':'[data-groupt]');return}
-  if(d.occ){b.gOcc=b.gOcc===d.occ?'':d.occ;render('[data-occ="'+d.occ+'"]');return}
-  if(d.back!==undefined){b.step--;b.errors={};render('#bk-h');toTop();return}
-  if(d.step){b.step=+d.step;b.errors={};render('#bk-h');toTop();return}
+  if(!S.pt)return;
+  if(d.pcity){S.pt.city=d.pcity;setCity(d.pcity,true);render('[data-pcity="'+d.pcity+'"]');return}
+  if(d.occ){S.pt.occ=S.pt.occ===d.occ?'':d.occ;render('[data-occ="'+d.occ+'"]');return}
 });
 function selectText(btn){const dd=btn.previousElementSibling||btn.parentNode;const r=document.createRange();r.selectNodeContents(dd);const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Виділено — скопіюйте вручну')}
 document.addEventListener('change',ev=>{
   const t=ev.target;
   if(t.name==='sh-city'){setCity(t.value);S.sheet=null;render();return}
-  if(t.name==='bk-city'){S.bk.city=t.value;setCity(t.value,true);render('#bk-city-'+t.value);return}
-  if(t.id==='bk-date-other'){if(t.value){S.bk.date=t.value;if(S.bk.time&&slotPast(t.value,S.bk.time))S.bk.time='';const ok=fromIso(t.value)>=today();S.bk.errors.date=ok?undefined:'Ця дата вже минула. Оберіть сьогодні або пізніше.';if(ok)delete S.bk.errors.date;render('#bk-date-other')}}
+  if(t.id==='pt-date'&&S.pt){S.pt.date=t.value;if(S.pt.errors.date){delete S.pt.errors.date;render('#pt-date')}}
 });
 document.addEventListener('input',ev=>{
-  const t=ev.target;if(!S.bk)return;
-  if(t.id==='bk-name')S.bk.name=t.value;
-  if(t.id==='bk-gcount')S.bk.gCount=t.value;
-  if(t.id==='bk-comment'){S.bk.comment=t.value;const c=$('#cnt');if(c)c.textContent=t.value.length}
-  if(t.id==='bk-phone'){const digits=t.value.replace(/\D/g,'').replace(/^(380|80|0)(?=\d{9})/,'').slice(0,9);S.bk.phone=digits;const f=fmtPhone(digits);if(t.value!==f)t.value=f}
+  const t=ev.target;if(!S.pt)return;
+  if(t.id==='pt-name')S.pt.name=t.value;
+  if(t.id==='pt-guests')S.pt.guests=t.value;
+  if(t.id==='pt-comment')S.pt.comment=t.value;
+  if(t.id==='pt-phone'){const digits=t.value.replace(/\D/g,'').replace(/^(380|80|0)(?=\d{9})/,'').slice(0,9);S.pt.phone=digits;const f=fmtPhone(digits);if(t.value!==f)t.value=f}
 });
 document.addEventListener('submit',ev=>{
-  if(ev.target.id!=='bkForm')return;ev.preventDefault();
-  const b=S.bk;
-  if(b.step<4){
-    if(!validate(b.step)){render('[aria-invalid="true"], .chips [aria-pressed]');const first=$('.err');first&&first.scrollIntoView({block:'center',behavior:'smooth'});return}
-    b.step++;render('#bk-h');toTop();return;
-  }
-  const btn=$('#bkNext');btn.disabled=true;btn.textContent='Надсилаємо…';
-  setTimeout(()=>{S.sent={...b};S.bk=null;go('success')},900);
+  if(ev.target.id!=='ptForm')return;ev.preventDefault();
+  if(!validate()){render('[aria-invalid="true"]');const first=$('.err');first&&first.scrollIntoView({block:'center',behavior:'smooth'});return}
+  const btn=$('#ptSend');btn.disabled=true;btn.textContent='Надсилаємо…';
+  setTimeout(()=>{S.sent={...S.pt};S.pt=null;go('success')},900);
 });
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(S.sheet){S.sheet=null;render()}else if(S.dev){S.dev=false;render()}}});
 $('#devTab').addEventListener('click',()=>{S.dev=!S.dev;render();const x=$('.dev .x');x&&x.focus()});
 
 function jump(k){
-  S.dev=window.innerWidth>900&&!S.frame?S.dev:false;if(S.frame)S.dev=true;
-  const tm=new Date(today());tm.setDate(tm.getDate()+2);
-  const sample={date:iso(tm),time:'19:30',guests:4};
+  if(S.frame)S.dev=true;else S.dev=window.innerWidth>900?S.dev:false;
+  const tm=new Date(today());tm.setDate(tm.getDate()+12);
   switch(k){
     case'home':go('home');break;
     case'locations':go('locations');break;
     case'sheet':go('home');S.sheet='city';render();break;
     case'loc-odesa':setCity('odesa',true);go('location');break;
-    case'bk1':startBooking();break;
-    case'bk2':startBooking({step:2});break;
-    case'bkg':startBooking({step:2,...sample,group:true,gCount:14,gOcc:'День народження'});break;
-    case'bk3':startBooking({step:3,...sample,name:'О',phone:'6712'});validate(3);render();break;
-    case'bk4':startBooking({step:4,...sample,name:'Олена',phone:'671234567',comment:'Столик біля вікна, якщо можна'});break;
-    case'ok':S.sent={...newBooking(),...sample,name:'Олена',phone:'671234567',comment:'Столик біля вікна, якщо можна'};go('success');break;
+    case'party':S.pt=newParty();go('party');break;
+    case'party-err':S.pt=newParty({guests:'6',name:'О',phone:'6712'});validate();go('party');break;
+    case'ok':S.sent={...newParty(),date:iso(tm),guests:'18',occ:'День народження',name:'Олена',phone:'671234567',comment:'Сет піци й негроні на всіх, приблизно з 19:00'};go('success');break;
     case'menu':setCity('lviv',true);S.menuCat='food';go('menu');break;
     case'events':S.evCity=null;go('events');break;
     case'ev-empty':setCity('lviv',true);S.evCity='lviv';go('events');break;
   }
 }
 render();
-/* deep links for the pitch: #bk2, #ok, #menu … (bare tokens only) */
-const JUMPS=['home','locations','sheet','loc-odesa','bk1','bk2','bkg','bk3','bk4','ok','menu','events','ev-empty'];
-let h0=location.hash.slice(1);if(h0.startsWith('m-')&&innerWidth>700){S.frame=true;h0=h0.slice(2);render()}
+/* deep links for the pitch: #party, #ok, #menu … ; #m-… opens the phone frame; …-open forces the "open now" state */
+const JUMPS=['home','locations','sheet','loc-odesa','party','party-err','ok','menu','events','ev-empty'];
+let h0=location.hash.slice(1);if(h0.endsWith('-open')){S.forceOpen=true;h0=h0.slice(0,-5)}
+if(h0.startsWith('m-')&&innerWidth>700){S.frame=true;h0=h0.slice(2);render()}
 if(JUMPS.includes(h0))jump(h0);if(S.frame){S.dev=false;render()}
 </script>
