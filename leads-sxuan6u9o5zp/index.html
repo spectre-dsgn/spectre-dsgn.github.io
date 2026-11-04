@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Spectre Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: split workspace. Filterable lead list on the left, full dossier on the right; one column on phones. */
+:root{
+  --bg:#eef0f5; --surface:#ffffff; --surface2:#f5f6fa; --ink:#161923; --muted:#5d6376; --line:#dadde9;
+  --accent:#4a3fd0; --accent-ink:#ffffff; --accent-soft:#e9e7fb;
+  --ok:#0f7a4d; --ok-soft:#dcf3e8; --warn:#8f5600; --warn-soft:#fcefd0; --bad:#b3261e; --bad-soft:#fbe3e1; --info:#1b5fb8; --info-soft:#e0ecfb;
+  --font-ui:'Onest',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,Consolas,'Courier New',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1017; --surface:#161924; --surface2:#1c2030; --ink:#e9ebf4; --muted:#9298ad; --line:#272b3b;
+    --accent:#9a91ff; --accent-ink:#0e1017; --accent-soft:#25234a;
+    --ok:#4fd39b; --ok-soft:#12332a; --warn:#f0b64a; --warn-soft:#3a2d12; --bad:#ff8a80; --bad-soft:#3d1b19; --info:#7db4ff; --info-soft:#16284a;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1017; --surface:#161924; --surface2:#1c2030; --ink:#e9ebf4; --muted:#9298ad; --line:#272b3b;
+  --accent:#9a91ff; --accent-ink:#0e1017; --accent-soft:#25234a;
+  --ok:#4fd39b; --ok-soft:#12332a; --warn:#f0b64a; --warn-soft:#3a2d12; --bad:#ff8a80; --bad-soft:#3d1b19; --info:#7db4ff; --info-soft:#16284a;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:14px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1320px;margin:0 auto;padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-bottom:16px}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto}
+.brand b{font-weight:700;letter-spacing:.14em;font-size:15px}
+.brand .sub{font-family:var(--font-mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
+.tab{border:0;background:none;padding:6px 14px;border-radius:7px;cursor:pointer;color:var(--muted);font-weight:500}
+.tab[aria-selected="true"]{background:var(--accent-soft);color:var(--accent)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);padding:7px 14px;border-radius:9px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.small{padding:4px 10px;font-size:12.5px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.banner{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn);border-radius:10px;padding:10px 14px;margin-bottom:14px}
+.banner[hidden]{display:none}
+
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.stat b{display:block;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat span{font-family:var(--font-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.filters input,.filters select,.field input,.field select,.field textarea,.notes{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:7px 10px;min-width:0}
+.filters input{flex:1 1 220px}
+.filters select{flex:0 1 170px}
+
+.split{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:14px;align-items:start}
+.list{display:flex;flex-direction:column;gap:8px}
+.card{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;cursor:pointer}
+.card:hover{border-color:var(--accent)}
+.card[aria-current="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card h3{margin:0;font-size:15px;font-weight:600;overflow-wrap:anywhere}
+.card .meta{color:var(--muted);font-size:12.5px;margin-top:2px}
+.card-bot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.fit{display:inline-flex;gap:2px;align-items:center}
+.fit i{width:5px;height:12px;border-radius:2px;background:var(--line)}
+.fit i.on{background:var(--accent)}
+.pill{display:inline-block;font-family:var(--font-mono);font-size:11px;padding:2px 8px;border-radius:99px;background:var(--surface2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.pill.new{background:var(--info-soft);color:var(--info);border-color:transparent}
+.pill.contacted,.pill.replied,.pill.demo{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.won{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.lost{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.pill.info{background:var(--info-soft);color:var(--info);border-color:transparent}
+.tg-mark{font-family:var(--font-mono);font-size:11px;color:var(--ok)}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:28px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;min-width:0}
+.d-head{display:flex;flex-wrap:wrap;gap:10px 16px;justify-content:space-between;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.d-head h2{margin:0;font-size:22px;font-weight:700;overflow-wrap:anywhere;text-wrap:balance}
+.d-head .meta{color:var(--muted);margin-top:2px}
+.d-ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.d-ctl select{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:6px 10px}
+.back{display:none}
+.sec{margin-top:18px}
+.sec h4{margin:0 0 8px;font-family:var(--font-mono);font-size:11.5px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.contacts{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--surface2);min-width:0}
+.chip.pri{border-color:var(--accent)}
+.chip .k{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);width:62px;flex:none}
+.chip .v{font-family:var(--font-mono);font-size:12.5px;overflow-wrap:anywhere;min-width:0;flex:1}
+.chip a{color:var(--accent);text-decoration:none}
+.chip a:hover{text-decoration:underline}
+.chip.none .v{color:var(--muted)}
+.icon-btn{border:0;background:none;color:var(--muted);cursor:pointer;padding:2px 4px;border-radius:6px;font-size:12px;flex:none}
+.icon-btn:hover{color:var(--accent);background:var(--accent-soft)}
+ul.pts{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.msg{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.seg{display:inline-flex;background:var(--surface2);border:1px solid var(--line);border-radius:9px;padding:2px}
+.seg button{border:0;background:none;padding:4px 10px;border-radius:7px;cursor:pointer;color:var(--muted);font-size:12.5px}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.gen{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.gen input{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:5px 10px;width:140px}
+.gen-out{margin-top:8px}
+.evid{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.evid a{color:var(--accent)}
+.notes{width:100%;min-height:90px;resize:vertical}
+.hint{color:var(--muted);font-size:12.5px}
+.why{color:var(--muted);font-size:13px;margin-top:6px}
+
+.how{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.how .box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.how h3{margin:0 0 6px;font-size:15px}
+.how p{margin:0 0 6px;color:var(--muted)}
+.how-lead{max-width:70ch;color:var(--muted);margin:0 0 14px}
+
+.overlay{position:fixed;inset:0;background:rgba(10,12,20,.55);display:flex;align-items:flex-start;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px 16px;overflow:auto;z-index:20}
+.overlay[hidden]{display:none}
+.modal{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(640px,100%);padding:18px 20px;margin-top:4vh}
+.modal h2{margin:0 0 12px;font-size:18px}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.field{display:flex;flex-direction:column;gap:3px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.field textarea{min-height:70px;resize:vertical}
+.modal-foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:14px}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:99px;font-size:13px;z-index:30;max-width:calc(100% - 32px)}
+.toast[hidden]{display:none}
+
+@media (max-width:900px){
+  .split{grid-template-columns:minmax(0,1fr)}
+  .split.open .list{display:none}
+  .split:not(.open) .detail{display:none}
+  .back{display:inline-block}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two{grid-template-columns:minmax(0,1fr)}
+  .fgrid{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><b>SPECTRE</b><span class="sub">Leads</span></div>
+    <div class="tabs" role="tablist" aria-label="Разделы">
+      <button class="tab" role="tab" id="tab-base" data-tab="base" aria-selected="true">База</button>
+      <button class="tab" role="tab" id="tab-how" data-tab="how" aria-selected="false">Где искать</button>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btn-export" type="button">Экспорт CSV</button>
+      <button class="btn primary" id="btn-add" type="button">+ Лид</button>
+    </div>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+
+  <main id="view-base">
+    <section class="stats" id="stats" aria-label="Сводка"></section>
+    <section class="filters" aria-label="Фильтры">
+      <input id="f-q" type="search" placeholder="Поиск по названию, нише, городу, заметкам" aria-label="Поиск">
+      <select id="f-status" aria-label="Статус"></select>
+      <select id="f-niche" aria-label="Ниша"></select>
+      <select id="f-country" aria-label="Страна"></select>
+      <select id="f-sort" aria-label="Сортировка">
+        <option value="fit">Сначала сильные</option>
+        <option value="touched">Недавно обновлённые</option>
+        <option value="name">По названию</option>
+      </select>
+    </section>
+    <div class="split" id="split">
+      <aside class="list" id="list" aria-label="Список лидов"></aside>
+      <article class="detail" id="detail" aria-live="polite"></article>
+    </div>
+  </main>
+
+  <main id="view-how" hidden></main>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="add-title">
+    <h2 id="add-title">Новый лид</h2>
+    <div class="fgrid">
+      <div class="field full"><label for="a-name">Название *</label><input id="a-name" autocomplete="off"></div>
+      <div class="field"><label for="a-niche">Ниша</label><input id="a-niche" placeholder="Кафе, салон, магазин" autocomplete="off"></div>
+      <div class="field"><label for="a-country">Страна</label><input id="a-country" autocomplete="off"></div>
+      <div class="field"><label for="a-city">Город</label><input id="a-city" autocomplete="off"></div>
+      <div class="field"><label for="a-site">Сайт</label><input id="a-site" placeholder="https://" autocomplete="off"></div>
+      <div class="field"><label for="a-tg">Telegram</label><input id="a-tg" placeholder="@username" autocomplete="off"></div>
+      <div class="field"><label for="a-ig">Instagram</label><input id="a-ig" placeholder="@username" autocomplete="off"></div>
+      <div class="field"><label for="a-wa">WhatsApp</label><input id="a-wa" placeholder="+971..." autocomplete="off"></div>
+      <div class="field"><label for="a-mail">Email</label><input id="a-mail" autocomplete="off"></div>
+      <div class="field"><label for="a-phone">Телефон</label><input id="a-phone" autocomplete="off"></div>
+      <div class="field"><label for="a-budget">Бюджет (только если известен)</label><input id="a-budget" autocomplete="off"></div>
+      <div class="field"><label for="a-fit">Приоритет 1-5</label>
+        <select id="a-fit"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+      <div class="field full"><label for="a-notes">Что известно о них, что заметили на сайте или в соцсетях</label>
+        <textarea id="a-notes" placeholder="Например: сайт без цен, записываются через директ Instagram, скоро открывают вторую точку"></textarea></div>
+      <div class="field full"><label for="a-needs">Что им нужно (по одному пункту в строке)</label><textarea id="a-needs"></textarea></div>
+      <div class="field full"><label for="a-offer">Что предложить (по одному пункту в строке)</label><textarea id="a-offer"></textarea></div>
+      <div class="field full"><label for="a-pitch">Сообщение для отправки</label><textarea id="a-pitch"></textarea></div>
+    </div>
+    <p class="hint" id="a-hint"></p>
+    <div class="modal-foot">
+      <button class="btn" id="a-ai" type="button" hidden>ИИ: заполнить нужды, оффер и текст</button>
+      <button class="btn" id="a-cancel" type="button">Отмена</button>
+      <button class="btn primary" id="a-save" type="button">Сохранить</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+const STATUS=[["new","Новый"],["contacted","Написали"],["replied","Ответили"],["demo","Демо отправлено"],["won","Сделка"],["lost","Отказ"]];
+const SLABEL=Object.fromEntries(STATUS);
+const CONF={site:["Проверено на сайте","ok"],listing:["Из стороннего источника","warn"],unverified:["Нужна проверка","bad"],manual:["Добавлено менеджером","info"]};
+const S={leads:[],loaded:false,sel:null,tab:"base",q:"",fStatus:"",fNiche:"",fCountry:"",sort:"fit",lang:"main",gen:{text:"",busy:false,ctl:null}};
+let db=null,user=null,sample=null,downloads=null,me={id:null,isOwner:false,canEdit:false},canWrite=true;
+const queue={};
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const arr=v=>Array.isArray(v)?v:[];
+const lines=t=>String(t||"").split("\n").map(s=>s.trim()).filter(Boolean);
+function toast(t){const el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>{el.hidden=true},2600)}
+async function copy(text){
+  try{await navigator.clipboard.writeText(text);toast("Скопировано");}
+  catch(e){
+    const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.append(ta);ta.select();
+    let ok=false;try{ok=document.execCommand("copy")}catch(_){}
+    ta.remove();toast(ok?"Скопировано":"Выделите текст и скопируйте вручную");
+  }
+}
+const handle=v=>String(v||"").trim().replace(/^https?:\/\/(www\.)?(instagram\.com|t\.me|tiktok\.com)\//i,"").replace(/^@/,"").replace(/\/.*$/,"");
+const digits=v=>String(v||"").replace(/[^\d]/g,"");
+const url=v=>{v=String(v||"").trim();if(!v)return"";return /^https?:\/\//i.test(v)?v:"https://"+v};
+
+function contactRows(l){
+  const c=l.contacts||{};
+  const rows=[];
+  rows.push(["Telegram",c.telegram?"@"+handle(c.telegram):"",c.telegram?"https://t.me/"+handle(c.telegram):"",true]);
+  rows.push(["Instagram",c.instagram?"@"+handle(c.instagram):"",c.instagram?"https://instagram.com/"+handle(c.instagram):"",true]);
+  rows.push(["WhatsApp",c.whatsapp||"",digits(c.whatsapp)?"https://wa.me/"+digits(c.whatsapp):"",false]);
+  rows.push(["Email",c.email||"",c.email?"mailto:"+c.email:"",false]);
+  rows.push(["Телефон",c.phone||"",digits(c.phone)?"tel:+"+digits(c.phone):"",false]);
+  rows.push(["Сайт",l.website||"",url(l.website),false]);
+  rows.push(["TikTok",c.tiktok?"@"+handle(c.tiktok):"",c.tiktok?"https://www.tiktok.com/@"+handle(c.tiktok):"",false]);
+  rows.push(["Facebook",c.facebook||"",c.facebook?(/^https?:/i.test(c.facebook)?c.facebook:"https://www.facebook.com/search/top?q="+encodeURIComponent(c.facebook)):"",false]);
+  rows.push(["Другое",c.other||"","",false]);
+  return rows;
+}
+
+/* ---------- list ---------- */
+function hay(l){const c=l.contacts||{};return [l.name,l.niche,l.city,l.country,l.notes,l.website,...Object.values(c)].join(" ").toLowerCase()}
+function cmp(a,b){
+  if(S.sort==="name")return String(a.name).localeCompare(String(b.name));
+  if(S.sort==="touched")return (b.touched||0)-(a.touched||0);
+  return (b.fit||0)-(a.fit||0)||String(a.name).localeCompare(String(b.name));
+}
+function visible(){
+  const q=S.q.trim().toLowerCase();
+  return S.leads.filter(l=>(!S.fStatus||(l.status||"new")===S.fStatus)&&(!S.fNiche||l.niche===S.fNiche)&&(!S.fCountry||l.country===S.fCountry)&&(!q||hay(l).includes(q))).sort(cmp);
+}
+function fitDots(n){n=Number(n)||0;return '<span class="fit" role="img" aria-label="Приоритет '+n+' из 5" title="Приоритет '+n+' из 5">'+[1,2,3,4,5].map(i=>'<i class="'+(i<=n?"on":"")+'"></i>').join("")+'</span>'}
+function renderStats(){
+  const L=S.leads,st=l=>l.status||"new";
+  const work=L.filter(l=>["contacted","replied","demo"].includes(st(l))).length;
+  const items=[["Всего",L.length],["Новые",L.filter(l=>st(l)==="new").length],["В работе",work],["Сделки",L.filter(l=>st(l)==="won").length]];
+  $("stats").innerHTML=items.map(([k,v])=>'<div class="stat"><b>'+v+'</b><span>'+k+'</span></div>').join("");
+}
+function fillSelect(id,first,vals,cur){
+  const el=$(id);el.innerHTML='<option value="">'+first+'</option>'+vals.map(([v,t])=>'<option value="'+esc(v)+'">'+esc(t)+'</option>').join("");
+  el.value=vals.some(([v])=>v===cur)?cur:"";
+}
+function renderFilters(){
+  const uniq=k=>[...new Set(S.leads.map(l=>l[k]).filter(Boolean))].sort().map(v=>[v,v]);
+  fillSelect("f-status","Все статусы",STATUS,S.fStatus);
+  fillSelect("f-niche","Все ниши",uniq("niche"),S.fNiche);
+  fillSelect("f-country","Все страны",uniq("country"),S.fCountry);
+}
+function renderList(){
+  const v=visible(),el=$("list");
+  if(!S.loaded){el.innerHTML='<div class="empty"><b>Загружаю базу</b>Лиды появятся через секунду.</div>';return}
+  if(!S.leads.length){el.innerHTML='<div class="empty"><b>База пока пуста</b>Нажмите «+ Лид», чтобы добавить первого. Откройте вкладку «Где искать», если нужны идеи, где их взять.</div>';return}
+  if(!v.length){el.innerHTML='<div class="empty"><b>Ничего не найдено</b>Сбросьте фильтры или измените запрос.</div>';return}
+  el.innerHTML=v.map(l=>{
+    const st=l.status||"new",tg=(l.contacts||{}).telegram;
+    return '<button type="button" class="card" data-id="'+esc(l.id)+'" aria-current="'+(l.id===S.sel)+'">'+
+      '<div class="card-top"><div><h3>'+esc(l.name)+'</h3><div class="meta">'+esc([l.niche,l.city,l.country].filter(Boolean).join(" · "))+'</div></div>'+fitDots(l.fit)+'</div>'+
+      '<div class="card-bot"><span class="pill '+st+'">'+esc(SLABEL[st]||st)+'</span>'+(tg?'<span class="tg-mark">TG есть</span>':'')+
+      (arr(l.needs)[0]?'<span class="meta" style="font-size:12px;flex-basis:100%">'+esc(arr(l.needs)[0].slice(0,92))+(arr(l.needs)[0].length>92?"…":"")+'</span>':'')+'</div></button>';
+  }).join("");
+}
+
+/* ---------- detail ---------- */
+let detailSig="";
+function sigOf(l){const c={...l};delete c.notes;delete c.touched;delete c.touchedBy;return JSON.stringify(c)+"|"+S.lang+"|"+canWrite+"|"+me.canEdit}
+function renderDetail(force){
+  const el=$("detail"),l=S.leads.find(x=>x.id===S.sel);
+  if(!l){
+    detailSig="";
+    el.innerHTML=S.leads.length?'<div class="empty"><b>Выберите лида слева</b>Здесь появятся контакты, потребности, оффер и готовое сообщение.</div>':'<div class="empty"><b>Здесь будет карточка лида</b>Контакты, что им нужно, что предложить и текст первого сообщения.</div>';
+    return;
+  }
+  const sig=sigOf(l);
+  if(!force&&sig===detailSig)return;
+  const ae=document.activeElement;
+  if(!force&&ae&&ae.id==="d-notes"&&ae.dataset.id===l.id)return;
+  detailSig=sig;
+  const st=l.status||"new",conf=CONF[l.confidence]||CONF.manual,dis=canWrite?"":" disabled";
+  const rows=contactRows(l);
+  const chips=rows.filter(r=>r[1]||r[3]).map(([k,v,href,pri])=>{
+    if(!v)return '<div class="chip none"><span class="k">'+k+'</span><span class="v">не найден</span></div>';
+    const isWeb=/^https?:/i.test(href);
+    const val=href?'<a href="'+esc(href)+'"'+(isWeb?' target="_blank" rel="noopener noreferrer"':'')+'>'+esc(v)+'</a>':esc(v);
+    return '<div class="chip'+(pri?' pri':'')+'"><span class="k">'+k+'</span><span class="v">'+val+'</span><button type="button" class="icon-btn" data-copy="'+esc(v)+'" aria-label="Скопировать '+k+'">копир.</button></div>';
+  }).join("");
+  const needs=arr(l.needs),offer=arr(l.offer);
+  const hasRu=l.pitch_ru&&l.pitch_lang&&l.pitch_lang!=="RU";
+  const showRu=hasRu&&S.lang==="ru";
+  const msg=showRu?l.pitch_ru:(l.pitch||"");
+  const mine=me.id&&l.assignee===me.id;
+  el.innerHTML=
+   '<div class="d-head"><div><button type="button" class="btn small back" id="d-back">← Список</button><h2>'+esc(l.name)+'</h2>'+
+   '<div class="meta">'+esc([l.niche,l.city,l.country].filter(Boolean).join(" · "))+'</div>'+
+   '<div style="margin-top:6px;display:flex;gap:8px;align-items:center">'+fitDots(l.fit)+'<span class="hint">Приоритет '+(Number(l.fit)||0)+'/5</span></div>'+
+   (l.fitWhy?'<div class="why">'+esc(l.fitWhy)+'</div>':'')+'</div>'+
+   '<div class="d-ctl"><label class="hint" for="d-status">Статус</label><select id="d-status"'+dis+'>'+STATUS.map(([v,t])=>'<option value="'+v+'"'+(v===st?' selected':'')+'>'+t+'</option>').join("")+'</select>'+
+   '<span class="pill" id="d-assignee">'+(l.assignee?'Ведёт: <span data-uid="'+esc(l.assignee)+'">менеджер</span>':'Никто не ведёт')+'</span>'+
+   (me.id&&canWrite?'<button type="button" class="btn small" id="d-take">'+(mine?'Снять с себя':'Взять себе')+'</button>':'')+
+   (me.canEdit?'<button type="button" class="btn small" id="d-del">Удалить</button>':'')+'</div></div>'+
+   '<div class="sec"><h4>Контакты</h4><div class="contacts">'+chips+'</div></div>'+
+   '<div class="sec two"><div><h4>Что им нужно</h4>'+(needs.length?'<ul class="pts">'+needs.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul>':'<span class="hint">Пока не заполнено</span>')+'</div>'+
+   '<div><h4>Что предложить</h4>'+(offer.length?'<ul class="pts">'+offer.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul>':'<span class="hint">Пока не заполнено</span>')+'</div></div>'+
+   (l.budget?'<div class="sec"><h4>Бюджет</h4><div>'+esc(l.budget)+'</div></div>':'')+
+   '<div class="sec"><h4>Сообщение для первого контакта</h4>'+
+   '<div class="msg-bar">'+(hasRu?'<div class="seg"><button type="button" data-lang="main" aria-pressed="'+(!showRu)+'">Для отправки ('+esc(l.pitch_lang||"EN")+')</button><button type="button" data-lang="ru" aria-pressed="'+showRu+'">Перевод (RU)</button></div>':'')+
+   '<button type="button" class="btn small" data-copy="'+esc(msg)+'">Скопировать текст</button></div>'+
+   '<div class="msg" id="d-msg">'+(msg?esc(msg):'<span class="hint">Текста пока нет. Сгенерируйте его кнопкой ниже.</span>')+'</div>'+
+   '<div class="gen" id="d-gen" hidden><label class="hint" for="g-lang">Язык</label><input id="g-lang" value="'+esc(l.pitch_lang==="RU"?"русский":"English")+'"><button type="button" class="btn small" id="g-run">Новый вариант (ИИ)</button><button type="button" class="btn small" id="g-stop" hidden>Стоп</button></div>'+
+   '<div class="gen-out" id="g-out"></div></div>'+
+   '<div class="sec"><h4>Проверка данных</h4><div class="evid"><span class="pill '+conf[1]+'">'+conf[0]+'</span>'+
+   (l.checked?'<span class="hint">'+esc(l.checked)+'</span>':'')+
+   arr(l.evidence).map(e=>'<a href="'+esc(e.url)+'" target="_blank" rel="noopener noreferrer">'+esc(e.label)+'</a>').join("")+'</div>'+
+   (l.caveat?'<div class="why">'+esc(l.caveat)+'</div>':'')+'</div>'+
+   '<div class="sec"><h4>Заметки команды</h4><textarea class="notes" id="d-notes" data-id="'+esc(l.id)+'" placeholder="Что ответили, когда написать снова, договорённости"'+dis+'>'+esc(l.notes||"")+'</textarea>'+
+   '<div class="hint" id="d-saved"></div></div>';
+  $("d-gen").hidden=!(sample&&canWrite);
+  fillNames();
+}
+async function fillNames(){
+  const els=[...document.querySelectorAll("[data-uid]")];
+  if(!els.length||!user)return;
+  try{const ids=[...new Set(els.map(e=>e.dataset.uid))];const ps=await user.profiles(ids);els.forEach(e=>{e.textContent=(ps[e.dataset.uid]&&ps[e.dataset.uid].name)||"менеджер"})}catch(_){}
+}
+
+/* ---------- how-to tab ---------- */
+const HOW=[
+ ["Сигналы, что человеку нужна ваша услуга",["Скоро открытие или недавно открылись: нет логотипа, сайта, прайса.","Вместо сайта ссылка на Linktree, Taplink или WhatsApp в шапке профиля.","Запись и заказы идут вручную в директе или по телефону.","Сайт без цены, без мобильной версии, с битыми ссылками и опечатками.","Открыли вторую точку или франшизу, а сайт описывает одну.","Публичная заявка на площадке: ищут разработчика бота, дизайнера, моушн-дизайнера."]],
+ ["Google Maps",["Запрос «ниша + район», фильтр по рейтингу от 4.3.","Берите карточки без сайта или с сайтом на конструкторе, которому больше 3-4 лет.","Мало отзывов и высокий рейтинг: бизнес молодой и растёт.","Контакты в карточке публичные: телефон, сайт, ссылки на соцсети."]],
+ ["Instagram",["Поиск по хэштегам открытий: #comingsoon, #grandopening, #newcafe + город.","Профили, где в био только телефон или ссылка на мессенджер.","Лимит: 20-30 новых диалогов в день с одного аккаунта, иначе риск блокировки.","Первое сообщение без ссылок на прайс, одна конкретная деталь о них."]],
+ ["Telegram",["Каталоги каналов: TGStat, Telemetr. Ищите магазины и услуги без бота и без сайта.","Каналы магазинов, где заказывают комментарием или в личку: вручную обрабатывается всё.","Чаты предпринимателей и маркетплейсов: смотрите, кто просит бота или сайт.","Пишите владельцу канала, не в общий чат."]],
+ ["Агрегаторы записи",["Fresha, Booksy, Treatwell: салоны, студии, клиники.","Сравните карточку и собственный сайт. Нет сайта или он слабее карточки: это лид.","Предложение: бот или сайт записи с их брендом, без комиссии агрегатора."]],
+ ["Площадки заказов",["Upwork, Freelancehunt, Kwork, Wellfound: фильтры «Telegram bot», «landing page», «motion designer».","Площадки закрыты для автоматического чтения, открывайте вручную в браузере.","Отвечайте в первые 1-2 часа после публикации, с готовым примером работы."]],
+ ["Новости об открытиях",["Городские сайты об открытиях и разделы «скоро откроется» в местных СМИ.","Ищите «opening soon» + город + 2026.","Новый бизнес уже решил открыться, значит бюджет на бренд и сайт есть сейчас."]],
+ ["Агентства и студии",["Агентства, которые публикуют вакансии motion и 3D-дизайнеров, часто берут подрядчиков.","Предложение: работа под белой этикеткой, быстрые сроки, тестовая анимация за свой счёт.","Контакты ищите в разделе «Hire us» или «Careers» на их сайте."]],
+ ["Какой канал в каком регионе",["ОАЭ: Instagram и WhatsApp. Telegram работает у русскоязычных владельцев.","США, Великобритания, Европа: Instagram и email. Telegram встречается редко.","Грузия, Армения, Казахстан, Сербия: Telegram и Instagram.","Турция: Instagram и WhatsApp.","Юго-Восточная Азия: WhatsApp и Instagram, Telegram в крипто и e-commerce.","Это рабочие ориентиры, а не статистика. Проверяйте по профилю конкретного бизнеса."]],
+ ["Первое сообщение",["До 80 слов, как живой человек: без поздравлений и без подписи с именем. Одна наблюдаемая проблема.","Без вопроса «можно прислать?». Пишите так: могу на днях прислать демо-версию, если интересно.","В конце две ссылки: пример работы (скажите, что это тоже демо) и наш сайт spectre-dsgn.github.io.","Демо делайте до ответа, 15-30 минут на мокап. Это ваш главный аргумент.","Цену в первом сообщении не называйте.","Повтор через 3 и через 7 дней, новым углом: показать готовый мокап.","Язык переписки как у клиента. Для местных бизнесов это язык страны."]],
+ ["Как вносить лида",["Название, ниша, страна, город.","Контакты по приоритету: Telegram, Instagram, затем остальные.","Нужда: что именно вы увидели, а не общие слова.","Бюджет заполняйте только если он указан публично. Иначе оставьте пустым.","Источник и дата проверки в заметках."]]
+];
+function renderHow(){
+  $("view-how").innerHTML='<p class="how-lead">Методика поиска для менеджеров. Это инструкция, а не список бизнесов: конкретные лиды живут во вкладке «База».</p><div class="how">'+
+    HOW.map(([t,pts])=>'<section class="box"><h3>'+esc(t)+'</h3><ul class="pts">'+pts.map(p=>'<li>'+esc(p)+'</li>').join("")+'</ul></section>').join("")+'</div>';
+}
+
+/* ---------- writes ---------- */
+function save(id,patch){
+  local.over[id]=Object.assign(local.over[id]||{},patch);
+  persist();
+  S.leads=buildLeads();
+  renderAll(false);
+  return Promise.resolve();
+}
+function writeFail(e){
+  if(e&&(e.code==="invalid_argument"||e.code==="revoked")){canWrite=false;renderAll(true);toast("Нет прав на изменение. Попросите владельца выдать доступ «Contributor».")}
+  else toast("Не удалось сохранить, попробуйте ещё раз");
+}
+let notesTimer=null;
+function onNotes(e){
+  const ta=e.target;if(ta.id!=="d-notes")return;
+  clearTimeout(notesTimer);$("d-saved").textContent="Сохраняю…";
+  notesTimer=setTimeout(()=>{save(ta.dataset.id,{notes:ta.value}).then(()=>{const s=$("d-saved");if(s)s.textContent="Сохранено"}).catch(writeFail)},700);
+}
+
+/* ---------- AI ---------- */
+function leadForAI(l){return {name:l.name,niche:l.niche,country:l.country,city:l.city,website:l.website,needs:l.needs,offer:l.offer,notes:l.notes,contacts:l.contacts}}
+async function genPitch(l){
+  const lang=($("g-lang").value||"English").trim();
+  const prompt="Ты менеджер по продажам студии Spectre Studio: дизайн, анимация, 3D, сайты, Telegram-боты и автоматизация для бизнеса.\nНапиши первое холодное сообщение этому потенциальному клиенту.\nПравила: пиши как живой человек, коротко и просто, не больше 80 слов; без поздравлений и комплиментов; без имени и подписи отправителя и без шаблонных скобок; назови студию «Spectre Studio» один раз; одна конкретная наблюдаемая проблема из данных ниже; предложи бесплатную демо-версию и скажи, что можешь прислать её на днях, если им интересно (не спрашивай «можно прислать?»); ничего не выдумывай; без цены; в конце две ссылки: пример нашей работы, который тоже демо-версия, spectre-dsgn.github.io/negroni/ и наш сайт spectre-dsgn.github.io. Язык сообщения:"+lang+".\nДанные о клиенте (JSON):\n"+JSON.stringify(leadForAI(l))+"\nВерни только текст сообщения.";
+  const out=$("g-out");S.gen.ctl=new AbortController();S.gen.busy=true;S.gen.text="";
+  $("g-run").disabled=true;$("g-stop").hidden=false;out.innerHTML='<div class="msg">Думаю…</div>';
+  try{
+    const r=await sample(prompt,{signal:S.gen.ctl.signal,cache:false,onText:({text})=>{S.gen.text=text;out.firstChild.textContent=text}});
+    S.gen.text=r.text;
+    out.innerHTML='<div class="msg"></div><div class="msg-bar" style="margin-top:8px"><button type="button" class="btn small" data-copy="'+esc(r.text)+'">Скопировать</button><button type="button" class="btn small primary" id="g-save">Сохранить как основной</button></div>';
+    out.firstChild.textContent=r.text;
+    $("g-save").onclick=()=>save(l.id,{pitch:r.text,pitch_lang:lang.toLowerCase().startsWith("рус")?"RU":lang.slice(0,2).toUpperCase(),pitch_ru:""}).then(()=>{S.lang="main";toast("Сохранено")}).catch(writeFail);
+  }catch(e){
+    if(e&&e.code==="cancelled")out.innerHTML=e.text?'<div class="msg"></div>':"";
+    else out.innerHTML='<div class="hint">'+esc(aiError(e))+'</div>';
+    if(e&&e.text&&out.firstChild)out.firstChild.textContent=e.text;
+  }finally{
+    S.gen.busy=false;const run=$("g-run");if(run)run.disabled=false;const stop=$("g-stop");if(stop)stop.hidden=true;
+  }
+}
+function aiError(e){
+  const c=e&&e.code;
+  if(c==="not_granted"||c==="sampling_disabled")return"ИИ-помощник не разрешён для этого аккаунта.";
+  if(c==="rate_limited")return"Слишком много запросов. Попробуйте позже.";
+  if(c==="invalid_json")return"ИИ ответил не в том формате. Нажмите ещё раз.";
+  return"Не получилось, нажмите ещё раз.";
+}
+async function aiFill(){
+  const name=$("a-name").value.trim();
+  if(!name){toast("Сначала введите название");return}
+  const info={name,niche:$("a-niche").value,country:$("a-country").value,city:$("a-city").value,website:$("a-site").value,telegram:$("a-tg").value,instagram:$("a-ig").value,notes:$("a-notes").value};
+  const btn=$("a-ai");btn.disabled=true;btn.textContent="Думаю…";
+  try{
+    const r=await sample.json("Ты менеджер по продажам студии Spectre Studio: дизайн, анимация, 3D, сайты, Telegram-боты, автоматизация для бизнеса.\nПо данным о потенциальном клиенте подготовь карточку. Используй только то, что есть в данных; ничего не выдумывай, если данных мало, пиши осторожно и коротко.\nВерни только JSON вида {\"needs\":[до 4 коротких пунктов на русском],\"offer\":[до 4 коротких пунктов на русском],\"pitch\":\"первое сообщение до 80 слов на языке рынка клиента (английский, если неясно), пиши как живой человек, без поздравлений, без имени и подписи отправителя, одна наблюдаемая проблема, предложи бесплатную демо-версию и скажи, что можешь прислать её на днях, если интересно (не спрашивай «можно прислать»), в конце две ссылки: пример работы, который тоже демо, spectre-dsgn.github.io/negroni/ и наш сайт spectre-dsgn.github.io\",\"pitch_lang\":\"EN или RU или другой двухбуквенный код\",\"pitch_ru\":\"перевод pitch на русский\"}.\nДанные (JSON):\n"+JSON.stringify(info),{cache:false});
+    if(Array.isArray(r.needs))$("a-needs").value=r.needs.join("\n");
+    if(Array.isArray(r.offer))$("a-offer").value=r.offer.join("\n");
+    if(r.pitch)$("a-pitch").value=r.pitch;
+    $("a-pitch").dataset.lang=String(r.pitch_lang||"EN").toUpperCase();
+    $("a-pitch").dataset.ru=r.pitch_ru||"";
+    $("a-hint").textContent="Черновик от ИИ. Проверьте факты перед отправкой.";
+  }catch(e){$("a-hint").textContent=aiError(e)}
+  finally{btn.disabled=false;btn.textContent="ИИ: заполнить нужды, оффер и текст"}
+}
+function openAdd(){
+  ["a-name","a-niche","a-country","a-city","a-site","a-tg","a-ig","a-wa","a-mail","a-phone","a-budget","a-notes","a-needs","a-offer","a-pitch"].forEach(i=>{$(i).value=""});
+  $("a-pitch").dataset.lang="";$("a-pitch").dataset.ru="";$("a-fit").value="3";
+  $("a-hint").textContent="";$("a-ai").hidden=!sample;$("overlay").hidden=false;$("a-name").focus();
+}
+async function addLead(){
+  const name=$("a-name").value.trim();
+  if(!name){toast("Введите название");return}
+  const v=i=>$(i).value.trim();
+  const contacts={};
+  [["telegram","a-tg"],["instagram","a-ig"],["whatsapp","a-wa"],["email","a-mail"],["phone","a-phone"]].forEach(([k,i])=>{if(v(i))contacts[k]=v(i)});
+  const doc={name,niche:v("a-niche"),country:v("a-country"),city:v("a-city"),website:v("a-site"),contacts,fit:Number($("a-fit").value)||3,
+    needs:lines($("a-needs").value),offer:lines($("a-offer").value),budget:v("a-budget"),notes:v("a-notes"),
+    pitch:v("a-pitch"),pitch_lang:$("a-pitch").dataset.lang||"",pitch_ru:$("a-pitch").dataset.ru||"",
+    confidence:"manual",checked:new Date().toISOString().slice(0,10),status:"new",assignee:me.id||null,touched:Date.now(),touchedBy:me.id||null};
+  Object.keys(doc).forEach(k=>{if(doc[k]===""||doc[k]===null)delete doc[k]});
+  $("a-save").disabled=true;
+  try{const id="m-"+Date.now().toString(36);doc.id=id;local.added.push(doc);persist();S.leads=buildLeads();S.sel=id;$("overlay").hidden=true;toast("Лид добавлен в вашем браузере");renderAll(true);$("split").classList.add("open")}
+  catch(e){toast("Не удалось сохранить")}finally{$("a-save").disabled=false}
+}
+
+/* ---------- export ---------- */
+async function exportCsv(){
+  const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const head=["Название","Ниша","Страна","Город","Приоритет","Telegram","Instagram","WhatsApp","Email","Телефон","Сайт","Что нужно","Что предложить","Бюджет","Статус","Заметки","Сообщение"];
+  const rows=visible().map(l=>{const c=l.contacts||{};return [l.name,l.niche,l.country,l.city,l.fit,c.telegram,c.instagram,c.whatsapp,c.email,c.phone,l.website,arr(l.needs).join("; "),arr(l.offer).join("; "),l.budget,SLABEL[l.status||"new"],l.notes,l.pitch].map(q).join(",")});
+  try{const blob=new Blob(["\ufeff"+[head.map(q).join(","),...rows].join("\r\n")],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="spectre-leads.csv";document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+  catch(e){toast("Не удалось сохранить файл")}
+}
+
+/* ---------- wiring ---------- */
+function renderAll(force){renderStats();renderFilters();renderList();renderDetail(force)}
+function setTab(t){
+  S.tab=t;$("view-base").hidden=t!=="base";$("view-how").hidden=t!=="how";
+  ["base","how"].forEach(k=>$("tab-"+k).setAttribute("aria-selected",String(k===t)));
+  if(t==="how"&&!$("view-how").innerHTML)renderHow();
+}
+document.addEventListener("click",e=>{
+  const t=e.target;
+  const tab=t.closest("[data-tab]");if(tab){setTab(tab.dataset.tab);return}
+  const cp=t.closest("[data-copy]");if(cp){copy(cp.dataset.copy);return}
+  const card=t.closest(".card");if(card){S.sel=card.dataset.id;S.lang="main";renderList();renderDetail(true);$("split").classList.add("open");return}
+  const lg=t.closest("[data-lang]");if(lg){S.lang=lg.dataset.lang;renderDetail(true);return}
+  if(t.id==="d-back"){$("split").classList.remove("open");return}
+  if(t.id==="d-take"){const l=S.leads.find(x=>x.id===S.sel);if(l)save(l.id,{assignee:l.assignee===me.id?null:me.id}).catch(writeFail);return}
+  if(t.id==="d-del"){
+    if(t.dataset.sure!=="1"){t.dataset.sure="1";t.textContent="Точно удалить?";setTimeout(()=>{if(t.isConnected){t.dataset.sure="";t.textContent="Удалить"}},3000);return}
+    const id=S.sel;db.doc("leads/"+id).delete().then(()=>{S.sel=null;$("split").classList.remove("open");toast("Удалено")}).catch(writeFail);return
+  }
+  if(t.id==="g-run"){const l=S.leads.find(x=>x.id===S.sel);if(l&&sample)genPitch(l);return}
+  if(t.id==="g-stop"){S.gen.ctl&&S.gen.ctl.abort();return}
+  if(t.id==="btn-add"){openAdd();return}
+  if(t.id==="btn-export"){exportCsv();return}
+  if(t.id==="a-cancel"||t===$("overlay")){$("overlay").hidden=true;return}
+  if(t.id==="a-save"){addLead();return}
+  if(t.id==="a-ai"){aiFill();return}
+});
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.id==="d-status"){const l=S.leads.find(x=>x.id===S.sel);if(l)save(l.id,{status:t.value}).catch(writeFail);return}
+  if(t.id==="f-status"){S.fStatus=t.value;renderList()}
+  if(t.id==="f-niche"){S.fNiche=t.value;renderList()}
+  if(t.id==="f-country"){S.fCountry=t.value;renderList()}
+  if(t.id==="f-sort"){S.sort=t.value;renderList()}
+});
+document.addEventListener("input",e=>{
+  if(e.target.id==="f-q"){S.q=e.target.value;renderList()}
+  onNotes(e);
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("overlay").hidden)$("overlay").hidden=true});
+
+const DATA=[{"caveat":"Instagram, Telegram и WhatsApp не найдены, связь только по телефону. Найдите их Instagram вручную по названию и адресу (Pushkin St 93). Дефекты видны на грузинской версии меню, перепроверьте глазами перед отправкой.","checked":"2026-10-28","city":"Батуми","confidence":"site","contacts":{"phone":"+995 500 77 80 80"},"country":"Грузия","evidence":[{"label":"Сайт ресторана","url":"https://bobobatumi.ge"},{"label":"Подборка новых заведений Батуми","url":"https://madloba.info/reviews/where-to-eat/restorany/new-restaurants-and-cafes-in-batumi-latest-hyped-openings/"}],"fit":4,"fitWhy":"Новое заведение из подборки открытий 2026 года. Сайт с смелой идеей (цифровая корзина, голосовой помощник), но с видимыми дефектами и без соцсетей на странице.","name":"Bobo (Bobo Batumi)","needs":["В меню цены и количество слипаются с названиями блюд, что читать трудно","Дубли позиций, одинаковые картинки у разных блюд, опечатки, нет alt-текстов","Нет ссылок на Instagram, Telegram и WhatsApp, нет брони столика и доставки на сайте (доставка только через Wolt)","Есть технологичные фишки: цифровая корзина на стол, голосовой помощник, игра. Значит владелец открыт к технологиям"],"niche":"Ресторан, грузинская и узбекская кухня","offer":["Чистое меню с фото блюд, ценами и языками без дублей","Бронь столика и заказ через Telegram-бота и WhatsApp","Собственная доставка без комиссии Wolt","Анимированные Reels для Instagram и брендинг"],"pitch":"Здравствуйте! Посмотрел сайт Bobo. Идея с цифровой корзиной и голосовым помощником сильная, но в меню цены слиплись с названиями блюд, есть дубли позиций и повторяющиеся картинки. Мы Spectre Studio (сайты, боты, дизайн). Могу бесплатно собрать демо: чистое меню с фото и бронь столика через Telegram-бота. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","website":"https://bobobatumi.ge","id":"bobo-batumi"},{"caveat":"Данные только из одной новости, дата открытия «в 2026». Возможно, кафе уже открылось под другим названием. Сначала найдите страницу в Facebook.","checked":"2026-10-28","city":"St. Clair Shores, Мичиган","confidence":"listing","contacts":{"facebook":"Cacao Tree Cafe","other":"Адрес нового кафе: 21721 Harper St, St. Clair Shores. Instagram и сайт не найдены"},"country":"США","evidence":[{"label":"Статья об открытии","url":"https://whatnow.com/?p=353674"}],"fit":4,"fitWhy":"Новое заведение с новым названием, в соцсетях ещё ничего не анонсировали. Нужен весь комплект запуска.","name":"Cacao Tree Cafe (новое кафе, владелец Amber Poupore)","needs":["Новое кафе откроется с новым названием, анонс в соцсетях ещё не сделан","Нужны название, логотип, сайт-визитка и Instagram-запуск","Исходное кафе в Royal Oak работает с 2010 года, сайта и Instagram в поиске нет"],"niche":"Кафе","offer":["Логотип и мини-брендбук для нового названия","Одностраничный сайт с меню и картой","Анимированный тизер открытия для Instagram и Facebook"],"pitch":"Hi Amber, I read that you're opening a new cafe on Harper Ave. A new name usually needs a logo, a simple website and a launch teaser for social. We're Spectre Studio (branding, web, motion), and I can make a free demo: a one-page site and a short animated teaser in your style. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Привет, Amber! Прочитал, что вы открываете новое кафе на Harper Ave. Для нового названия обычно нужны логотип, простой сайт и тизер для соцсетей. Мы Spectre Studio (брендинг, сайты, моушн), и я могу бесплатно сделать демо: одностраничный сайт и короткий анимированный тизер в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","id":"cacao-tree-cafe-new"},{"caveat":"Бюджет не указан. Число подписчиков взято из стороннего архива, данные могут быть устаревшими. Сайт на WordPress (по путям файлов).","checked":"2026-10-28","city":"Дубай","confidence":"site","contacts":{"email":"info@gatedxb.com","instagram":"gate_dxb","other":"Для рекламы в Telegram: @gatedxb","phone":"+971 58 662 9835","telegram":"gate_dxb","whatsapp":"+971 58 662 9835"},"country":"ОАЭ","evidence":[{"label":"Сайт","url":"https://gatedxb.ae"},{"label":"Канал в архиве рекламы","url":"https://telegramadsarchive.com/channels/gate_dxb"}],"fit":4,"fitWhy":"Русскоязычное медиа, живёт в Telegram (около 5 тыс. подписчиков) и продаёт рекламу. У сайта нет медиакита и цен, значит реклама продаётся вручную. Контакты публичные.","name":"Gate DXB («Посадочный в Дубай»)","needs":["На сайте нет медиакита, цен на рекламу и цифр аудитории","Нет формы заявки и бота: рекламодателям нужно писать вручную","Повторяющиеся кнопки и контактные блоки, пустые ссылки в меню, общие подписи «Перейти» и «Читать»","Каталог детских активностей (135 программ) без встроенного поиска и записи"],"niche":"Медиа и городской гид, Telegram-канал","offer":["Страница «Реклама»: пакеты, цифры аудитории, цены и форма заявки","Telegram-бот для заявок от рекламодателей","Анимированный медиакит и моушн-ролики для рекламных интеграций","Каталог активностей с поиском и записью"],"pitch":"Здравствуйте! Смотрел gatedxb.ae: рубрики и аудитория сильные, но на сайте нет медиакита, цен на рекламу и формы заявки, поэтому рекламодателям приходится писать вручную. Мы Spectre Studio (дизайн, анимация, сайты, боты). Могу бесплатно собрать демо: страницу «Реклама» с пакетами и цифрами аудитории и бота заявок в Telegram. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","website":"https://gatedxb.ae","id":"gate-dxb-dubai"},{"caveat":"Telegram и Instagram не найдены. Сайт на грузинском языке и английском, писать лучше по-английски. Первый контакт: email или звонок.","checked":"2026-10-28","city":"Тбилиси (ул. Шевченко, 5)","confidence":"site","contacts":{"email":"info@mrcook.ge","other":"Второй телефон: +995 32 292 25 50. Есть форма «Напиши нам» на сайте. Соцсети на сайте не указаны","phone":"+995 32 247 74 32"},"country":"Грузия","evidence":[{"label":"Сайт","url":"http://www.mrcook.ge/"},{"label":"Страница контактов","url":"http://www.mrcook.ge/index.php?page=contact"}],"fit":4,"fitWhy":"Реальный производитель с кейтерингом, сайт очевидно устарел: нет цен, заказа и соцсетей. Видимый разрыв между товаром и сайтом.","name":"Mr. Cook (Cook, Mister Catering)","needs":["Каталог без цен, без корзины, без онлайн-заказа и доставки","Контактов на главной нет, ссылок на соцсети нет вообще","Старый PHP-сайт (по адресам страниц похоже, это предположение), описания товаров обрезаны","Кейтеринг подан отдельным блоком, но без формы заявки на мероприятие"],"niche":"Кондитерская, кафетерий, кейтеринг","offer":["Современный каталог с ценами и корзиной","Форма заявки на кейтеринг с автоматическим расчётом","Бот заказа в Telegram и WhatsApp","Запуск Instagram с анимированными роликами продукции"],"pitch":"Hi, I looked at mrcook.ge: the catalog and catering are strong, but there are no prices, no online ordering and no social links, so people can't order without calling. We're Spectre Studio (websites, design, ordering bots). I can make a free demo: a modern catalog with prices and a catering request form, plus a Telegram or WhatsApp order bot. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Здравствуйте! Смотрел mrcook.ge: каталог и кейтеринг сильные, но нет цен, онлайн-заказа и ссылок на соцсети, поэтому без звонка заказать нельзя. Мы Spectre Studio (сайты, дизайн, боты для заказов). Могу бесплатно сделать демо: современный каталог с ценами и форма заявки на кейтеринг, плюс бот заказа в Telegram или WhatsApp. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","website":"http://www.mrcook.ge/","id":"mr-cook-tbilisi"},{"caveat":"Основатель по данным сайта: Emma Dodson. Не пишите, что картинки сделаны ИИ: это только предположение по названиям файлов.","checked":"2026-10-28","city":"Бостон (Charlestown)","confidence":"site","contacts":{"email":"information@studio-louise.net","instagram":"studiolouise__","phone":"+1 616 450 4952","tiktok":"studiolouise__"},"country":"США","evidence":[{"label":"Сайт студии","url":"https://studio-louise.net"},{"label":"Статья об открытии","url":"https://whatnow.com/?p=416936"}],"fit":4,"fitWhy":"Новая студия, сайт на Squarespace, владелец доступен по email и в Instagram. Типичный чек: сайт и контент для запуска.","name":"Studio Louise","needs":["Новая студия: на главной нет цен, заголовки и кнопка «Become a member» повторяются","Часть визуалов выглядит шаблонно, у большинства фото нет alt-текстов","Нужен контент для запуска: Reels и анимированные заставки для Instagram и TikTok"],"niche":"Пилатес-студия","offer":["Обновлённая главная с ценами, расписанием и записью","Серия коротких анимированных Reels-заставок в цветах студии","Фирменный визуал вместо шаблонных картинок"],"pitch":"Hi Emma, I was looking at the Studio Louise site. It's clean, but prices aren't on the homepage and a few visuals feel a bit generic. We're Spectre Studio (web, motion, branding), and I'd like to make you a free demo: a refreshed homepage with pricing and booking, plus a short animated Reels intro in your colors. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Привет, Emma! Смотрел сайт Studio Louise. Он аккуратный, но на главной нет цен, а часть визуалов выглядит шаблонно. Мы Spectre Studio (сайты, моушн, брендинг), и я хочу бесплатно сделать вам демо: обновлённая главная с ценами и записью и короткая анимированная заставка для Reels в ваших цветах. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","website":"https://studio-louise.net","id":"studio-louise-boston"},{"caveat":"Дефекты сайта перепроверьте глазами перед отправкой. Платформа и спеллинг брендов не подтверждены. Telegram не найден, писать лучше в Instagram. Бюджет не указан.","checked":"2026-10-28","city":"Дубай (Alserkal Avenue)","confidence":"site","contacts":{"facebook":"https://www.facebook.com/theeditdubai","instagram":"theeditdubai","other":"Email, телефон и WhatsApp на главной не указаны, есть страница /pages/contact-us. Основательница по статье: Rumana Nazim"},"country":"ОАЭ","evidence":[{"label":"Сайт","url":"https://theeditdubai.com"},{"label":"Статья о бутиках Дубая","url":"https://artinthemiddle.com/blog/beyond-the-malls-5-independent-fashion-boutiques-in-dubai-worth-discovering-2"}],"fit":4,"fitWhy":"Живой интернет-магазин на Shopify (по путям файлов, предположение) с событиями и matcha-баром. На сайте видимые поломки: битые ссылки, товар не загружается.","name":"The Edit","needs":["Несколько ссылок на бренды и категории ведут на страницу поиска, ссылка «Botanyc» ведёт на главную","Один товарный блок показывает «this product could not be loaded», в логотипах «Featured On» нет названий","Бренды пишутся по-разному (Maria Marlowe и Maria Merlowe), навигация и баннеры дублируются","Контактов на главной нет, есть только рассылка со скидкой 10%"],"niche":"Concept store и интернет-магазин, независимые дизайнеры","offer":["Починенная и ускоренная витрина, чистая навигация по брендам","Анимированные заставки для событий, matcha-бара и новых коллекций","Бот или чат в WhatsApp для заказов и консьержа с доставкой по ОАЭ","Motion-баннеры для сезонных распродаж"],"pitch":"Hi Rumana, I like the curated mix at The Edit. On theeditdubai.com a few things may be costing you sales: several brand links lead to a search page, one product fails to load, and some brand names are spelled two ways. We're Spectre Studio (web, motion, branding), and I can make a free demo: a cleaned-up storefront and a short animated intro for your events and matcha bar. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Привет, Rumana! Мне нравится подборка в The Edit. На theeditdubai.com есть вещи, которые могут стоить вам продаж: несколько ссылок на бренды ведут на страницу поиска, один товар не загружается, а часть брендов написана по-разному. Мы Spectre Studio (сайты, моушн, брендинг), и я могу бесплатно сделать демо: исправленная витрина и короткая анимированная заставка для ваших событий и matcha-бара. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","website":"https://theeditdubai.com","id":"the-edit-dubai"},{"caveat":"Telegram не найден. Опечатки и битые ссылки перепроверьте глазами перед отправкой. Имя владельца на сайте не указано.","checked":"2026-10-28","city":"Дубай","confidence":"site","contacts":{"facebook":"https://www.facebook.com/TheFlowerShop.ae","instagram":"flowershop.ae","phone":"+971 4 252 6555","tiktok":"flowershop.ae","whatsapp":"+971 52 145 6834"},"country":"ОАЭ","evidence":[{"label":"Сайт магазина","url":"https://www.theflowershop.ae"}],"fit":4,"fitWhy":"Живой бизнес с доставкой по 4 эмиратам. Заказы частично идут через WhatsApp и телефон, сайт на старом движке с ошибками.","name":"The Flower Shop (Blooming Bay Flowers & Plants Trading LLC)","needs":["Сайт на старой корзине (по именам файлов похоже на osCommerce или Zen Cart, это предположение)","Опечатки в названиях товаров («Boquuet»), неработающие ссылки валюты, неверный параметр в ссылке WhatsApp","Заказы идут в WhatsApp и по телефону, подписок на цветы нет, корпоративные подарки только через форму","Контакты и отслеживание заказа сведены на одну страницу поддержки"],"niche":"Цветы и подарки, доставка","offer":["Бот для заказа в WhatsApp или Telegram: каталог, адрес, оплата в чате","Редизайн магазина: быстрый, без ошибок, с подпиской на цветы","Сезонные анимированные баннеры (14 февраля, День матери)","Корпоративная форма заказа с автоматическим счётом"],"pitch":"Hi, I was on theflowershop.ae: strong catalog and same-day delivery. A few things are probably costing you orders though: typos in product names (like “Boquuet”), a broken parameter in the WhatsApp link, and no flower subscriptions. We're Spectre Studio, we build ordering bots and fast storefronts. I can make a free demo of a WhatsApp or Telegram bot that takes the order, address and payment right in the chat, using your own catalog. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Здравствуйте! Смотрел theflowershop.ae: сильный каталог и доставка в тот же день. Но кое-что, скорее всего, стоит вам заказов: опечатки в названиях товаров (например «Boquuet»), неверный параметр в ссылке WhatsApp и нет подписок на цветы. Мы Spectre Studio, делаем боты для заказов и быстрые магазины. Могу бесплатно сделать демо бота для WhatsApp или Telegram, где заказ, адрес и оплата проходят прямо в чате, на вашем каталоге. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","website":"https://www.theflowershop.ae","id":"the-flower-shop-dubai"},{"caveat":"Email взят из публичного объявления о найме и подписан как контакт для общих вопросов. Владелец по этому источнику: Maayan Irvine. Instagram не найден, сайт не открывали, проверьте перед отправкой.","checked":"2026-10-28","city":"Нью-Йорк (Park Slope, новая точка на Upper West Side)","confidence":"listing","contacts":{"email":"maayan@craftpilates.com"},"country":"США","evidence":[{"label":"Объявление на dance.nyc","url":"https://www.dance.nyc/for-artists/listings/2026/01/Pilates-Instructor-to-join-a-new-studio-UWS/"},{"label":"Сайт","url":"https://craftpilates.com"}],"fit":3,"fitWhy":"Расширяется на вторую студию, владелец известен. Сайт и Instagram мы не проверяли.","name":"Craft Pilates","needs":["Открытие второй студии на 644 Amsterdam Ave, целились на февраль, возможно уже открылась","Для второй точки обычно нужны страница локации, расписание и запускной контент","Ищут инструкторов, значит студия растёт"],"niche":"Пилатес-студия, вторая точка","offer":["Страница новой локации с записью","Короткая анимированная заставка и серия Reels для запуска","Единый визуал для двух студий"],"pitch":"Hi Maayan, I saw the news about your new Upper West Side studio. A second location usually needs its own page and a few launch Reels. We're Spectre Studio (web, motion, branding), and I can make a free demo: a UWS landing page plus a 10-second animated opener in Craft's style. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Привет, Maayan! Видел новость о вашей новой студии на Upper West Side. Второй точке обычно нужны своя страница и несколько Reels к запуску. Мы Spectre Studio (сайты, моушн, брендинг), и я могу бесплатно сделать демо: лендинг для UWS и 10-секундную анимированную заставку в стиле Craft. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","website":"https://craftpilates.com","id":"craft-pilates-nyc"},{"caveat":"Оборот и другие цифры из интервью, актуальность неизвестна. Instagram из подборок, его не открывали. Адрес из подборки (ул. Тулебаева 114а) не подтверждён, бренд ушёл из офлайна. Бюджет не указан.","checked":"2026-10-28","city":"Алматы","confidence":"listing","contacts":{"instagram":"jenil_brand","other":"Основательница Айнура Раева, личный Instagram по поиску: ainura_rai. Сайт у бренда есть по интервью, адрес не найден"},"country":"Казахстан","evidence":[{"label":"Forbes.kz о бренде Jenil","url":"https://forbes.kz/articles/kak-aynura-raeva-sozdala-brend-jenil-27f3d7"},{"label":"WE Project, интервью основательницы","url":"https://www.weproject.media/articles/detail/aynura-raeva-o-tom-kak-poyavilsya-brend-jenil-i-pochemu-ee-odezhda-eto-oshchushchenie-doma/"}],"fit":3,"fitWhy":"Онлайн-бренд с понятной сезонностью. По интервью Forbes.kz оборот около 10-12 млн тенге в месяц и до 15 млн в пик (Новый год, 8 марта, 14 февраля). Деньги на контент есть, дата интервью неизвестна.","name":"Jenil","needs":["Продаёт только онлайн через сайт и соцсети, по Казахстану, около половины заказов из Алматы","Три сезонных пика в год, под них нужны баннеры, Reels и рассылки","Производство отдано партнёрскому цеху, значит бренд растёт через контент и дизайн, а не через собственное производство"],"niche":"Бельё и домашняя одежда, онлайн-бренд","offer":["Анимированные баннеры и Reels к сезонным пикам","Telegram-бот: каталог, размеры, повторный заказ, карта лояльности","Обновление страниц товаров, 3D- и motion-подача тканей"],"pitch":"Здравствуйте, Айнура! Читал, как вы строили Jenil: онлайн-продажи и три сезонных пика, Новый год, 14 февраля и 8 марта. К пикам можно подготовить анимированные баннеры и Reels-заставки в вашем стиле. Мы Spectre Studio (дизайн, анимация, сайты, боты). Могу бесплатно сделать демо одного ролика для сезонной кампании. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","id":"jenil-almaty"},{"caveat":"Instagram и адрес из подборки, дата статьи неизвестна, сам профиль не открывали. Проверьте, нет ли у бренда сайта, и добавьте в сообщение одно наблюдение из профиля. Бюджет не указан.","checked":"2026-10-28","city":"Астана (ул. Сыганак, 15)","confidence":"listing","contacts":{"instagram":"kaidarova.ethnic"},"country":"Казахстан","evidence":[{"label":"Подборка казахстанских брендов (sxodim)","url":"https://sxodim.com/astana/article/interesnye-kazahstanskie-brendy-v-astane"}],"fit":3,"fitWhy":"Принимает индивидуальные заказы, а такие заявки неудобно вести в директе. Есть физический адрес. Сайт и бот поиском не найдены.","name":"Kaidarova","needs":["Индивидуальный пошив и мебель на заказ: заявки, размеры и сроки, скорее всего, обрабатываются вручную в директе","Каталога с формой заказа в источниках не видно","Сайт и Telegram поиском не найдены"],"niche":"Одежда и мебель в этническом стиле, пошив на заказ","offer":["Каталог и форма заявки на пошив с замерами и статусом заказа","Telegram-бот для заявок и напоминаний клиентам","Анимированные ролики о процессе пошива для Instagram"],"pitch":"Здравствуйте! Увидел, что Kaidarova шьёт на заказ одежду и мебель в этническом стиле. Индивидуальные заявки удобнее собирать в боте или на странице с каталогом и формой замера. Мы Spectre Studio (дизайн, сайты, боты). Могу бесплатно собрать демо: каталог и форму заявки на пошив в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","id":"kaidarova-astana"},{"caveat":"Собственник и руководитель маркетинга на сайте не названы. Сначала найдите контакт через форму франшизы или LinkedIn.","checked":"2026-10-28","city":"Калифорния, Нью-Йорк, Северная Каролина, Аризона","confidence":"site","contacts":{"instagram":"karakhousecoffee","other":"Прямых email и телефона на сайте нет. Канал связи: страница франшизы на сайте и интернет-магазин karakhousestore.com"},"country":"США","evidence":[{"label":"Сайт","url":"https://karakhousecoffee.com"}],"fit":3,"fitWhy":"Растущая франшиза с несколькими точками. Бюджет вероятно корпоративный, но решает не одна точка, а головной офис, найти человека сложнее.","name":"Karak House Coffee Co.","needs":["Навигация перегружена почти одинаковыми страницами «Best Coffee Shop Franchises in [City]»","Тонкая главная страница, меню только ссылкой, нет прямых контактов","Списки городов на сайте расходятся между собой","Заказ только через приложение, веб-заказа на главной не видно"],"niche":"Кофейни, франшиза","offer":["Лендинг для франшизы с формой заявки и калькулятором вложений","3D-рендеры напитков и анимированные ролики для соцсетей","Единое меню с фото и онлайн-заказом"],"pitch":"Hi, I was on the Karak House site and noticed the menu has lots of near-duplicate city pages, and there's no direct way for someone interested in a franchise to reach you. We're Spectre Studio: franchise landing pages, 3D drink renders, short motion for social. I can put together a free concept of a cleaner homepage and franchise page in your branding. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Здравствуйте! Заходил на сайт Karak House: в меню много почти одинаковых страниц по городам, а у тех, кто интересуется франшизой, нет прямого способа с вами связаться. Мы Spectre Studio: лендинги для франшиз, 3D-рендеры напитков, короткий моушн для соцсетей. Могу бесплатно собрать концепт чистой главной и страницы франшизы в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","website":"https://karakhousecoffee.com","id":"karak-house-coffee"},{"caveat":"Данные только из каталога каналов. Сам канал в Telegram не открывали: проверьте, что он активен, и найдите, кто владелец. Страну вывели по коду телефона, это не факт.","checked":"2026-10-28","city":"","confidence":"listing","contacts":{"other":"Второй телефон: +998 90 906 0960","phone":"+998 90 922 2390","telegram":"larosa_flowersshop"},"country":"Узбекистан (по коду +998, предположение)","evidence":[{"label":"Канал в каталоге Telemetr","url":"https://telemetr.me/content/larosa_flowersshop"}],"fit":3,"fitWhy":"Маленький канал (около 120 подписчиков), чек небольшой, зато чистый Telegram-лид для бота-магазина.","name":"LA ROSA flowers shop","needs":["В описании канала «имеется онлайн заказ и доставка», но указаны только телефоны, сайта и бота нет","Продаёт букеты, комнатные растения и сувениры через посты в канале, каталога с корзиной не видно","Заказы, по всей видимости, обрабатываются вручную"],"niche":"Цветы и сувениры (искусственные), Telegram-магазин","offer":["Telegram-бот магазин или mini app: каталог, корзина, заказ в один клик","Уведомления владельцу о новых заказах","Дизайн карточек товаров и анимированные баннеры к праздникам"],"pitch":"Здравствуйте! Увидел ваш канал LA ROSA: для заказа указаны только телефоны, каталога с корзиной не видно. Мы Spectre Studio, делаем Telegram-магазины. Могу бесплатно собрать демо: бот-магазин с вашими букетами, корзиной и заказом в один клик, в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","id":"la-rosa-flowers"},{"caveat":"Бюджет в вакансии не указан: там просят назвать свою цену. Telegram и email не найдены.","checked":"2026-10-28","city":"","confidence":"site","contacts":{"instagram":"mergerocks","other":"Форма «Get a quote / Book a call»: merge.rocks/hire-us. Behance: behance.net/MergeRocks. Dribbble: dribbble.com/mergerocks"},"country":"Не указана","evidence":[{"label":"Сайт агентства","url":"https://merge.rocks"},{"label":"Страница вакансии","url":"https://jobs.merge.rocks/freelance-motion-designer"}],"fit":3,"fitWhy":"Агентство, которое искало фрилансера-моушн-дизайнера. Это путь к постоянным субподрядным заказам, а не к разовому клиенту.","name":"Merge (Merge Rocks)","needs":["Искали фрилансера на 2D-ролик к запуску продукта: идея, сценарий, раскадровка, анимация, правки","Заявки на ту вакансию закрыты, потребность в моушн у агентства остаётся: услуга указана на сайте","100+ стартапов в клиентах, значит поток роликов и лендингов постоянный"],"niche":"Дизайн-агентство B2B и SaaS","offer":["Моушн, 3D и ролики для запуска продуктов под белой этикеткой","Разработка лендингов на Webflow как субподряд","Тестовая анимация по одному из их кейсов за свой счёт"],"pitch":"Hi, I saw you were looking for a motion designer for 2D product launch videos. If there's overflow, we're Spectre Studio and can take launch videos and explainers end to end: concept, storyboard, animation, 3D and revisions, with fast turnaround. I can also do a free 10-second test animation based on one of your case studies. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Здравствуйте! Видел, что вы искали моушн-дизайнера для 2D-роликов к запуску продуктов. Если есть перегруз, мы Spectre Studio и можем взять ролики и объясняющие видео целиком: идея, раскадровка, анимация, 3D и правки, быстро. Могу также бесплатно сделать 10-секундную тестовую анимацию по одному из ваших кейсов. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","website":"https://merge.rocks","id":"merge-rocks-agency"},{"caveat":"Instagram взят из обзора и не открывался. Телефон из карточки карт. Перед отправкой проверьте в Instagram, есть ли у них сайт и бронь, и подставьте в сообщение то, что увидите.","checked":"2026-10-28","city":"Алматы (пр. Назарбаева, 145)","confidence":"listing","contacts":{"instagram":"qarlygash_cafe","phone":"+7 707 329 55 66"},"country":"Казахстан","evidence":[{"label":"Обзор новых мест Алматы, апрель 2026","url":"https://www.weproject.media/articles/detail/chto-novogo-v-almaty-kafe-bary-i-prostranstva-dlya-otdykha/"},{"label":"Карточка на Yandex Maps","url":"https://yandex.com/maps/org/23068226086"}],"fit":3,"fitWhy":"Кафе с историей: переосмысление легендарного «Карлыгаш» 1967 года, рейтинг 5.0 на 257 оценках. Сильный бренд для моушн и сайта, но потребность пока гипотеза.","name":"Qarlygash Cafe","needs":["Гипотеза: собственного сайта с меню и бронью нет, в поиске только карточки на картах и обзор WE Project","Онлайн-заказа и доставки на официальных страницах не найдено","История места сильная, но негде её рассказать кроме соцсетей"],"niche":"Кафе","offer":["Страница с историей места, меню и бронью стола через Telegram или WhatsApp","Анимированный ролик о возрождении «Карлыгаш» для Instagram","3D-визуалы фирменных блюд и ретро-брендинг"],"pitch":"Здравствуйте! Читал про возрождение «Карлыгаша». Собственного сайта с меню и бронью у кафе не нашёл, только карточки на картах. Мы Spectre Studio (дизайн, анимация, сайты, боты). Могу бесплатно собрать демо: страницу с меню, историей места и бронью стола через Telegram или WhatsApp. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","id":"qarlygash-cafe-almaty"},{"caveat":"Instagram взят из обзора и не открывался. Прежде чем писать, найдите конкретную проблему и добавьте её в текст.","checked":"2026-10-28","city":"Алматы","confidence":"unverified","contacts":{"instagram":"aua.cafe.almaty"},"country":"Казахстан","evidence":[{"label":"Обзор новых мест Алматы, апрель 2026","url":"https://www.weproject.media/articles/detail/chto-novogo-v-almaty-kafe-bary-i-prostranstva-dlya-otdykha/"}],"fit":2,"fitWhy":"Новое кафе из апрельского обзора 2026. Кроме Instagram ничего не найдено, потребность не подтверждена.","name":"AUA Cafe","needs":["Гипотеза: нужны сайт или меню с доставкой. Сайта, меню и доставки поиском не нашли","Сначала проверьте Instagram: возможно, всё уже есть там"],"niche":"Кафе","offer":["Страница с меню и бронью","Простой бот заказа в Telegram","Анимация для Reels"],"pitch":"Здравствуйте! Увидел AUA Cafe в подборке новых мест Алматы. Мы Spectre Studio, делаем сайты-меню, Telegram-ботов для заказа и анимацию для Reels. Могу бесплатно собрать демо: страницу с меню и бронью в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","id":"aua-cafe-almaty"},{"caveat":"Instagram и телефон только из подборки, дата статьи неизвестна. Телефон не подтверждён. Профиль не открывали.","checked":"2026-10-28","city":"Астана","confidence":"unverified","contacts":{"instagram":"baikonurstreetwear","other":"Номер 8 702 809 11 92 из подборки, мог относиться к соседнему бренду, проверьте"},"country":"Казахстан","evidence":[{"label":"Подборка казахстанских брендов (sxodim)","url":"https://sxodim.com/astana/article/interesnye-kazahstanskie-brendy-v-astane"}],"fit":2,"fitWhy":"Бренд с яркой космической темой, просится в 3D и анимацию. Потребность гипотеза, данных мало.","name":"Baikonur Street Wear","needs":["Гипотеза: заказы идут через Instagram, собственного магазина с корзиной нет","Тема космоса и уличной культуры, значит нужен сильный визуал для дропов"],"niche":"Стритвир, худи, свитшоты, бомберы","offer":["3D-заставка и страница дропа с предзаказом","Telegram-бот: уведомления о новых дропах, предзаказ, оплата","Анимированные Reels-анонсы коллекций"],"pitch":"Здравствуйте! Увидел Baikonur Street Wear в подборке: тема космоса и уличной культуры просится в 3D и анимацию. Мы Spectre Studio (дизайн, анимация, 3D). Могу бесплатно сделать демо: 3D-заставку и страницу дропа с предзаказом в Telegram. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","id":"baikonur-streetwear-astana"},{"caveat":"Единственный источник это подборка с Instagram, дата статьи неизвестна. Профиль не открывали. Посмотрите его и вставьте в сообщение одно конкретное наблюдение.","checked":"2026-10-28","city":"Алматы","confidence":"unverified","contacts":{"instagram":"chopx.kz"},"country":"Казахстан","evidence":[{"label":"Подборка казахстанских брендов (sxodim)","url":"https://sxodim.com/astana/article/interesnye-kazahstanskie-brendy-v-astane"}],"fit":2,"fitWhy":"Онлайн-бренд с доставкой по стране. Подходит Telegram-магазин, но потребность гипотеза: сайт и бота поиском не нашли.","name":"ChopX","needs":["Гипотеза: заказы идут через Instagram и директ, собственного каталога с корзиной нет","Сайт и Telegram поиском не найдены"],"niche":"Мерч с мемами, футболки и худи, онлайн-магазин","offer":["Telegram-магазин: каталог принтов, корзина, оплата в чате","Анимированные drop-анонсы для Instagram и TikTok","Страница коллекции с предзаказом"],"pitch":"Здравствуйте! Увидел ChopX в подборке казахстанских брендов: онлайн-магазин с мемными принтами. Для такого мерча хорошо работает Telegram-магазин: каталог, корзина и оплата в чате. Мы Spectre Studio. Могу бесплатно собрать демо с вашими принтами. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","id":"chopx-almaty"},{"caveat":"Подпись «Sadie» в истории бренда не подтверждена как владелец, в сообщении имя не используется.","checked":"2026-10-28","city":"Шарлотт, Северная Каролина (South End)","confidence":"site","contacts":{"email":"hello@finderscoffee.com","instagram":"thefinderscoffee"},"country":"США","evidence":[{"label":"Сайт","url":"https://finderscoffee.com"}],"fit":2,"fitWhy":"Недавнее открытие, но сайт уже рабочий, с онлайн-заказом. Небольшой чек, зато быстрое решение.","name":"Finders' Coffee","needs":["На сайте пометка «Soft Open Oct 23»: заведение только открылось","Нет полного меню с ценами, нет программы лояльности и телефона","Опечатки в тексте («gentile acidity», «a subtle of jasmine»)","Есть сестринская пекарня Littl Madeleine (littlmade.com), сайт не открылся для проверки"],"niche":"Кофейня","offer":["Страница меню с QR-кодом для стойки","Карта лояльности через чат-бота","Анимированные заставки для Instagram"],"pitch":"Hi, I was looking at the Finders' Coffee site: there's no full menu with prices yet, and no loyalty option. We're Spectre Studio (web, motion, bots). I can make a free demo: a menu page with a QR code for the counter and a loyalty card inside a chat bot, in your look. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Здравствуйте! Смотрел сайт Finders' Coffee: пока нет полного меню с ценами и нет программы лояльности. Мы Spectre Studio (сайты, моушн, боты). Могу бесплатно сделать демо: страницу меню с QR-кодом для стойки и карту лояльности в чат-боте в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","website":"https://finderscoffee.com","id":"finders-coffee-charlotte"},{"caveat":"Telegram-контакт это их бот записи, а не человек. Пишите в Instagram или WhatsApp. Дефекты мелкие, не представляйте их как проблемы сайта, заходите с контентом. Бюджет не указан.","checked":"2026-10-28","city":"Дубай (Dubai Marina и Azizi Riviera)","confidence":"site","contacts":{"facebook":"https://www.facebook.com/katewhitebeautysalon/","instagram":"katewhitesalon","other":"Телефон Azizi Riviera: +971 4 271 3900","phone":"+971 50 402 1770","telegram":"Katewhitesalon_bot","whatsapp":"+971 4 568 9534"},"country":"ОАЭ","evidence":[{"label":"Сайт салона","url":"https://www.katewhite.ae"}],"fit":2,"fitWhy":"Две точки и русскоязычный сайт с ценами и онлайн-записью. Базовая потребность уже закрыта, поэтому заходить нужно с контентом, а не с сайтом.","name":"Kate White Ladies Beauty Salon","needs":["Сайт на Tilda уже есть, с услугами, ценами, записью и ботом в Telegram","В галерее «Наши работы» все фото ведут на одну страницу, в блоке массажа есть несовпадение в тексте","Растёт: вторая точка в Azizi Riviera, значит нужны контент и лояльность"],"niche":"Салон красоты, русскоязычный","offer":["Анимированные Reels-заставки для услуг и акций","Программа лояльности внутри их Telegram-бота","Исправление галереи и новая страница для точки в Azizi Riviera"],"pitch":"Здравствуйте! У Kate White уже сильный сайт и бот записи. Мы Spectre Studio (дизайн, анимация, сайты, боты) и можем предложить следующий шаг: анимированные Reels-заставки для услуг на обеих точках и программу лояльности в вашем боте. Могу бесплатно сделать демо одного ролика в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","website":"https://www.katewhite.ae","id":"kate-white-dubai"},{"caveat":"Единственный контакт берётся из обзора, само заведение поиском не подтверждено. Перед сообщением откройте их Instagram и добавьте одно конкретное наблюдение, без этого сообщение общее.","checked":"2026-10-28","city":"Алматы (ул. Наурызбай батыра)","confidence":"unverified","contacts":{"instagram":"kudos.ala"},"country":"Казахстан","evidence":[{"label":"Обзор новых мест Алматы, апрель 2026","url":"https://www.weproject.media/articles/detail/chto-novogo-v-almaty-kafe-bary-i-prostranstva-dlya-otdykha/"}],"fit":2,"fitWhy":"Новая кофейня (открыта в апреле 2026), но проверить пока нечего: кроме Instagram из обзора ничего не найдено.","name":"Kudos Specialty Coffee","needs":["Гипотеза: у новой кофейни нет сайта, меню и карты лояльности. Проверьте в Instagram","В поиске сайта и карточки не нашли"],"niche":"Specialty-кофейня","offer":["Страница с меню и картой","Карта лояльности в Telegram-боте","Анимированные заставки для Instagram"],"pitch":"Здравствуйте! Увидел Kudos в подборке новых мест Алматы. Мы Spectre Studio, делаем сайты с меню, анимированные заставки для Reels и Telegram-ботов с картой лояльности для кофеен. Могу бесплатно подготовить демо: страницу с меню и карту лояльности в чате в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","id":"kudos-specialty-coffee-almaty"},{"caveat":"Телефон и сайт взяты из карточки Yango Maps. Не подтверждено, что это тот же салон, что «Pour Elle Beauty Studio» на Fresha. Instagram не найден.","checked":"2026-10-28","city":"Дубай (Dubai Marina)","confidence":"unverified","contacts":{"phone":"+971 56 206 3550"},"country":"ОАЭ","evidence":[{"label":"Карточка на Yango Maps","url":"https://maps.yango.com/org/pour_elle/86360384914/"}],"fit":2,"fitWhy":"Данные неполные. Запись у салонов Дубая часто идёт через Fresha и Instagram, это гипотеза, а не факт.","name":"Pour Elle","needs":["Гипотеза: запись через агрегатор Fresha, собственный бот или сайт записи не подтверждён","Нужно открыть сайт и Instagram и записать реальную проблему, прежде чем писать"],"niche":"Салон красоты","offer":["Бот записи в Telegram и Instagram с их услугами","Простой сайт с онлайн-записью без комиссии агрегатора"],"pitch":"Hi, we're Spectre Studio. We build Telegram and Instagram booking bots and simple websites for beauty studios, so clients can book without calling. I can make a free demo of the booking flow with your services. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Здравствуйте! Мы Spectre Studio, делаем боты записи для Telegram и Instagram и простые сайты для салонов красоты, чтобы клиенты записывались без звонков. Могу бесплатно сделать демо записи с вашими услугами. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","website":"pour-elle.ae","id":"pour-elle-dubai-marina"},{"caveat":"Данные только из подборки, профиль не открывали, сайт поиском не найден. Перед отправкой найдите ссылку на магазин в Instagram.","checked":"2026-10-28","city":"Алматы","confidence":"unverified","contacts":{"instagram":"tofari_kz"},"country":"Казахстан","evidence":[{"label":"Подборка казахстанских брендов (sxodim)","url":"https://sxodim.com/astana/article/interesnye-kazahstanskie-brendy-v-astane"}],"fit":2,"fitWhy":"Бренд с сильной историей материалов, которая лучше всего рассказывается через анимацию и 3D. Потребность гипотеза.","name":"TOFARI","needs":["Гипотеза: история материалов и бренда не раскрыта нигде, кроме Instagram","Сайт поиском не найден, интернет-магазин в статье упомянут"],"niche":"Эко-одежда из крапивы, конопли, льна и эвкалипта","offer":["Короткий анимированный ролик о ткани, от растения до одежды","Страница товара и бота-каталога с описанием материалов","3D-визуалы изделий"],"pitch":"Здравствуйте! Увидел TOFARI в подборке: эко-одежда из крапивы, конопли и льна. Историю материалов лучше всего рассказывать анимацией и 3D. Мы Spectre Studio (дизайн, анимация, 3D). Могу бесплатно сделать демо: короткий ролик о ткани и страницу товара в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","pitch_lang":"RU","id":"tofari-almaty"},{"caveat":"Данные из статьи и поиска. Страницу Facebook (2015 год) могли не вести. Основательница по статье: Sandra Hakim. Прежде чем писать, проверьте, нет ли у бутика сайта.","checked":"2026-10-28","city":"Дубай (Box Park)","confidence":"unverified","contacts":{"facebook":"https://www.facebook.com/Urbaniststore","instagram":"urbaniststore"},"country":"ОАЭ","evidence":[{"label":"Статья о бутиках Дубая","url":"https://artinthemiddle.com/blog/beyond-the-malls-5-independent-fashion-boutiques-in-dubai-worth-discovering-2"}],"fit":2,"fitWhy":"Давно работающий бутик с известной основательницей, но потребность только гипотеза: официальный сайт и онлайн-магазин поиском не найдены.","name":"Urbanist","needs":["Гипотеза: нет собственного сайта и онлайн-заказа, в поиске только Instagram и старая страница Facebook","Проверьте Instagram: возможно, ссылка на магазин там уже есть"],"niche":"Мультибрендовый бутик, мода и стритвир","offer":["Одностраничный сайт-лукбук с заказом через WhatsApp","Анимированные заставки для коллабораций и поп-апов","Единый визуал для бутика и событий"],"pitch":"Hi Sandra, I couldn't find an official online store for Urbanist, only your Instagram. A curated boutique like yours deserves a site where people can browse and order. We're Spectre Studio (web, motion, branding), and I can make a free demo: a one-page lookbook site with WhatsApp ordering, plus a short animated intro in your look. If you're interested, I can send the demo over in the next few days. Here's an example of our work (it's a demo too): spectre-dsgn.github.io/negroni/ and our own site: spectre-dsgn.github.io","pitch_lang":"EN","pitch_ru":"Привет, Sandra! Я не нашёл официального интернет-магазина Urbanist, только ваш Instagram. Такому отобранному бутику нужен сайт, где можно смотреть и заказывать. Мы Spectre Studio (сайты, моушн, брендинг), и я могу бесплатно сделать демо: одностраничный сайт-лукбук с заказом через WhatsApp и короткую анимированную заставку в вашем стиле. Если интересно, на днях могу прислать демо-версию. Вот пример нашей работы, это тоже демо: spectre-dsgn.github.io/negroni/ и наш сайт: spectre-dsgn.github.io","id":"urbanist-dubai"}];
+const LSKEY="spectre-leads-manager-v1";
+let local={over:{},added:[]};
+try{const raw=JSON.parse(localStorage.getItem(LSKEY)||"null");if(raw&&raw.over)local={over:raw.over,added:Array.isArray(raw.added)?raw.added:[]}}catch(_){}
+function persist(){try{localStorage.setItem(LSKEY,JSON.stringify(local))}catch(_){toast("Браузер не даёт сохранять заметки, они пропадут после закрытия")}}
+function buildLeads(){
+  const base=DATA.map(l=>Object.assign({status:"new"},l,local.over[l.id]||{}));
+  const added=local.added.map(l=>Object.assign({},l,local.over[l.id]||{}));
+  return base.concat(added);
+}
+function boot(){
+  const b=$("banner");b.hidden=false;
+  b.textContent="Статусы, заметки и добавленные лиды сохраняются только в этом браузере и не видны другим менеджерам. Чтобы отдать данные, используйте «Экспорт CSV».";
+  S.leads=buildLeads();S.loaded=true;
+  if(matchMedia("(min-width:901px)").matches)S.sel=visible()[0]?.id||null;
+  renderAll(true);
+}
+boot();
+</script>
+</body>
+</html>
